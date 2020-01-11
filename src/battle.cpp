@@ -42,8 +42,8 @@ Battle::Battle(IServer& serv, int id, std::string channel_name)
     , m_serv(serv)
     , m_ah(*this)
     , m_autolock_on_start(false)
-    , m_id(id)
     , m_timer(NULL)
+    , m_id(id)
 {
 	m_autohost_manager = nullptr;
 	m_opts.battleid = m_id;
@@ -110,7 +110,7 @@ void Battle::OnRequestBattleStatus()
 	const wxColor col = sett().GetBattleLastColour();
 	bs.colour = LSL::lslColor(col.Red(), col.Green(), col.Blue());
 	//FIXME ? bs.colour = GetFreeColour( GetMe() );
-	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostGameName()));
+	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostGameNameAndVersion()));
 	SendMyBattleStatus();
 }
 
@@ -242,8 +242,6 @@ User& Battle::OnUserAdded(User& user)
 		}
 
 		m_ah.OnUserAdded(user);
-		if (!user.BattleStatus().IsBot() && sett().GetBattleLastAutoAnnounceDescription())
-			DoAction(m_opts.description);
 	}
 	// any code here may be skipped if the user was autokicked
 	return user;
@@ -365,7 +363,8 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 			try {
 				User& user = GetUser(nick);
 				m_serv.BattleKickPlayer(m_opts.battleid, user);
-			} catch (assert_exception) {
+			} catch (const assert_exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(nick + " banned")));
 
@@ -951,7 +950,8 @@ void Battle::FixTeamIDs(BalanceType balance_type, bool support_clans, bool stron
 		try {
 			int mapposcount = LoadMap().info.positions.size();
 			numcontrolteams = std::min(numcontrolteams, mapposcount);
-		} catch (assert_exception) {
+		} catch (const assert_exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 

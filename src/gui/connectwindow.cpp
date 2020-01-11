@@ -1,23 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 #include "connectwindow.h"
 
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/combobox.h>
-#include <wx/icon.h>
-#include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/notebook.h>
-#include <wx/panel.h>
-#include <wx/settings.h>
-#include <wx/sizer.h>
-#include <wx/statline.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
 #include <wx/tokenzr.h>
-#include <wx/tooltip.h>
 
 #include "gui/controls.h"
+#include "gui/customdialogs.h"
 #include "images/connect.xpm"
 #include "servermanager.h"
 #include "settings.h"
@@ -26,22 +14,11 @@
 #include "utils/slconfig.h"
 #include "utils/tasutil.h"
 
-// Define events.
-BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
-
-EVT_BUTTON(wxID_OK, ConnectWindow::OnOk)
-EVT_BUTTON(wxID_CANCEL, ConnectWindow::OnCancel)
-EVT_COMBOBOX(CON_SERV_SEL, ConnectWindow::OnServerChange)
-
-END_EVENT_TABLE()
-
 //! @brief Constructor
 //!
 //! @param parent Parent window
-ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
-    : wxDialog(parent, -1, _("Connect to lobby server"), wxDefaultPosition, wxSize(300, 300),
-	       wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN)
-    , m_ui(ui)
+ConnectWindow::ConnectWindow(wxWindow* parent)
+    : ConnectWindowBase(parent)
 {
 	SetIcon(wxIcon(connect_xpm));
 	wxString server = sett().GetDefaultServer();
@@ -50,165 +27,68 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	bool savepass = sett().GetServerAccountSavePass(server);
 	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
 
-
-	// Create all UI elements.
-	m_tabs = new wxNotebook(this, -1);
-	m_login_tab = new wxPanel(m_tabs, -1);
-	m_register_tab = new wxPanel(m_tabs, -1);
-	// Add tabs to tab control.
-	m_tabs->AddPage(m_login_tab, _("Login"), true);
-	m_tabs->AddPage(m_register_tab, _("Register"), false);
-
-
-	// Login tab
-	m_server_lbl = new wxStaticText(m_login_tab, -1, _("Server"));
-	m_server_combo = new wxComboBox(m_login_tab, CON_SERV_SEL, server);
-	m_server_combo->SetToolTip(_("Server to connect to. You can connect to any server you like by typing in hostaddress:port format."));
-
-	m_ser_acc_line = new wxStaticLine(m_login_tab);
-
-	m_nick_lbl = new wxStaticText(m_login_tab, -1, _("Nickname"));
-	m_nick_text = new wxTextCtrl(m_login_tab, -1, username);
-	m_pass_lbl = new wxStaticText(m_login_tab, -1, _("Password"));
-	m_pass_text = new wxTextCtrl(m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-	m_rpass_check = new wxCheckBox(m_login_tab, -1, _("Remember password"));
-	m_rpass_check->SetValue(savepass);
-	m_autoconnect_check = new wxCheckBox(m_login_tab, -1, _("Autoconnect next time"));
-	m_autoconnect_check->SetToolTip(_("remember connection details and automatically connect to server on next lobby startup"));
-	m_autoconnect_check->SetValue(autoconnect);
-
-	m_acc_note_line = new wxStaticLine(m_login_tab);
-
-	m_note_lbl = new wxStaticText(m_login_tab, -1, _("Note: If you do not have an account, you can register one for free on the Register tab."));
-	m_note_lbl->Wrap(400);
-
-	m_ok_btn = new wxButton(this, wxID_OK, _("Ok"));
-	m_cancel_btn = new wxButton(this, wxID_CANCEL, _("Cancel"));
-
-
-	// Add UI elements to sizers.
-	m_buttons_sizer = new wxStdDialogButtonSizer();
-	m_buttons_sizer->Add(m_cancel_btn);
-	m_buttons_sizer->AddStretchSpacer();
-	m_buttons_sizer->Add(m_ok_btn);
-
-	m_rpass_sizer = new wxBoxSizer(wxVERTICAL);
-	m_rpass_sizer->Add(m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4);
-	m_rpass_sizer->Add(m_autoconnect_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4);
-
-	m_pass_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_pass_sizer->Add(m_pass_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_pass_sizer->Add(m_pass_text, 2, wxEXPAND | wxALL, 4);
-
-	// FIXME was lazy, absoulte positioning isn't that nice
-	int pos1 = (m_pass_lbl->GetSize()).GetWidth() + 40;
-	wxBoxSizer* m_check_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_check_sizer->Add(pos1, 0, 0);
-	m_check_sizer->Add(m_rpass_sizer, 0, wxEXPAND | wxALIGN_RIGHT);
-
-	m_nick_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_nick_sizer->Add(m_nick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_nick_sizer->Add(m_nick_text, 2, wxEXPAND | wxALL, 4);
-
-	m_server_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_server_sizer->Add(m_server_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_server_sizer->Add(m_server_combo, 2, wxEXPAND | wxALL, 4);
-
-	m_login_main_sizer = new wxBoxSizer(wxVERTICAL);
-	m_login_main_sizer->Add(m_server_sizer, 0, wxEXPAND | wxALL, 0);
-	m_login_main_sizer->Add(m_ser_acc_line, 0, wxEXPAND | wxALL, 4);
-	m_login_main_sizer->Add(m_nick_sizer, 0, wxEXPAND);
-	m_login_main_sizer->Add(m_pass_sizer, 0, wxEXPAND);
-	m_login_main_sizer->Add(m_check_sizer, 0, wxEXPAND);
-	m_login_main_sizer->Add(m_acc_note_line, 0, wxEXPAND | wxALL, 4);
-	m_login_main_sizer->Add(m_note_lbl, 0, wxEXPAND | wxALL, 4);
-	m_login_main_sizer->AddStretchSpacer();
-
-	m_login_tab->SetSizer(m_login_main_sizer);
-
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
-	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
-	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND);
-
-
-	// Register tab
-	m_regnick_lbl = new wxStaticText(m_register_tab, wxID_ANY, _("Nickname"));
-	m_regnick_text = new wxTextCtrl(m_register_tab, wxID_ANY);
-
-	wxBoxSizer* m_regnick_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_regnick_sizer->Add(m_regnick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_regnick_sizer->Add(m_regnick_text, 1, wxALL, 4);
-
-
-	m_regpass_sep = new wxStaticLine(m_register_tab, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
-
-
-	m_regpass1_lbl = new wxStaticText(m_register_tab, wxID_ANY, _("Password"));
-	m_regpass1_text = new wxTextCtrl(m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-
-	wxBoxSizer* m_regpass1_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_regpass1_sizer->Add(m_regpass1_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_regpass1_sizer->Add(m_regpass1_text, 1, wxALL, 4);
-
-
-	m_regpass2_lbl = new wxStaticText(m_register_tab, wxID_ANY, _("Retype password"));
-	m_regpass2_text = new wxTextCtrl(m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-
-	wxBoxSizer* m_regpass2_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_regpass2_sizer->Add(m_regpass2_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_regpass2_sizer->Add(m_regpass2_text, 1, wxALL, 4);
-
-	m_regemail_lbl = new wxStaticText(m_register_tab, wxID_ANY, _("Email address"));
-	m_regemail_text = new wxTextCtrl(m_register_tab, wxID_ANY);
-
-	wxBoxSizer* m_regemail_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_regemail_sizer->Add(m_regemail_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
-	m_regemail_sizer->Add(m_regemail_text, 1, wxALL, 4);
-
-	wxBoxSizer* m_register_sizer = new wxBoxSizer(wxVERTICAL);
-	m_register_sizer->Add(m_regnick_sizer, 0, wxEXPAND, 4);
-	m_register_sizer->Add(m_regpass_sep, 0, wxALL | wxEXPAND, 4);
-	m_register_sizer->Add(m_regpass1_sizer, 0, wxEXPAND, 4);
-	m_register_sizer->Add(m_regpass2_sizer, 0, wxEXPAND, 4);
-	m_register_sizer->Add(m_regemail_sizer, 0, wxEXPAND, 4);
-
-
-	m_reginfo_text = new wxStaticText(m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_reginfo_text->SetLabel("A verification code will be sent to your email address.");
-
-	m_register_sizer->Add(m_reginfo_text, 1, wxALL, 4);
-
-	m_register_tab->SetSizer(m_register_sizer);
-	m_register_tab->Layout();
-	m_register_sizer->Fit(m_register_tab);
-
-
-	// Set sizer.
-	SetSizer(m_main_sizer);
-
-	if (!username.empty()) {
-		m_ok_btn->SetFocus();
-	} else { // no nick set, make register tab default
-		m_tabs->SetSelection(1);
-		m_regnick_text->SetFocus();
+	if (sett().GetUserLevel() < Settings::UserLevel::Professional) {
+		m_remember_password_check->Hide();
+		m_autoconnect_check->Hide();
 	}
 
-	m_ok_btn->SetDefault();
+	ReloadServerList();
+	m_nickname_text->SetValue(username);
+	m_password1_hidden_text->SetValue(password);
+	m_remember_password_check->SetValue(savepass);
+	m_autoconnect_check->SetValue(autoconnect);
 
-	Layout();
-	m_main_sizer->SetSizeHints(this);
+	if (!username.empty()) {
+		EnterLoginMode();
+	} else { // no nick set, make register tab default
+		EnterRegistrationMode();
+	}
+
+	Fit();
 #ifdef __WXMSW__
 	SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 #endif
-	ReloadServerList();
 }
 
-
-//! @brief Destructor
-ConnectWindow::~ConnectWindow()
+void ConnectWindow::EnterRegistrationMode()
 {
+	in_login_mode = false;
+
+	Freeze();
+	m_loginreg_button->SetLabel(_("Return to login..."));
+	m_email_label->Show();
+	m_email_text->Show();
+	m_password2_label->Show();
+	m_password2_hidden_text->Show();
+	m_nickname_text->SetFocus();
+	m_ok_button->SetLabel(_("Register"));
+
+	Layout(); Fit(); Thaw();
 }
 
+void ConnectWindow::EnterLoginMode()
+{
+	in_login_mode = true;
+
+	Freeze();
+	m_loginreg_button->SetLabel(_("Create a new account..."));
+	m_email_label->Hide();
+	m_email_text->Hide();
+	m_password2_label->Hide();
+	m_password2_hidden_text->Hide();
+	m_ok_button->SetFocus();
+	m_ok_button->SetLabel(_("Login"));
+
+	Fit(); Layout(); Thaw();
+}
+
+void ConnectWindow::OnChangeMode(wxCommandEvent&)
+{
+	if (in_login_mode)
+		EnterRegistrationMode();
+	else
+		EnterLoginMode();
+}
 
 void ConnectWindow::ReloadServerList()
 {
@@ -220,14 +100,15 @@ void ConnectWindow::ReloadServerList()
 void ConnectWindow::OnServerChange(wxCommandEvent&)
 {
 	wxString HostAddress = m_server_combo->GetValue();
-	m_nick_text->SetValue(sett().GetServerAccountNick(HostAddress));
-	m_pass_text->SetValue(sett().GetServerAccountPass(HostAddress));
+	m_nickname_text->SetValue(sett().GetServerAccountNick(HostAddress));
+	m_password1_hidden_text->SetValue(sett().GetServerAccountPass(HostAddress));
+	m_password1_plain_text->SetValue(sett().GetServerAccountPass(HostAddress));
+	m_password2_hidden_text->SetValue(sett().GetServerAccountPass(HostAddress));
+	m_password2_plain_text->SetValue(sett().GetServerAccountPass(HostAddress));
 }
 
 void ConnectWindow::CleanHide()
 {
-	m_reginfo_text->SetLabel(wxEmptyString);
-	m_note_lbl->SetLabel(wxEmptyString);
 	Hide();
 }
 
@@ -260,33 +141,48 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	sett().SaveSettings();
 	ReloadServerList();
 
-	if (m_tabs->GetSelection() <= 0) { //normal login
-		sett().SetServerAccountNick(HostAddress, m_nick_text->GetValue());
-		sett().SetServerAccountSavePass(HostAddress, m_rpass_check->GetValue());
-		if (m_rpass_check->IsChecked()) {
-			sett().SetServerAccountPass(HostAddress, m_pass_text->GetValue());
+	if (in_login_mode) {
+		sett().SetServerAccountNick(HostAddress, m_nickname_text->GetValue());
+		sett().SetServerAccountSavePass(HostAddress, m_remember_password_check->GetValue());
+		if (m_remember_password_check->IsChecked()) {
+			sett().SetServerAccountPass(HostAddress, m_password1_hidden_text->GetValue());
 		}
 		CleanHide();
-		ServerManager::Instance()->DoConnectToServer(STD_STRING(HostAddress), STD_STRING(m_nick_text->GetValue()), STD_STRING(m_pass_text->GetValue()));
+		ServerManager::Instance()->DoConnectToServer(STD_STRING(HostAddress),
+		                                             STD_STRING(m_nickname_text->GetValue()),
+		                                             STD_STRING(m_password1_hidden_text->GetValue()));
 		return;
 	}
 
-	sett().SetServerAccountNick(HostAddress, m_regnick_text->GetValue());
-	if (m_rpass_check->IsChecked()) {
-		sett().SetServerAccountPass(HostAddress, m_regpass1_text->GetValue());
+	// Shortest possible: one character for account, a.b for domain?
+	wxArrayString email_components = wxStringTokenize(m_email_text->GetValue(), _T("@"));
+	if (email_components.GetCount() < 2
+	  ||email_components[0].size() < 1 || email_components[1].size() < 3) {
+		OnRegistrationDenied(_("The entered email is ill-formed.\nPlease try again"));
+		m_email_text->SetFocus();
+		return;
+	}
+
+	sett().SetServerAccountNick(HostAddress, m_nickname_text->GetValue());
+	// Save password if the user choses so
+	if (m_remember_password_check->IsChecked()) {
+		sett().SetServerAccountPass(HostAddress, m_password1_hidden_text->GetValue());
 	}
 
 	// register new nick
-	if (!IsValidNickname(STD_STRING(m_regnick_text->GetValue()))) {
+	if (!IsValidNickname(STD_STRING(m_nickname_text->GetValue()))) {
 		OnRegistrationDenied(_("The entered nickname contains invalid characters like )? &%.\n Please try again"));
 		return;
 	}
-	if (m_regpass2_text->GetValue() != m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty()) {
-		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty password)"));
+	if (m_password2_hidden_text->GetValue() != m_password1_hidden_text->GetValue() || m_password1_hidden_text->GetValue().IsEmpty()) {
+		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)"));
 		return;
 	}
 	CleanHide();
-	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress), STD_STRING(m_regnick_text->GetValue()), STD_STRING(m_regpass1_text->GetValue()), STD_STRING(m_regemail_text->GetValue()));
+	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress),
+	                                           STD_STRING(m_email_text->GetValue()),
+	                                           STD_STRING(m_nickname_text->GetValue()),
+	                                           STD_STRING(m_password1_hidden_text->GetValue()));
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)
@@ -297,25 +193,22 @@ void ConnectWindow::OnCancel(wxCommandEvent&)
 void ConnectWindow::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 {
 	//	Show();
-	m_tabs->SetSelection(0);
-	m_nick_text->SetValue(user);
-	m_pass_text->SetValue(pass);
+	EnterLoginMode();
+	m_nickname_text->SetValue(user);
+	m_password1_hidden_text->SetValue(pass);
 }
 
 void ConnectWindow::OnRegistrationDenied(const wxString& reason)
 {
-	m_reginfo_text->SetLabel(reason);
-	m_reginfo_text->SetForegroundColour(wxColour(255, 0, 0));
-	m_reginfo_text->Wrap(400);
-	m_tabs->SetSelection(1);
+	wxLogMessage(reason);
+	customMessageBoxModal(SL_MAIN_ICON, reason, _("Registration failed"));
+	EnterRegistrationMode();
 	Show();
 }
 
 void ConnectWindow::OnLoginDenied(const wxString& reason)
 {
-	m_note_lbl->SetLabel(reason);
-	m_note_lbl->SetForegroundColour(wxColour(255, 0, 0));
-	m_note_lbl->Wrap(400);
-	m_tabs->SetSelection(0);
+	customMessageBoxModal(SL_MAIN_ICON, reason, _("Log-in failed"));
+	EnterLoginMode();
 	Show();
 }

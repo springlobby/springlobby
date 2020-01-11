@@ -22,7 +22,6 @@
 #include "gui/controls.h"
 #include "gui/slbook.h"
 #include "images/battle.xpm"
-#include "images/battle_list.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 #include "log.h"
@@ -42,12 +41,6 @@ MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
 
 	m_tabs = new SLNotebook(this, _T( "mainjoinbattletab" ), BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE);
 	m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
-
-	m_imagelist = new wxImageList(12, 12);
-	m_imagelist->Add(wxIcon(battle_list_xpm));
-	m_imagelist->Add(wxIcon(battle_xpm));
-	m_imagelist->Add(wxIcon(battle_map_xpm));
-	m_imagelist->Add(wxIcon(battle_settings_xpm));
 
 	m_battle_tab = new BattleRoomTab(m_tabs, 0);
 	m_tabs->InsertPage(0, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm));
@@ -123,11 +116,13 @@ void MainJoinBattleTab::BattleUserUpdated(User& user)
 {
 	try {
 		GetBattleRoomTab().UpdateUser(user);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetBattleMapTab().UpdateUser(user);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -135,11 +130,13 @@ void MainJoinBattleTab::ReloadPresetList()
 {
 	try {
 		//GetBattleRoomTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetMMOptionsTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 

@@ -1020,16 +1020,6 @@ void Settings::SetBattleLastAutoSpectTime(int value)
 	cfg().Write(_T( "/Hosting/AutoSpectTime" ), value);
 }
 
-bool Settings::GetBattleLastAutoAnnounceDescription()
-{
-	return cfg().Read(_T( "/Hosting/AutoAnnounceDescription" ), 0l);
-}
-
-void Settings::SetBattleLastAutoAnnounceDescription(bool value)
-{
-	cfg().Write(_T( "/Hosting/AutoAnnounceDescription" ), value);
-}
-
 void Settings::SetBattleLastSideSel(const wxString& gamename, int sidenum)
 {
 	cfg().Write(_T("/Battle/Sides/" + gamename), sidenum);
@@ -1398,6 +1388,16 @@ bool Settings::GetSplitBRoomHorizontally()
 void Settings::SetSplitBRoomHorizontally(const bool vertical)
 {
 	cfg().Write(_T( "/GUI/SplitBRoomHorizontally" ), vertical);
+}
+
+int Settings::GetUserLevel()
+{
+	return cfg().Read(_T("/General/UserLevel"), NewUser);
+}
+
+void Settings::SetUserLevel(int level)
+{
+	cfg().Write(_T("/General/UserLevel" ), level);
 }
 
 bool Settings::GetShowXallTabs()

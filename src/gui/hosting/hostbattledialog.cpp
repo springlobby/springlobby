@@ -8,25 +8,9 @@
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
-#include <wx/bmpbuttn.h>
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/image.h>
-#include <wx/intl.h>
+
 #include <wx/log.h>
 #include <wx/menu.h>
-#include <wx/radiobox.h>
-#include <wx/radiobut.h>
-#include <wx/scrolwin.h>
-#include <wx/sizer.h>
-#include <wx/slider.h>
-#include <wx/statbmp.h>
-#include <wx/statbox.h>
-#include <wx/statline.h>
-#include <wx/stattext.h>
-#include <wx/string.h>
-#include <wx/textctrl.h>
 
 #include "gui/controls.h"
 #include "gui/customdialogs.h"
@@ -51,95 +35,19 @@
 #include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(HostBattleDialog, wxDialog)
-EVT_BUTTON(HOST_CANCEL, HostBattleDialog::OnCancel)
-EVT_BUTTON(HOST_OK, HostBattleDialog::OnOk)
-EVT_BUTTON(BTN_REFRESH, HostBattleDialog::OnReloadMods)
-EVT_BUTTON(PICK_RELAYHOST, HostBattleDialog::OnPickRelayHost)
 EVT_MENU(wxID_ANY, HostBattleDialog::OnRelayChoice)
-EVT_RADIOBOX(CHOSE_NAT, HostBattleDialog::OnNatChange)
-EVT_CHECKBOX(CHK_USE_RELAY, HostBattleDialog::OnUseRelay)
-EVT_CHOICE(CHOOSE_ENGINE, HostBattleDialog::OnEngineSelect)
 END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog(wxWindow* parent)
-    : wxDialog(parent, -1, _("Host new battle"), wxDefaultPosition, wxSize(420, 520), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE)
+    : HostBattleDialogBase(parent)
     , WindowHintsPickle(_T("hostbattledialog"), this, wxSize(410, 520))
     , m_last_relayhost(sett().GetLastRelayedHost())
 {
-	SetMinSize(wxSize(400, 560));
+	m_battle_name_text->SetValue(sett().GetLastHostDescription());
+	m_password_text->SetValue(sett().GetLastHostPassword());
+	m_port_spinctrl->SetValue(sett().GetLastHostPort());
+	m_relayhost_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
 
-	m_panel = new wxPanel(this);
-	wxBoxSizer* all_sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxFlexGridSizer* topsizer = new wxFlexGridSizer(2, 0, 10);
-	wxBoxSizer* m_main_sizer;
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
-
-	m_desc_lbl = new wxStaticText(m_panel, wxID_ANY, _("Description"), wxDefaultPosition, wxDefaultSize, 0);
-	m_desc_lbl->Wrap(-1);
-	topsizer->Add(m_desc_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-
-	m_desc_text = new wxTextCtrl(m_panel, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0);
-	m_desc_text->SetToolTip(_("A short description of the game, this will show up in the battle list."));
-	topsizer->Add(m_desc_text, 1, wxALL | wxEXPAND, 5);
-
-	m_desc_check = new wxCheckBox(m_panel, wxID_ANY, _("Autopaste description"));
-	m_desc_check->SetValue(sett().GetBattleLastAutoAnnounceDescription());
-	m_desc_check->SetToolTip(_("Automatically write the battle description when a user joins."));
-
-	topsizer->AddStretchSpacer();
-	topsizer->Add(m_desc_check, 0, wxLEFT, 5);
-
-	m_mod_lbl = new wxStaticText(m_panel, wxID_ANY, _("Engine"), wxDefaultPosition, wxDefaultSize, 0);
-	m_mod_lbl->Wrap(-1);
-	topsizer->Add(m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-
-	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
-	m_engine_choice = new wxChoice(m_panel, CHOOSE_ENGINE);
-	m_engine_choice->SetToolTip(_("Select the engine version to play."));
-	mod_choice_button_sizer2->Add(m_engine_choice, 0, wxALL, 5);
-	topsizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
-
-	m_mod_lbl = new wxStaticText(m_panel, wxID_ANY, _("Game"), wxDefaultPosition, wxDefaultSize, 0);
-	m_mod_lbl->Wrap(-1);
-	topsizer->Add(m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-
-	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_game_choice = new wxChoice(m_panel, wxID_ANY);
-	m_game_choice->SetToolTip(_("Select the game to play."));
-	mod_choice_button_sizer->Add(m_game_choice, 0, wxALL, 5);
-
-	wxBitmap mp = charArr2wxBitmap(arrow_refresh_png, sizeof(arrow_refresh_png));
-	m_refresh_btn = new wxBitmapButton(m_panel, BTN_REFRESH, mp);
-	mod_choice_button_sizer->Add(m_refresh_btn, 0, wxEXPAND | wxTOP | wxBOTTOM, 5);
-
-	topsizer->Add(mod_choice_button_sizer, 0, wxEXPAND | wxALL, 1);
-
-	m_pwd_lbl = new wxStaticText(m_panel, wxID_ANY, _("Password\n(no spaces)"), wxDefaultPosition, wxDefaultSize, 0);
-	m_pwd_lbl->Wrap(-1);
-	topsizer->Add(m_pwd_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-
-	m_pwd_text = new wxTextCtrl(m_panel, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-	m_pwd_text->SetToolTip(_("Password needed to join game. Keep empty for no password"));
-	topsizer->Add(m_pwd_text, 1, wxALL | wxEXPAND, 5);
-
-	m_port_lbl = new wxStaticText(m_panel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0);
-	m_port_lbl->Wrap(-1);
-	topsizer->Add(m_port_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
-
-	m_port_text = new wxTextCtrl(m_panel, wxID_ANY, wxString::Format(_T( "%d" ), sett().GetLastHostPort()), wxDefaultPosition, wxDefaultSize, 0);
-	m_port_text->SetToolTip(_("UDP port to host game on. Default is 8452."));
-	topsizer->Add(m_port_text, 1, wxALL | wxEXPAND, 5);
-
-	//	m_port_test_check = new wxCheckBox( m_panel, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
-	//	m_port_test_check->SetValue( sett().GetTestHostPort() );
-	//	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
-
-
-	m_relayed_host_check = new wxCheckBox(m_panel, CHK_USE_RELAY, _("Use relayhost"), wxDefaultPosition, wxDefaultSize, 0);
-	m_relayed_host_check->SetToolTip(_("host and control game on remote server, helps if you have trouble hosting"));
-	m_relayed_host_pick = new wxButton(m_panel, PICK_RELAYHOST, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_relayed_host_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
 
 	m_relayhost_list = new wxMenu();
 	wxMenuItem* automatic_pick = new wxMenuItem(m_relayhost_list, AUTO_PICK_HOST, _("Chose automatically"), _("Randomly picks an available one"), wxITEM_RADIO);
@@ -156,136 +64,45 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 		newitem->Check(m_last_relayhost == m_relayhost_array_list[i]);
 	}
 
-	m_relayed_host_check->SetValue(sett().GetLastHostRelayedMode());
-	m_relayed_host_pick->Show(m_relayed_host_check->IsChecked());
+	m_use_relayhost_check->SetValue(sett().GetLastHostRelayedMode());
+	m_relayhost_pick->Show(m_use_relayhost_check->IsChecked());
+	m_nat_traversal_radios->SetSelection(sett().GetLastHostNATSetting());
 
-	topsizer->Add(m_relayed_host_check, 1, wxALL | wxEXPAND, 5);
-	topsizer->Add(m_relayed_host_pick, 0, wxALL | wxEXPAND, 5);
+	if (sett().GetUserLevel() < Settings::UserLevel::Developer) {
+		m_use_relayhost_check->SetValue(false);
+		m_use_relayhost_check->Hide();
+		m_relayhost_pick->Hide();
+	}
 
-	m_main_sizer->Add(topsizer, 0, wxEXPAND, 0);
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_1), wxBitmap(rank0_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_2), wxBitmap(rank1_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_3), wxBitmap(rank2_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_4), wxBitmap(rank3_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_5), wxBitmap(rank4_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_6), wxBitmap(rank5_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_7), wxBitmap(rank6_xpm));
+	m_rank_combo->Append(User::GetRankName(UserStatus::RANK_8), wxBitmap(rank7_xpm));
+	int prevRankLimit = sett().GetLastRankLimit();
+	if (prevRankLimit < 0)
+		prevRankLimit = -(prevRankLimit + 1);
+	m_rank_combo->SetSelection(prevRankLimit);
 
-	wxStaticBoxSizer* m_players_box;
-	m_players_box = new wxStaticBoxSizer(new wxStaticBox(m_panel, -1, _("Number of players")), wxVERTICAL);
+	if (sett().GetUserLevel() < Settings::UserLevel::Professional) {
+		m_rank_sizer->ShowItems(false);
+		m_max_players_box->ShowItems(false);
+	}
 
-	m_players_box->SetMinSize(wxSize(-1, 60));
-	m_players_slide = new wxSlider(m_panel, wxID_ANY, sett().GetLastHostPlayerNum(), 2, SPRING_MAX_USERS, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS | wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS);
-	m_players_slide->SetToolTip(_("The maximum number of players to allow in the battle."));
-	m_players_box->Add(m_players_slide, 0, wxALL | wxEXPAND, 5);
-
-	m_main_sizer->Add(m_players_box, 0, wxALL | wxEXPAND, 5);
-
-	wxBoxSizer* m_pl_nat_sizer;
-	m_pl_nat_sizer = new wxBoxSizer(wxHORIZONTAL);
-
-	wxString m_nat_radiosChoices[] = {
-	    _("None"), _("Hole punching") /*, _("Fixed source ports")*/
-	};
-	int m_nat_radiosNChoices = sizeof(m_nat_radiosChoices) / sizeof(wxString);
-	m_nat_radios = new wxRadioBox(m_panel, CHOSE_NAT, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS);
-	m_nat_radios->SetSelection(sett().GetLastHostNATSetting());
-
-	m_nat_radios->Enable(true);
-
-	m_nat_radios->SetToolTip(_("NAT traversal to use."));
-
-	m_pl_nat_sizer->Add(m_nat_radios, 1, wxALL | wxEXPAND, 5);
-
-	wxStaticBoxSizer* m_rank_box;
-	m_rank_box = new wxStaticBoxSizer(new wxStaticBox(m_panel, -1, _("Rank requirement")), wxVERTICAL);
-	wxArrayString rankFilterChoices;
-	rankFilterChoices.Add(_("At least"));
-	rankFilterChoices.Add(_("No greater than"));
-	m_rank_direction = new wxChoice(m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0);
-	m_rank_direction->SetToolTip(_("Select the type of rank enforcement."));
-	m_rank_box->Add(m_rank_direction);
-
-	wxFlexGridSizer* m_rank_sizer;
-	m_rank_sizer = new wxFlexGridSizer(2, 0, 0, 0);
-	m_rank_sizer->SetFlexibleDirection(wxBOTH);
-
-	m_rank0_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-	m_rank_sizer->Add(m_rank0_radio, 0, wxALL, 5);
-
-	m_rank0_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank0_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank0_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-
-	m_rank1_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank1_radio, 0, wxALL, 5);
-
-	m_rank1_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank1_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank1_img, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL | wxALL, 2);
-
-	m_rank2_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank2_radio, 0, wxALL, 5);
-
-	m_rank2_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank2_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank2_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2);
-
-	m_rank3_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank3_radio, 0, wxALL, 5);
-
-	m_rank3_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank3_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank3_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2);
-
-	m_rank4_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank4_radio, 0, wxALL, 5);
-
-	m_rank4_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank4_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank4_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2);
-
-	m_rank5_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank5_radio, 0, wxALL, 5);
-
-	m_rank5_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank5_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank5_img, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL, 5);
-
-	m_rank6_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank6_radio, 0, wxALL, 5);
-
-	m_rank6_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank6_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank6_img, 0, wxALL, 5);
-
-	m_rank7_radio = new wxRadioButton(m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_rank_sizer->Add(m_rank7_radio, 0, wxALL, 5);
-
-	m_rank7_img = new wxStaticBitmap(m_panel, wxID_ANY, wxBitmap(rank7_xpm), wxDefaultPosition, wxSize(16, 16), 0);
-	m_rank_sizer->Add(m_rank7_img, 0, wxALL, 5);
-
-	m_rank_box->Add(m_rank_sizer, 1, wxEXPAND, 5);
-
-	m_pl_nat_sizer->Add(m_rank_box, 1, wxALL | wxEXPAND, 5);
-
-	m_main_sizer->Add(m_pl_nat_sizer, 0, wxEXPAND, 5);
-	m_main_sizer->Add(0, 0, 1, wxEXPAND, 0);
-
-	m_buttons_sep = new wxStaticLine(m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
-	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 2);
-
-	wxBoxSizer* m_buttons_sizer;
-	m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
-
-	m_cancel_btn = new wxButton(m_panel, HOST_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0);
-	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-	m_buttons_sizer->Add(m_cancel_btn, 0, wxALL, 5);
-
-	m_host_btn = new wxButton(m_panel, HOST_OK, _("Host"), wxDefaultPosition, wxDefaultSize, 0);
-	m_host_btn->SetToolTip(_("Start hosting the battle."));
-
-	m_buttons_sizer->Add(m_host_btn, 0, wxALL, 5);
-
-	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
-
-	m_panel->SetSizer(m_main_sizer);
-	all_sizer->Add(m_panel, 1, wxEXPAND, 0);
-	this->SetSizer(all_sizer);
+	this->SetSizer( m_main_sizer );
 	this->Layout();
-	m_host_btn->SetFocus();
+	m_main_sizer->Fit( this );
+
+	m_host_button->SetFocus();
 
 	ReloadEngineList();
 }
 
 
-void HostBattleDialog::ReloadModList()
+void HostBattleDialog::ReloadGameList()
 {
 	m_game_choice->Clear();
 
@@ -303,6 +120,7 @@ void HostBattleDialog::ReloadModList()
 		m_game_choice->SetSelection(0);
 	}
 }
+
 
 void HostBattleDialog::ReloadEngineList()
 {
@@ -322,7 +140,7 @@ void HostBattleDialog::ReloadEngineList()
 		m_engine_choice->SetSelection(0);
 	}
 	//unitsync change needs a refresh of games as well
-	ReloadModList();
+	ReloadGameList();
 }
 
 
@@ -340,23 +158,20 @@ void HostBattleDialog::OnOk(wxCommandEvent& /*unused*/)
 		return;
 	}
 
-	if (m_desc_text->GetValue().IsEmpty())
-		m_desc_text->SetValue(_T( "(none)" ));
-	sett().SetLastHostDescription(m_desc_text->GetValue());
+	if (m_battle_name_text->GetValue().IsEmpty())
+		m_battle_name_text->SetValue(_T( "(none)" ));
+	sett().SetLastHostDescription(m_battle_name_text->GetValue());
+
 	sett().SetLastHostMod(m_game_choice->GetString(m_game_choice->GetSelection()));
-	wxString password = m_pwd_text->GetValue();
+	wxString password = m_password_text->GetValue();
 	password.Replace(_T(" "), wxEmptyString);
 	sett().SetLastHostPassword(password);
-	long tmp = DEFSETT_SPRING_PORT;
-	m_port_text->GetValue().ToLong(&tmp);
-	sett().SetLastHostPort(tmp);
-	//  sett().SetTestHostPort( m_port_test_check->GetValue() );
+	sett().SetLastHostPort(m_port_spinctrl->GetValue());
 	sett().SetTestHostPort(false);
-	sett().SetLastHostPlayerNum(m_players_slide->GetValue());
-	sett().SetLastHostNATSetting(m_nat_radios->GetSelection());
+	sett().SetLastHostPlayerNum(m_max_players_slider->GetValue());
+	sett().SetLastHostNATSetting(m_nat_traversal_radios->GetSelection());
 	sett().SetLastRankLimit(GetSelectedRank());
-	sett().SetLastHostRelayedMode(m_relayed_host_check->GetValue());
-	sett().SetBattleLastAutoAnnounceDescription(m_desc_check->GetValue());
+	sett().SetLastHostRelayedMode(m_use_relayhost_check->GetValue());
 	sett().SetLastRelayedHost(m_last_relayhost);
 	sett().SaveSettings();
 	EndModal(wxID_OK);
@@ -371,23 +186,9 @@ void HostBattleDialog::OnCancel(wxCommandEvent& /*unused*/)
 
 int HostBattleDialog::GetSelectedRank()
 {
-	int ret = 0;
-	if (m_rank0_radio->GetValue())
+	int ret = m_rank_combo->GetSelection();
+	if (wxNOT_FOUND == ret)
 		ret = 0;
-	if (m_rank1_radio->GetValue())
-		ret = 1;
-	if (m_rank2_radio->GetValue())
-		ret = 2;
-	if (m_rank3_radio->GetValue())
-		ret = 3;
-	if (m_rank4_radio->GetValue())
-		ret = 4;
-	if (m_rank5_radio->GetValue())
-		ret = 5;
-	if (m_rank6_radio->GetValue())
-		ret = 6;
-	if (m_rank7_radio->GetValue())
-		ret = 7;
 	if (m_rank_direction->GetSelection() > 0)
 		ret = -ret - 1;
 	return ret;
@@ -396,13 +197,9 @@ int HostBattleDialog::GetSelectedRank()
 void HostBattleDialog::OnNatChange(wxCommandEvent& /*unused*/)
 {
 	//  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
-	m_port_text->Enable(m_nat_radios->GetSelection() == 0);
+	m_port_spinctrl->Enable(m_nat_traversal_radios->GetSelection() == 0);
 }
 
-void HostBattleDialog::OnReloadMods(wxCommandEvent&)
-{
-	ReloadModList();
-}
 
 void HostBattleDialog::OnPickRelayHost(wxCommandEvent&)
 {
@@ -420,14 +217,14 @@ void HostBattleDialog::OnRelayChoice(wxCommandEvent& event)
 		index = index - MANUAL_PICK_HOST - 1;
 		m_last_relayhost = m_relayhost_array_list[index];
 	}
-	m_relayed_host_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
+	m_relayhost_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
 }
 
 void HostBattleDialog::OnUseRelay(wxCommandEvent&)
 {
-	m_relayed_host_pick->Show(m_relayed_host_check->IsChecked());
-	m_port_text->Enable(!m_relayed_host_check->IsChecked() && m_nat_radios->GetSelection() == 0);
-	m_nat_radios->Enable(!m_relayed_host_check->IsChecked());
+	m_relayhost_pick->Show(m_use_relayhost_check->IsChecked());
+	m_port_spinctrl->Enable(!m_use_relayhost_check->IsChecked() && m_nat_traversal_radios->GetSelection() == 0);
+	m_nat_traversal_radios->Enable(!m_use_relayhost_check->IsChecked());
 	Layout();
 }
 
@@ -458,7 +255,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 	bo.rankneeded = sett().GetLastRankLimit();
 	bo.maxplayers = sett().GetLastHostPlayerNum();
 	bo.relayhost = STD_STRING(sett().GetLastRelayedHost());
-	bo.engineName = "spring";
+	bo.engineName = "Spring";
 	bo.engineVersion = LSL::usync().GetSpringVersion();
 
 	// Get selected mod from unitsync.
@@ -467,9 +264,12 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 		mod = LSL::usync().GetGame(STD_STRING(sett().GetLastHostMod()));
 		bo.gamehash = mod.hash;
 		bo.gamename = mod.name;
-	} catch (...) {
-		wxLogWarning(_T( "can't host: game not found" ));
-		customMessageBoxModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
+		wxLogWarning(_T("Can't host: game not found. Exception: %s"), e.what());
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+		  _("Battle not started beacuse the game you selected could not be found. Exception: %s"),
+		  e.what()), _("Error starting battle."), wxOK);
 		return;
 	}
 

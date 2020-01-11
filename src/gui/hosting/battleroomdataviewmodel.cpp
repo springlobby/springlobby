@@ -83,7 +83,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			if (isSpectator) {
 				variant = wxVariant(iconsCollection->BMP_EMPTY);
 			} else {
-				variant = wxVariant(iconsCollection->GetFractionBmp(GetBattle()->GetHostGameName(), user->BattleStatus().side));
+				variant = wxVariant(iconsCollection->GetFractionBmp(GetBattle()->GetHostGameNameAndVersion(), user->BattleStatus().side));
 			}
 			break;
 

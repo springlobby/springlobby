@@ -8,6 +8,7 @@
 
 #define PRD_LOG_COMPONENT "prd"
 
+std::string GetCurrentTimeString(const char* format);
 const char* wxLogLevelToString(wxLogLevel level);
 
 class wxString;

@@ -25,14 +25,19 @@ lsl/spring/spring.cpp
 #include <wx/log.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <clocale>
+#include <cstdio>
+#include <ctime>
 #include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <stdexcept>
+#include <unistd.h>
 #include <vector>
 #include <random>
-#include <algorithm>
-#include <cerrno>
 
+#include "gui/crashreporterdialog.h"
 #include "gui/customdialogs.h"
 #include "gui/mainwindow.h"
 #include "gui/ui.h"
@@ -64,7 +69,8 @@ Spring& spring()
 
 Spring::Spring()
     : wxEvtHandler()
-    , m_process(NULL)
+    , crash_count(0)
+    , m_process(nullptr)
     , m_running(false)
 {
 }
@@ -72,7 +78,7 @@ Spring::Spring()
 
 Spring::~Spring()
 {
-	m_process = NULL;
+	m_process = nullptr;
 }
 
 
@@ -83,84 +89,188 @@ bool Spring::IsRunning() const
 
 bool Spring::Run(IBattle& battle)
 {
-	const std::string executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
-	if (!wxFile::Exists(TowxString(executable))) {
-		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_T("The Spring engine executable version '%s' was not found at the set location '%s', please re-check."), battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found"));
+	// Short-circuit before we "damage" internal and on-disk structures
+	if (m_running) {
+		wxLogError(_("An engine/game is already running!"));
+		return false;
+	}
+
+	// Fresh start.
+	crash_count = 0;
+	engine_path = SlPaths::GetSpringBinary(battle.GetEngineVersion());
+	engine_params.clear();
+
+	if (!wxFile::Exists(TowxString(engine_path))) {
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+		  _("The engine executable version '%s' was not found at the set location '%s', please re-check."),
+		  battle.GetEngineVersion().c_str(), engine_path.c_str()), _("Executable not found"));
 		ui().mw().ShowConfigure(MainWindow::OPT_PAGE_SPRING);
 		return false;
 	}
-	wxLogMessage("Going to start version %s with %s", battle.GetEngineVersion().c_str(), executable.c_str());
-
-	wxArrayString params;
+	wxLogMessage(_T("Going to start engine %s with executable at %s"),
+	             battle.GetEngineVersion().c_str(), engine_path.c_str());
 
 	const std::string& demopath = battle.GetPlayBackFilePath();
 	if (!demopath.empty()) {
-		params.push_back(TowxString(demopath));
-		return LaunchEngine(executable, params);
+		engine_params.push_back(TowxString(demopath));
+		return LaunchEngine();
 	}
+
+//	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
 
 	const wxString scripttxt = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	try {
-
 		wxFile f(scripttxt, wxFile::write);
 		battle.DisableHostStatusInProxyMode(true);
 		f.Write(WriteScriptTxt(battle));
 		battle.DisableHostStatusInProxyMode(false);
 		f.Close();
-	} catch (std::exception& e) {
-		wxLogError(wxString::Format(_T("Couldn't write %s, exception caught:\n %s"), scripttxt.c_str(), TowxString(e.what()).c_str()));
-		return false;
-	} catch (...) {
-		wxLogError(wxString::Format(_T("Couldn't write %s"), scripttxt.c_str()));
+	} catch (const std::exception& e) {
+		wxLogError(_T("Couldn't write %s, exception caught:\n %s"), scripttxt, e.what());
 		return false;
 	}
 
-	params.push_back(scripttxt);
-	return LaunchEngine(executable, params);
+	engine_params.push_back(scripttxt);
+	return LaunchEngine();
 }
 
-bool Spring::LaunchEngine(wxArrayString& params)
+// Slightly modified from SprintRTS's FileSystemAbstraction
+unsigned int GetFileModificationTime(const std::string& file)
 {
-	return LaunchEngine(SlPaths::GetSpringBinary(), params);
+	struct stat info;
+
+	if (stat(file.c_str(), &info) != 0) {
+		wxLogWarning("Unable to obtain last mtime of file '%s', reason: %s", file.c_str(), strerror(errno));
+		return 0;
+	}
+
+	return info.st_mtime;
 }
 
-bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
+std::string GetFileModificationDateTime(const std::string& file)
 {
-	if (m_running) {
-		wxLogError(_T("Spring already running!"));
-		return false;
+	const std::time_t t = GetFileModificationTime(file);
+
+	if (t == 0)
+		return "";
+
+	const struct tm* clk = std::gmtime(&t);
+	const char* fmt = "%d%02d%02d_%02d%02d%02d";
+
+	char buf[68];
+	snprintf(buf, sizeof(buf), fmt, 1900 + clk->tm_year, clk->tm_mon + 1, clk->tm_mday, clk->tm_hour, clk->tm_min, clk->tm_sec);
+	return buf;
+}
+
+bool Spring::LaunchEngine()
+{
+	const std::string datadir = SlPaths::GetDataDir();
+	const std::string lobbyLogDir = SlPaths::GetLobbyLogDir();
+	SlPaths::mkDir(lobbyLogDir);
+	// Save previous log file, if any
+	std::string logPath = LSL::Util::EnsureDelimiter(datadir) + "infolog.txt";
+
+	std::string logMTime = GetFileModificationDateTime(logPath);
+	if (!logMTime.empty()) {
+		std::string logSavePath = LSL::Util::EnsureDelimiter(lobbyLogDir) + logMTime + "-infolog.txt";
+		if (0 != std::rename (logPath.c_str(), logSavePath.c_str())) {
+			wxLogError("Unable to save(move) last engine log (%s) to %s: %s", logPath, logSavePath, strerror(errno));
+		}
 	}
 
-	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
-		params.push_back(_T("--safemode"));
-	}
+	// Print out command line
 	std::string stdparams;
-	for (const wxString param : params) {
+	for (const wxString param: engine_params) {
 		if (!stdparams.empty())
 			stdparams += " ";
 		stdparams += STD_STRING(param);
 	}
 
-	const std::string datadir = SlPaths::GetDataDir();
-	wxLogMessage(_T("spring call params: %s %s %s"), datadir.c_str(), TowxString(cmd).c_str(), stdparams.c_str());
-	wxSetWorkingDirectory(TowxString(datadir));
+	wxLogMessage(_T("Engine call arguments (datadir: %s): %s %s"),
+	             datadir.c_str(), TowxString(engine_path).c_str(), stdparams.c_str());
 
-	if (m_process == 0) {
+	// Actually run
+	wxSetWorkingDirectory(TowxString(datadir));
+	if (m_process == nullptr) {
 		m_process = new SpringProcess(*this);
 	}
 	m_process->Create();
-	m_process->SetCommand(TowxString(cmd), params);
+	m_process->SetCommand(TowxString(engine_path), engine_params);
 	m_process->Run();
 	m_running = true;
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnSpringStarted);
+	if (0 == crash_count) // Still trying to start...
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnSpringStarted);
 	return true;
 }
 
 void Spring::OnTerminated(wxCommandEvent& event)
 {
-	slLogDebugFunc("");
+	const int exit_code = event.GetInt();
+	wxLogInfo(_T("Engine exited with code %d"), exit_code);
+
 	m_running = false;
-	m_process = NULL;
+	m_process = nullptr;
+
+	// First crash, try safe mode
+	if (0 != exit_code) {
+		++crash_count;
+		wxString heading(_("Engine crashed?"));
+		wxString message = wxString::Format(_("Engine exited with nonzero code %d."), exit_code);
+
+		if (1 == crash_count) {
+			message += _(" Possible reasons include:\n"
+			             "\n"
+			             " (a) Timeout when connecting.\n"
+						   "Make sure that the host you are connecting to has their firewall(s) and router(s)"
+						   " configured correctly. The default port is 8452.\n"
+			             "\n"
+						 " (b) Long connection loss during gameplay.\n"
+			               "In this case simply restart normally.\n"
+			             "\n"
+			             " (c) Graphics-related crash\n"
+						   "The engine or game requires more than what your graphics hardware is capable of."
+						   " You can try restarting in safe mode."
+						   " If that worked, then adjust engine settings to match your hardware capabilities."
+						   " If the problems persist, then ask in the newbies channel for help.\n"
+			             "\n"
+			             " (d) Choosing incompatible content for the selected game\n"
+						   "Sometimes, choosing incompatible content for the selected game will either crash the"
+						   " engine or the match will stop immidiately after loading finishes."
+			               " Are you using the right engine version for the selected game?"
+			               " Please consult the documentation of the selected game.\n"
+			             "\n"
+			             "We can run the engine again in safe mode. This will disable all graphics"
+			             " features known to cause problems, but will drastically reduce the visual"
+			             " quality of the game and some of the effects may not be rendered at all!"
+			  );
+
+			const wxString infologPath = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + "infolog.txt";
+			int code = ui().AskCrashReporter(infologPath, message, infologPath);
+			if (code == CrashReporterDialog::CANCEL) {
+				wxLogMessage("Re-run cancelled");
+				crash_count = 0;
+			} else if (code == CrashReporterDialog::RERUN_NORMAL) {
+				wxLogMessage(_T("Will re-run engine in normal-mode"));
+				LaunchEngine();
+				return; // We have not terminated yet!
+			} else if (code == CrashReporterDialog::RERUN_SAFE) {
+				wxLogMessage(_T("Will re-run engine in safe-mode"));
+				engine_params.push_back(_T("--safemode"));
+				LaunchEngine();
+				return; // We have not terminated yet!
+			}
+		} else if (2 == crash_count) {
+			message += _("Ooops, the engine crashed again.\n\n"
+			             "This time I do not know what to do anymore. Please contact my developers!\n"
+			             ":(");
+
+			customMessageBoxModal(SL_MAIN_ICON, message);
+		}
+	} else if (0 != crash_count) { // there was a crash, but we are cool now
+		customMessageBoxModal(SL_MAIN_ICON, _("Please report the crash to the game's developers\n"));
+	}
+
+	// Forward notification to other listeners
 	event.SetEventType(GlobalEventManager::OnSpringTerminated);
 	GlobalEventManager::Instance()->Send(event);
 }
@@ -215,7 +325,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	tdf.AppendStr("MapHash", battle.LoadMap().hash);
 
 	tdf.AppendStr("Mapname", battle.GetHostMapName());
-	tdf.AppendStr("GameType", battle.GetHostGameName());
+	tdf.AppendStr("GameType", battle.GetHostGameNameAndVersion());
 
 	tdf.AppendLineBreak();
 
@@ -326,7 +436,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
 	int free_team = 0;
 	std::map<User*, int> player_to_number; // player -> ordernumber
-	srand(time(NULL));
+	srand(time(nullptr));
 	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& user = battle.GetUser(i);
 		UserBattleStatus& status = user.BattleStatus();
@@ -388,7 +498,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	tdf.AppendLineBreak();
 
 	std::set<int> parsedteams;
-	const auto sides = LSL::usync().GetSides(battle.GetHostGameName());
+	const auto sides = LSL::usync().GetSides(battle.GetHostGameNameAndVersion());
 	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& usr = battle.GetUser(i);
 		UserBattleStatus& status = usr.BattleStatus();

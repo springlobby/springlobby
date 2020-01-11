@@ -21,7 +21,7 @@ SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab)
     , m_me(STD_STRING(cfg().ReadString("/Spring/DefaultName")))
 {
 	OnUserAdded(m_me);
-	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostGameName()));
+	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostGameNameAndVersion()));
 	m_me.BattleStatus().colour = wxColourTolsl(sett().GetBattleLastColour());
 	CustomBattleOptions().setSingleOption("startpostype", LSL::Util::ToIntString(ST_Pick), LSL::Enum::EngineOption);
 }
@@ -45,7 +45,7 @@ void SinglePlayerBattle::SendHostInfo(HostInfo update)
 	if ((update & HI_Game_Changed) != 0) {
 		RemoveUnfittingBots();
 		LoadGame();
-		wxString presetname = sett().GetModDefaultPresetName(TowxString(GetHostGameName()));
+		wxString presetname = sett().GetModDefaultPresetName(TowxString(GetHostGameNameAndVersion()));
 		if (!presetname.IsEmpty()) {
 			LoadOptionsPreset(STD_STRING(presetname));
 			SendHostInfo(HI_Send_All_opts);

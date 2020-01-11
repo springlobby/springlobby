@@ -139,17 +139,20 @@ void UserActions::UpdateUI()
 {
 	try {
 		ui().mw().GetBattleListTab().UpdateHighlights();
-	} catch (...) {
+	} catch (std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	try {
 		ui().mw().GetChatTab().UpdateNicklistHighlights();
-	} catch (...) {
+	} catch (std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	try {
 		ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
-	} catch (...) {
+	} catch (std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 

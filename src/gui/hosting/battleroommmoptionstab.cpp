@@ -123,8 +123,15 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* parent_sizer,
 					       LSL::Enum::GameOption optFlag)
 {
-	if (!m_battle)
+	if (!m_battle) {
+		wxString name = wxString::Format(_T("%d%sno_battle"), optFlag, wxsep.c_str());
+		wxStaticText* none_found = new wxStaticText(this, wxID_ANY,
+		  _("No options available, you have to join a battle first."),
+		  wxDefaultPosition, wxDefaultSize, 0, name);
+		m_statictext_map[name] = none_found;
+		parent_sizer->Add(none_found, 0, wxALL, 5);
 		return;
+	}
 	unsigned int num_options = 0;
 	for (const auto& it : m_battle->CustomBattleOptions().m_opts[optFlag].section_map) {
 		wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer(
@@ -143,15 +150,15 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* parent_sizer,
 	if (setupOptionsSectionSizer(dummy, section_sizer, optFlag) == 0) {
 		if (num_options == 0) {
 			wxString name = wxString::Format(_T("%d%sno_opts"), optFlag, wxsep.c_str());
-			wxStaticText* none_found = new wxStaticText(this, wxID_ANY, _("no options available"),
+			wxStaticText* none_found = new wxStaticText(this, wxID_ANY, _("No options available."),
 								    wxDefaultPosition, wxDefaultSize, 0, name);
 			m_statictext_map[name] = none_found;
-			parent_sizer->Add(none_found, 0, wxALL, 3);
+			parent_sizer->Add(none_found, 0, wxALL, 5);
 		}
 	} else {
 		wxStaticBoxSizer* other_section = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("other")), wxVERTICAL);
 		other_section->Add(section_sizer, 0, wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0);
-		parent_sizer->Add(other_section, 0, wxALL, 0);
+		parent_sizer->Add(other_section, 0, wxALL, 5);
 	}
 }
 
@@ -172,7 +179,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 	wxString pref = wxString::Format(_T("%d%s"), optFlag, wxsep.c_str());
 	LSL::OptionsWrapper optWrap = m_battle->CustomBattleOptions();
 	bool enable = m_battle->IsFounderMe();
-	wxFlexGridSizer* cbxSizer = new wxFlexGridSizer(4, 2, 10, 10);
+	wxFlexGridSizer* cbxSizer = new wxFlexGridSizer(2, 10, 10);
 	wxFlexGridSizer* spinSizer = new wxFlexGridSizer(4, 10, 10);
 	wxFlexGridSizer* textSizer = new wxFlexGridSizer(4, 10, 10);
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer(4, 10, 10);
@@ -186,14 +193,15 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 			LSL::mmOptionBool current = i.second;
 			wxCheckBox* temp = new wxCheckBox(this, BOOL_START_ID + ctrl_count, TowxString(current.name));
 			temp->SetToolTip(current.description);
-			m_name_info_map[pref + TowxString(current.key)] = TowxString(current.description);
-			temp->SetName(pref + TowxString(current.key));
-			m_chkbox_map[pref + TowxString(current.key)] = temp;
+			const wxString pref_key = pref + TowxString(current.key);
+			m_name_info_map[pref_key] = TowxString(current.description);
+			temp->SetName(pref_key);
+			m_chkbox_map[pref_key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
 			wxBoxSizer* ct_sizer = new wxBoxSizer(wxHORIZONTAL);
 			ct_sizer->Add(temp, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, b_gap);
-			ct_sizer->Add(getButton(BOOL_START_ID + ctrl_count, pref + TowxString(current.key)), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
+			ct_sizer->Add(getButton(BOOL_START_ID + ctrl_count, pref_key), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
 			chkSizer->Add(ct_sizer);
 			ctrl_count++;
 		}
@@ -522,7 +530,7 @@ void BattleroomMMOptionsTab::OnSetModDefaultPreset(wxCommandEvent& /*unused*/)
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"), _("Set game default preset"), choices);
 	if (result < 0)
 		return;
-	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameName()), choices[result]);
+	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion()), choices[result]);
 }
 
 void BattleroomMMOptionsTab::UpdatePresetList()
@@ -596,7 +604,7 @@ void BattleroomMMOptionsTab::SetBattle(IBattle* battle)
 		itor->second->Enable(isBattleEnabled);
 
 	if (isBattleEnabled) {
-		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameName())));
+		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion())));
 		if (!m_battle->IsFounderMe()) {
 			m_options_preset_sel->Disable();
 			m_load_btn->Disable();

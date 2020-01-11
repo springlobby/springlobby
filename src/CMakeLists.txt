@@ -13,6 +13,11 @@ IF(NOT MSVC)
 		#FIXME: hide wxwidgets 3.0.2 error spam (should be fixed in 3.0.3)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
 	endif()
+	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -ggdb")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -ggdb")
+		message(STATUS "DEBUG")
+	endif()
 ELSE(NOT MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(NOT MSVC)
@@ -158,6 +163,68 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( GLIB glib-2.0 )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
+#-----------------------------------------------------------------------------
+# wxFormBuilder
+#-----------------------------------------------------------------------------
+set(wxfb_projects
+	ConnectWindow
+	CrashReporterDialog
+	HostBattleDialog
+)
+
+set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
+set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
+set(wxfb_gensrc ${wxfb_src}/pregenerated)
+# For configure_file below, all .fbp should have
+# property name="path" set to @WXFB_GENERATION_PATH@.
+set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
+file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
+set(wxFB_REQUIRED_VERSION "3.9.0")
+
+if (IS_DIRECTORY ${wxfb_gensrc})
+	message(STATUS "using pre-generated wxFormBuilder GUI in ${wxfb_gensrc}")
+	file(COPY ${wxfb_gensrc} DESTINATION ${wxfb_bin})
+else()
+	find_program(wxFB_EXECUTABLE NAMES wxformbuilder ONLY_CMAKE_FIND_ROOT_PATH)
+	if ("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
+		message(FATAL_ERROR "couldn't find wxFormBuilder! Either install wxFB (${wxFB_REQUIRED_VERSION}) or provide pre-generated files in ${xfb_gensrc}.")
+	else()
+		message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
+	endif()
+
+
+	execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
+	                OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+	message(STATUS "found wxFormBuilder version: ${wxFB_VERSION}")
+	if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
+		message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
+	endif()
+
+	foreach(proj ${wxfb_projects})
+		message(STATUS "Processing wxFormBuilder project: ${proj}")
+		# configure_file monitors input for timestamp changes and output for
+		# content changes (checksum?). Replaces generation path.
+		configure_file(${wxfb_src}/${proj}.fbp ${wxfb_bin}/${proj}.fbp @ONLY)
+
+		add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj}.fbp
+			DEPENDS ${wxfb_bin}/${proj}.fbp
+			OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
+			       ${WXFB_GENERATION_PATH}/${proj}Base.h
+		)
+	endforeach()
+endif()
+
+foreach(proj ${wxfb_projects})
+	message(STATUS "Adding wxFormBuilder source files for: ${proj}")
+
+	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.cpp)
+	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.h)
+endforeach()
+# for gcc -I
+set(generated_gui_include ${wxfb_bin}) # generated/* in source
+#-----------------------------------------------------------------------------
+# springlobby build
+#-----------------------------------------------------------------------------
 
 set(springlobbySrc
 	address.cpp
@@ -208,6 +275,7 @@ set(springlobbySrc
 	gui/agreementdialog.cpp
 	gui/chatpanelmenu.cpp
 	gui/chatpanel.cpp
+	gui/crashreporterdialog.cpp
 	gui/contentdownloaddialog.cpp
 	gui/contentsearchresultview.cpp
 	gui/contentsearchresultdatamodel.cpp
@@ -369,6 +437,7 @@ add_subdirectory(updater)
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
+		${generated_gui_cpp}
 	)
 
 target_include_directories(springlobby
@@ -418,6 +487,7 @@ target_include_directories(springlobby
 		PRIVATE ${springlobby_SOURCE_DIR}/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
+		PRIVATE ${generated_gui_include}
 	)
 
 IF(UNIX)

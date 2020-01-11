@@ -168,7 +168,8 @@ void ChatPanelMenu::CreateNickListMenu()
 	bool moderator = false;
 	try {
 		moderator = serverSelector().GetServer().GetMe().GetStatus().moderator;
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	if (moderator) {
 		wxMenuItem* modingameitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _("Ingame time"), wxEmptyString, wxITEM_NORMAL);
@@ -464,7 +465,7 @@ void ChatPanelMenu::OnUserMenuOpenChat(wxCommandEvent& /*unused*/)
 void ChatPanelMenu::OnUserMenuJoinSame(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 	IBattle* battle = user->GetBattle();
 	if (battle == 0)
@@ -477,18 +478,15 @@ void ChatPanelMenu::OnUserMenuJoinSame(wxCommandEvent& /*unused*/)
 void ChatPanelMenu::OnUserMenuSlap(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
-	if (m_chatpanel->m_type == CPT_Channel) {
-		if (m_chatpanel->m_channel == 0)
-			return;
-		m_chatpanel->m_channel->DoAction("Slaps " + user->GetNick() + " around with a large PeeWee!");
-	} else if (m_chatpanel->m_type == CPT_User) {
-		if (m_chatpanel->m_user == 0)
-			return;
-		m_chatpanel->m_user->DoAction("slaps " + user->GetNick() + " around with a large PeeWee!");
-	}
+	std::string message("slaps " + user->GetNick() + " around with a fully loaded Panzerkampfwagen Tiger Ausf. B!");
+
+	if (m_chatpanel->m_type == CPT_Channel && m_chatpanel->m_channel != nullptr)
+		m_chatpanel->m_channel->DoAction(message);
+	else if (m_chatpanel->m_type == CPT_User && m_chatpanel->m_user != nullptr)
+		m_chatpanel->m_user->DoAction(message);
 }
 
 
@@ -498,7 +496,7 @@ void ChatPanelMenu::OnUserMenuMute(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	wxString mutetime = _T( "5" );
@@ -516,7 +514,7 @@ void ChatPanelMenu::OnUserMenuUnmute(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!UNMUTE #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -530,7 +528,7 @@ void ChatPanelMenu::OnUserMenuKick(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	wxString msg;
@@ -550,7 +548,7 @@ void ChatPanelMenu::OnUserMenuOp(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!OP #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -564,7 +562,7 @@ void ChatPanelMenu::OnUserMenuDeop(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!DEOP #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -695,7 +693,7 @@ void ChatPanelMenu::OnUserMenuAddToGroup(wxCommandEvent& event)
 	if (m_user_menu) {
 		wxString groupname = m_user_menu->GetGroupByEvtID(id);
 		const User* user = m_chatpanel->GetSelectedUser();
-		if (user)
+		if (user != nullptr)
 			useractions().AddUserToGroup(groupname, TowxString(user->GetNick()));
 	}
 }
@@ -703,7 +701,7 @@ void ChatPanelMenu::OnUserMenuAddToGroup(wxCommandEvent& event)
 void ChatPanelMenu::OnUserMenuDeleteFromGroup(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user)
+	if (user != nullptr)
 		useractions().RemoveUser(TowxString(user->GetNick()));
 }
 
@@ -713,7 +711,7 @@ void ChatPanelMenu::OnUserMenuCreateGroup(wxCommandEvent& /*unused*/)
 	if (ui().AskText(_("Enter name"),
 			 _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name)) {
 		const User* user = m_chatpanel->GetSelectedUser();
-		if (user) {
+		if (user != nullptr) {
 			useractions().AddGroup(name);
 			useractions().AddUserToGroup(name, TowxString(user->GetNick()));
 			ui().mw().ShowConfigure(MainWindow::OPT_PAGE_GROUPS);

@@ -52,13 +52,7 @@ MainOptionsTab::MainOptionsTab(wxWindow* parent)
 	GetAui().manager->AddPane(this, wxLEFT, _T("mainoptionstab"));
 	m_tabs = new SLNotebook(this, _T("mainoptionstab"), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE);
 	m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
-	/*    m_imagelist = new wxImageList( 12, 12 );
-    m_imagelist->Add( wxIcon(spring_xpm) );
-    m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
-    m_imagelist->Add( wxIcon(userchat_xpm) );
-    m_imagelist->Add( wxIcon(userchat_xpm) );
-    m_imagelist->Add( wxIcon(springlobby12x12_xpm) );
-*/
+
 	m_spring_opts = new SpringOptionsTab(m_tabs);
 	m_tabs->AddPage(m_spring_opts, _("Spring"), true, wxIcon(spring_xpm));
 

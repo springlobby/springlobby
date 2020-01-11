@@ -273,6 +273,24 @@ public:
 	size_t GetNotificationPopupPosition();
 	void SetNotificationPopupDisplayTime(const unsigned int seconds);
 	unsigned int GetNotificationPopupDisplayTime();
+
+	enum UserLevel {
+		NewUser = -1,
+		Newbie = 0,
+		Beginner = 1,
+		Average = 2,
+		AboveAverage = 3,
+		Experienced = 4,
+		HighlyExperienced = 5,
+		Veteran = 6,
+		Furniture = 7,
+		Professional = 10,
+		Developer = 1000
+	};
+
+	int GetUserLevel();
+	void SetUserLevel(int value);
+
 	/*@}*/
 
 
@@ -422,9 +440,6 @@ public:
 
 	int GetBattleLastAutoSpectTime();
 	void SetBattleLastAutoSpectTime(int value);
-
-	bool GetBattleLastAutoAnnounceDescription();
-	void SetBattleLastAutoAnnounceDescription(bool value);
 
 	void SetBattleLastSideSel(const wxString& gamename, int sidenum);
 	int GetBattleLastSideSel(const wxString& gamename);

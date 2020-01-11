@@ -134,12 +134,18 @@ bool SpringLobbyApp::OnInit()
 	try {
 #endif
 
-	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
+	const std::string configdir = SlPaths::GetConfigfileDir();
+	SlPaths::mkDir(configdir);
 
+
+	const std::string logDir = SlPaths::GetLobbyLogDir();
+	SlPaths::mkDir(logDir);
+	const wxString m_log_file_path = logDir + GetCurrentTimeString("%Y%m%d_%H%M%S-springlobby.log");
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
 	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets(0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 
 	wxLogMessage(_T("%s started"), TowxString(GetSpringlobbyAgent()).c_str());
+	wxLogMessage("Config dir: %s", configdir.c_str());
 
 	//this needs to called _before_ mainwindow instance is created
 	wxInitAllImageHandlers();
@@ -148,10 +154,6 @@ bool SpringLobbyApp::OnInit()
 
 
 	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), getLocalePath());
-
-	const std::string configdir = SlPaths::GetConfigfileDir();
-	wxLogMessage("Config dir: %s", configdir.c_str());
-	SlPaths::mkDir(configdir);
 
 	if (cfg().ReadBool(_T("/ResetLayout"))) {
 		wxLogMessage("Resetting Layout...");
@@ -191,15 +193,13 @@ bool SpringLobbyApp::OnInit()
 		wxLogWarning("Couldn't load unitsync");
 	}
 
-	wxLogWarning("%s", TowxString(GetSpringlobbyInfo()).c_str());
+	wxLogMessage("%s", GetSpringlobbyInfo());
 
 	ui().OnInit();
 
 #if !wxUSE_ON_FATAL_EXCEPTION
-}
-catch (std::exception& ex)
-{
-	wxLogError(_T("Error had happened: " + wxString(ex.what())));
+} catch (const std::exception& e) {
+	wxLogError(_T("Error had happened: %s"), e.what());
 }
 #endif
 
@@ -309,6 +309,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::OnQuit(wxCommandEvent& /*data*/)
 {
-	wxLogWarning("MainWindow::OnClose");
+	wxLogInfo("MainWindow::OnClose");
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 }

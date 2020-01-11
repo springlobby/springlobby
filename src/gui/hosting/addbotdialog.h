@@ -5,7 +5,10 @@
 
 #include <wx/dialog.h>
 #include <map>
+#include <vector>
+
 #include "gui/windowattributespickle.h"
+
 class wxTextCtrl;
 class wxStaticText;
 class wxChoice;
@@ -29,7 +32,7 @@ public:
 	wxString GetAIShortName();
 	wxString GetAiRawName();
 	wxString GetAIVersion();
-	int GetAIType();
+	int GetSelectedAIType();
 
 	void ReloadAIList();
 
@@ -72,6 +75,8 @@ private:
 
 	bool m_sp;
 
+	// Maps display (wxChoice m_ai) indices to unitsync indices (wxArrayString m_ais)
+	std::vector<int> m_valid_ai_index_map;
 	wxString RefineAIName(const wxString& name);
 
 	enum {

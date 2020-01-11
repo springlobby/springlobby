@@ -333,7 +333,7 @@ bool IBattle::ShouldAutoStart() const
 	if (GetInGame())
 		return false;
 	if (!IsLocked() && (GetNumActivePlayers() < m_opts.maxplayers))
-		return false; // proceed checking for ready & symc players only if the battle is full or locked
+		return false; // proceed checking for ready & sync players only if the battle is full or locked
 	if (!IsEveryoneReady())
 		return false;
 	return true;
@@ -754,6 +754,14 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	m_game_loaded = gamename.empty();
 	m_host_game.name = gamename;
 	m_host_game.hash = hash;
+
+	gameNameWithoutVersion = gamename.substr(0,gamename.find_last_of(" "));
+	// generate game-specific colour
+	int sum = 0;
+	for (char& c : gameNameWithoutVersion) {
+		sum += c;
+	}
+	gameBackgroundColour = GAME_BL_COLOURS[sum % 11];
 }
 
 
@@ -793,11 +801,21 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 }
 
 
-const std::string& IBattle::GetHostGameName() const
+const std::string& IBattle::GetHostGameNameAndVersion() const
 {
 	return m_host_game.name;
 }
 
+
+const std::string& IBattle::GetHostGameName() const
+{
+	return gameNameWithoutVersion;
+}
+
+const std::string& IBattle::GetHostGameBackgroundColour() const
+{
+	return gameBackgroundColour;
+}
 
 const std::string& IBattle::GetHostGameHash() const
 {
@@ -1049,7 +1067,8 @@ bool IBattle::IsFounder(const User& user) const
 	if (UserExists(m_opts.founder)) {
 		try {
 			return &GetFounder() == &user;
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 			return false;
 		}
 	} else

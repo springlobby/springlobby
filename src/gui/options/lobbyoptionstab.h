@@ -62,6 +62,7 @@ private:
 
 	wxStaticBoxSizer* m_web_box_sizer;
 	wxStaticBoxSizer* m_editor_box_sizer;
+	wxStaticBoxSizer* m_user_level_sizer;
 	wxBoxSizer* m_web_loc_sizer;
 	wxBoxSizer* m_editor_loc_sizer;
 	wxBoxSizer* m_notif_popup_pos_sizer;
@@ -69,6 +70,7 @@ private:
 
 	wxChoice* m_start_tab;
 	wxChoice* m_notif_popup_pos;
+	wxChoice* m_user_level_choice;
 	wxSpinCtrl* m_notif_popup_time;
 
 

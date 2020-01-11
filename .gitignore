@@ -25,6 +25,7 @@ Makefile
 *.exe
 
 # temp files
+*.bak
 *.swp
 /po/*.gmo
 /po/locale/

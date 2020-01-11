@@ -107,7 +107,6 @@ EVT_MENU(BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance)
 EVT_MENU(BROOM_BALANCE, BattleRoomTab::OnBalance)
 EVT_MENU(BROOM_FIXID, BattleRoomTab::OnFixTeams)
 EVT_MENU(BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours)
-EVT_MENU(BROOM_AUTOPASTE, BattleRoomTab::OnAutoPaste)
 
 EVT_LIST_ITEM_ACTIVATED(BROOM_OPTIONLIST, BattleRoomTab::OnOptionActivate)
 
@@ -209,9 +208,6 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_autohost_mnu->Check(false);
 
 
-	m_autopaste_mnu = new wxMenuItem(m_manage_users_mnu, BROOM_AUTOPASTE, _("AutoPaste Description"), _("Automatically paste battle's descriptoin when a new user joins"), wxITEM_CHECK);
-	m_manage_users_mnu->Append(m_autopaste_mnu);
-	m_autopaste_mnu->Check(sett().GetBattleLastAutoAnnounceDescription());
 	m_autospec_mnu = new wxMenuItem(m_manage_users_mnu, BROOM_AUTOSPECT, _("AutoSpect"), _("Automatically spectate players that don't ready up or become synced within x seconds."), wxITEM_CHECK);
 	m_manage_users_mnu->Append(m_autospec_mnu);
 	m_autospec_mnu->Check(sett().GetBattleLastAutoSpectTime() > 0);
@@ -764,7 +760,7 @@ void BattleRoomTab::OnAddBot(wxCommandEvent& /*unused*/)
 		bs.colour = m_battle->GetNewColour();
 		bs.aishortname = STD_STRING(dlg.GetAIShortName());
 		bs.aiversion = STD_STRING(dlg.GetAIVersion());
-		bs.aitype = dlg.GetAIType();
+		bs.aitype = dlg.GetSelectedAIType();
 		bs.owner = m_battle->GetMe().GetNick();
 		m_battle->GetServer().AddBot(m_battle->GetBattleId(), STD_STRING(dlg.GetNick()), bs);
 	}
@@ -811,17 +807,6 @@ void BattleRoomTab::OnAutoHost(wxCommandEvent& /*unused*/)
 	}
 }
 
-
-void BattleRoomTab::OnAutoPaste(wxCommandEvent& /*unused*/)
-{
-	if (!m_battle)
-		return;
-	const wxString description = wxGetTextFromUser(_("Enter a battle description"), _("Set description"), TowxString(m_battle->GetDescription()), (wxWindow*)&ui().mw());
-	m_autopaste_mnu->Check(!description.IsEmpty());
-	if (!description.IsEmpty())
-		m_battle->SetDescription(STD_STRING(description));
-	sett().SetBattleLastAutoAnnounceDescription(m_autopaste_mnu->IsChecked());
-}
 
 void BattleRoomTab::OnAutoControl(wxCommandEvent& /*unused*/)
 {
@@ -917,7 +902,7 @@ void BattleRoomTab::OnSideSel(wxCommandEvent& /*unused*/)
 	if (!m_battle)
 		return;
 	m_battle->ForceSide(m_battle->GetMe(), m_side_sel->GetSelection());
-	sett().SetBattleLastSideSel(TowxString(m_battle->GetHostGameName()), m_side_sel->GetSelection());
+	sett().SetBattleLastSideSel(TowxString(m_battle->GetHostGameNameAndVersion()), m_side_sel->GetSelection());
 }
 
 
@@ -1041,7 +1026,7 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 	}
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	RegenerateOptionsList();
-	ReloadMaplist();
+	ReloadMapList();
 	UpdateBattleInfo();
 
 	const size_t count = m_battle->GetNumUsers();
@@ -1121,7 +1106,7 @@ void BattleRoomTab::OnSetModDefaultPreset(wxCommandEvent& /*unused*/)
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"), _("Set game default preset"), choices);
 	if (result < 0)
 		return;
-	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameName()), choices[result]);
+	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion()), choices[result]);
 }
 
 
@@ -1146,7 +1131,7 @@ void BattleRoomTab::OnMapBrowse(wxCommandEvent& /*unused*/)
 	}
 }
 
-void BattleRoomTab::ReloadMaplist()
+void BattleRoomTab::ReloadMapList()
 {
 	if (!m_battle)
 		return;
@@ -1166,7 +1151,8 @@ void BattleRoomTab::SetMap(int index)
 	try {
 		m_battle->SetLocalMap(STD_STRING(m_map_combo->GetString(index)));
 		m_battle->SendHostInfo(IBattle::HI_Map);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -1179,7 +1165,8 @@ void BattleRoomTab::OnMapSelect(wxCommandEvent& /*unused*/)
 			const std::string map = STD_STRING(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
 			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(map);
 			//m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 		return;
 	}
@@ -1265,7 +1252,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	if (isBattleEnabled) {
 		m_votePanel->SetCurrentPlayer(&battle->GetMe());
 		RegenerateOptionsList();
-		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameName())));
+		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion())));
 		m_color_sel->SetColor(lslTowxColour(m_battle->GetMe().BattleStatus().colour));
 		for (UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++) {
 			//TODO: disable UI update while adding users?
@@ -1284,17 +1271,15 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 
 		m_host_new_btn->Show(false);
 
-		ReloadMaplist();
+		ReloadMapList();
 
 		UpdateBattleInfo(wxString::Format(_T( "%d_mapname" ), LSL::Enum::PrivateOptions));
 		UpdateBattleInfo();
 		UpdateStatsLabels();
+
+		ui().NeedsDownload(battle);
 	} else {
 		m_host_new_btn->Show(true);
-	}
-
-	if (battle != nullptr) { //prevents deadlock at start
-		ui().NeedsDownload(battle);
 	}
 }
 
@@ -1330,13 +1315,14 @@ void BattleRoomTab::RegenerateOptionsList()
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
-			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostGameName()));
+			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostGameNameAndVersion()));
 			for (unsigned int i = 0; i < sides.GetCount(); i++) {
-				m_side_sel->Append(sides[i], IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameName(), i));
+				m_side_sel->Append(sides[i], IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameNameAndVersion(), i));
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
 			m_side_sel->SetMinSize(s);
-		} catch (...) {
+		} catch (std::exception& e) {
+			wxLogError("Exception caught while retrieving sides/factions data from unitsync: %s", e.what());
 		}
 	}
 }

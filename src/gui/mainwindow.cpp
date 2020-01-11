@@ -123,9 +123,9 @@ MainWindow::MainWindow()
 	SetMinSize(wxSize(720, 576));
 
 	m_tab_names.Add(_("Chat"));
-	m_tab_names.Add(_("Battlelist"));
-	m_tab_names.Add(_("Battleroom"));
-	m_tab_names.Add(_("Singleplayer"));
+	m_tab_names.Add(_("Multiplayer"));
+	m_tab_names.Add(_("Battle room"));
+	m_tab_names.Add(_("Skirmish"));
 	//	m_tab_names.Add( _("Savegames") );
 	m_tab_names.Add(_("Replays"));
 	m_tab_names.Add(_("Downloads"));
@@ -150,11 +150,11 @@ MainWindow::MainWindow()
 
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
-	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
 	m_menuEdit->Append(MENU_SELECT_LOCALE, _("&Change language"));
-	m_settings_menu = new wxMenuItem(m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL);
 	m_menuEdit->Append(MENU_RESET_LAYOUT, _("&Reset layout"));
-	m_menuEdit->Append(m_settings_menu);
+	m_menuEdit->AppendSeparator();
+	m_menuEdit->Append(MENU_PREFERENCES, _("&Lobby preferences"));
+	m_menuEdit->Append(MENU_SETTINGSPP, _("&Engine preferences"));
 
 	m_menuEdit->Enable(MENU_SETTINGSPP, false); //unitsync isn't loaded yet, disable menu entry
 
@@ -203,7 +203,7 @@ MainWindow::MainWindow()
 
 	//use Insert so no Changepage events are triggered
 	m_func_tabs->InsertPage(PAGE_CHAT, m_chat_tab, m_tab_names[PAGE_CHAT], true);
-	m_func_tabs->InsertPage(PAGE_BATTLELIST, m_list_tab, m_tab_names[PAGE_BATTLELIST], false);
+	m_func_tabs->InsertPage(PAGE_MULTIPLAYER, m_list_tab, m_tab_names[PAGE_MULTIPLAYER], false);
 	m_func_tabs->InsertPage(PAGE_BATTLEROOM, m_join_tab, m_tab_names[PAGE_BATTLEROOM], false);
 	m_func_tabs->InsertPage(PAGE_SINGLEPLAYER, m_sp_tab, m_tab_names[PAGE_SINGLEPLAYER], false);
 	//    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
@@ -251,7 +251,7 @@ wxBitmap MainWindow::GetTabIcon(const unsigned char* data, size_t size) const
 void MainWindow::SetTabIcons()
 {
 	m_func_tabs->SetPageBitmap(PAGE_CHAT, GetTabIcon(chat_icon_png, sizeof(chat_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_BATTLELIST, GetTabIcon(join_icon_png, sizeof(join_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_MULTIPLAYER, GetTabIcon(join_icon_png, sizeof(join_icon_png)));
 	m_func_tabs->SetPageBitmap(PAGE_BATTLEROOM, GetTabIcon(broom_tab_icon_png, sizeof(broom_tab_icon_png)));
 	m_func_tabs->SetPageBitmap(PAGE_SINGLEPLAYER, GetTabIcon(single_player_icon_png, sizeof(single_player_icon_png)));
 	m_func_tabs->SetPageBitmap(PAGE_DOWNLOADS, GetTabIcon(downloads_icon_png, sizeof(downloads_icon_png)));

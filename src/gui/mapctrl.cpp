@@ -101,9 +101,9 @@ static inline int ReadInt24(const unsigned char* p)
 MapCtrl::MapCtrl(wxWindow* parent, int size, IBattle* battle, bool readonly, bool draw_start_types, bool singleplayer)
     : wxPanel(parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE)
     , m_async(std::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, std::placeholders::_1))
-    , m_minimap(0)
-    , m_metalmap(0)
-    , m_heightmap(0)
+    , m_minimap(nullptr)
+    , m_metalmap(nullptr)
+    , m_heightmap(nullptr)
     , m_battle(battle)
     , m_mapname("")
     , m_draw_start_types(draw_start_types)
@@ -176,7 +176,7 @@ MapCtrl::GetDrawableRect() const
 
 wxRect MapCtrl::GetMinimapRect() const
 {
-	if (m_minimap == 0)
+	if (m_minimap == nullptr)
 		return wxRect();
 
 	int cwidth, cheight, top = 0, left = 0;
@@ -350,7 +350,7 @@ void MapCtrl::SetMouseOverRect(int index)
 
 void MapCtrl::_SetCursor()
 {
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_rect_area != Main)
 			SetCursor(wxCursor(wxCURSOR_HAND));
 		else
@@ -358,7 +358,7 @@ void MapCtrl::_SetCursor()
 		return;
 	}
 
-	if (m_battle != 0) {
+	if (m_battle != nullptr) {
 		const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 								  .getSingleValue("startpostype", LSL::Enum::EngineOption));
 		if (longval != IBattle::ST_Choose) {
@@ -401,7 +401,7 @@ void MapCtrl::_SetCursor()
 
 void MapCtrl::RelocateUsers()
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	for (unsigned int i = 0; i < m_battle->GetNumUsers(); i++) {
@@ -411,7 +411,8 @@ void MapCtrl::RelocateUsers()
 			pos = m_battle->GetFreePosition();
 			if (user.BattleStatus().pos.x == -1)
 				m_battle->KickPlayer(user);
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 }
@@ -419,7 +420,7 @@ void MapCtrl::RelocateUsers()
 
 void MapCtrl::GetClosestStartPos(int fromx, int fromy, int& index, int& x, int& y, int& range)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	LSL::UnitsyncMap map = m_battle->LoadMap();
 
@@ -447,9 +448,9 @@ void MapCtrl::GetClosestStartPos(int fromx, int fromy, int& index, int& x, int& 
 int MapCtrl::LoadMinimap()
 {
 	slLogDebugFunc("");
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return -1;
-	if (m_minimap)
+	if (m_minimap != nullptr)
 		return -1;
 	if (!m_battle->MapExists(false))
 		return -1;
@@ -471,7 +472,8 @@ int MapCtrl::LoadMinimap()
 
 		m_mapname = map;
 		m_lastsize = wxSize(w, h);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		FreeMinimap();
 		m_mutex.Unlock();
 		return -3;
@@ -483,11 +485,11 @@ int MapCtrl::LoadMinimap()
 void MapCtrl::FreeMinimap()
 {
 	delete m_minimap;
-	m_minimap = 0;
+	m_minimap = nullptr;
 	delete m_metalmap;
-	m_metalmap = 0;
+	m_metalmap = nullptr;
 	delete m_heightmap;
-	m_heightmap = 0;
+	m_heightmap = nullptr;
 	m_mapname = "";
 }
 
@@ -657,7 +659,7 @@ void MapCtrl::DrawBackground(wxDC& dc)
 	dc.SetPen(wxPen(*wxLIGHT_GREY));
 	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxSOLID));
 
-	if (m_battle == 0) {
+	if (m_battle == nullptr) {
 		dc.DrawRectangle(0, 0, width, height);
 		return;
 	}
@@ -840,7 +842,7 @@ FitInside(const wxRect& what, const wxRect& container)
 
 wxRect MapCtrl::GetUserRect(const User& user, bool selected)
 {
-	ASSERT_LOGIC(m_battle != 0, "Bot == 0");
+	ASSERT_LOGIC(m_battle != nullptr, "Bot == 0");
 	m_map = m_battle->LoadMap();
 
 	wxPoint absolute_position(GetTranslatedScaledUserMapPosition(user));
@@ -931,8 +933,8 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 			DrawStartRect(dc, -1, tmp, col, false);
 		}
 
-		if (!m_battle->GetHostGameName().empty()) { //game isn't set -> no side known
-			wxBitmap bmp = IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameName(), user.BattleStatus().side);
+		if (!m_battle->GetHostGameNameAndVersion().empty()) { //game isn't set -> no side known
+			wxBitmap bmp = IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameNameAndVersion(), user.BattleStatus().side);
 			dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
 		}
 
@@ -995,7 +997,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 void MapCtrl::DrawUserPositions(wxDC& dc)
 {
 	slLogDebugFunc("");
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (!m_battle->MapExists(false))
 		return;
@@ -1051,10 +1053,10 @@ void MapCtrl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 	DrawBackground(dc);
 
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
-	if (!m_minimap)
+	if (m_minimap == nullptr)
 		return;
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							  .getSingleValue("startpostype", LSL::Enum::EngineOption));
@@ -1093,7 +1095,7 @@ void MapCtrl::OnMouseEnter(wxMouseEvent& /*event*/)
 void MapCtrl::OnMouseMove(wxMouseEvent& event)
 {
 	wxPoint p = event.GetPosition();
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (p == wxDefaultPosition)
 		return;
@@ -1158,7 +1160,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 		return;
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		wxRect r = GetRefreshRect();
 		wxRect d = GetDownloadRect();
 		RectangleArea old = m_rect_area;
@@ -1284,7 +1286,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 
 void MapCtrl::OnLeftDown(wxMouseEvent& event)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
@@ -1308,7 +1310,7 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 		}
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_rect_area != Main) {
 			m_mdown_area = m_rect_area;
 			Refresh();
@@ -1364,7 +1366,7 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 
 void MapCtrl::OnLeftUp(wxMouseEvent& event)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
@@ -1398,13 +1400,14 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 
 		} else if (m_mdown_area == Side) {
 			try {
-				const auto sides = LSL::usync().GetSides(m_battle->GetHostGameName());
+				const auto sides = LSL::usync().GetSides(m_battle->GetHostGameNameAndVersion());
 				const unsigned int sidecount = sides.size();
 				if (sidecount > 0)
 					user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;
 				else
 					user.BattleStatus().side = 0;
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 			RefreshRect(GetUserRect(user, true), false);
 
@@ -1419,7 +1422,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 		return;
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_mdown_area == m_rect_area) {
 			if (m_mdown_area == Refreshing) {
 				//				LSL::usync().AddReloadEvent();
@@ -1469,7 +1472,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 void MapCtrl::OnRightUp(wxMouseEvent& event)
 {
 	wxPoint p = event.GetPosition();
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (p == wxDefaultPosition)
 		return;
@@ -1501,7 +1504,7 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 						bs.aishortname = STD_STRING(dlg.GetAIShortName());
 						bs.airawname = STD_STRING(dlg.GetAiRawName());
 						bs.aiversion = STD_STRING(dlg.GetAIVersion());
-						bs.aitype = dlg.GetAIType();
+						bs.aitype = dlg.GetSelectedAIType();
 						bs.team = m_battle->GetFreeTeam();
 						bs.ally = m_battle->GetFreeAlly();
 						bs.colour = m_battle->GetNewColour();
@@ -1519,7 +1522,7 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 
 void MapCtrl::OnMouseWheel(wxMouseEvent& event)
 {
-	if (m_metalmap) {
+	if (m_metalmap != nullptr) {
 		int idx = (int)m_current_infomap;
 		if (event.m_wheelRotation > 0) {
 			++idx;
@@ -1553,19 +1556,19 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	const int w = m_lastsize.GetWidth();
 	const int h = m_lastsize.GetHeight();
 
-	if (m_minimap == NULL) {
+	if (m_minimap == nullptr) {
 		m_minimap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_MAP, w, h).wxbitmap());
 		// this ensures metalmap and heightmap aren't loaded in battlelist
 		if (m_draw_start_types) {
 			m_async.GetMapImageAsync(mapname, LSL::IMAGE_MAP, w, h);
 		}
-	} else if (m_metalmap == NULL) {
+	} else if (m_metalmap == nullptr) {
 		m_metalmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wxbitmap());
 		// singleplayer mode doesn't allow startboxes anyway
 		m_metalmap_cumulative = LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wximage();
 		Accumulate(m_metalmap_cumulative);
 		m_async.GetMapImageAsync(mapname, LSL::IMAGE_HEIGHTMAP, w, h);
-	} else if (m_heightmap == NULL) {
+	} else if (m_heightmap == nullptr) {
 		m_heightmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_HEIGHTMAP, w, h).wxbitmap());
 	}
 

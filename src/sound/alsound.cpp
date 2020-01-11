@@ -23,6 +23,41 @@
 #include "ring_sound.h"
 #include "utils/conversion.h"
 
+const char* GetALErrorString(ALenum& error)
+{
+	switch (error) {
+	case AL_NO_ERROR:
+		return "(OpenAL) there is not currently an error";
+	case AL_INVALID_NAME:
+		return "a bad name (ID) was passed to an OpenAL function";
+	case AL_INVALID_ENUM:
+		return "an invalid enum value was passed to an OpenAL function";
+	case AL_INVALID_VALUE:
+		return "an invalid value was passed to an OpenAL function";
+	case AL_INVALID_OPERATION:
+		return "(OpenAL) the requested operation is not valid";
+	case AL_OUT_OF_MEMORY:
+		return "the requested operation resulted in OpenAL running out of memory";
+	default:
+		return "unknown OpenAL error code";
+	}
+}
+
+#define BailOnALError() \
+	{ \
+		ALenum alError; \
+		if (AL_NO_ERROR != (alError = alGetError())) { \
+			wxLogError("OpenAL error %d: %s", alError, GetALErrorString(alError)); \
+			return NULL; \
+		} \
+	}
+
+#define AssertAlureResult(cond) \
+	if (! (cond) ) { \
+		wxLogError("Alure error: %s", alureGetErrorString()); \
+		return NULL; \
+	} \
+
 ALsound& slsound()
 {
 	static LSL::Util::LineInfo<ALsound> m(AT);
@@ -50,63 +85,53 @@ private:
 	int m_idx;
 	ExitCode Entry()
 	{
+		alGetError(); // Clear potential error code
+
 		ALuint m_sources[1];
 		ALuint m_buffers[1];
-		//Init
-		alGetError();
-		//*
 
-		//set up 3d sound
-		ALfloat alpos[3];
-		ALfloat alvel[3];
+		AssertAlureResult(AL_FALSE != alureInitDevice(0, 0));
+
+		//set up 3D sound, coordinates are x,y,z
+		alListener3f(AL_POSITION, 0, 0, 0);
+		BailOnALError();
+		alListener3f(AL_VELOCITY, 0, 0, 0);
+		BailOnALError();
+
 		ALfloat alori[6];
-		alpos[0] = 0;
-		alpos[1] = 0;
-		alpos[2] = 0;
-		alvel[0] = 0;
-		alvel[1] = 0;
-		alvel[2] = 0;
 		alori[0] = 0;
 		alori[1] = 0;
 		alori[2] = -1;
 		alori[3] = 0;
 		alori[4] = 1;
 		alori[5] = 0;
-
-		alListenerfv(AL_POSITION, alpos);
-		alListenerfv(AL_VELOCITY, alvel);
 		alListenerfv(AL_ORIENTATION, alori);
-		alureInitDevice(0, 0);
-		//*
+		BailOnALError();
+
 
 		alGenSources(1, m_sources);
-		if (alGetError() != AL_NO_ERROR) {
-			wxLogError(TowxString(alureGetErrorString()));
-			return NULL;
-		}
+		BailOnALError();
 
 		if (m_idx == 0) {
 			m_buffers[0] = alureCreateBufferFromMemory(pm_sound_data, sizeof(pm_sound_data) / sizeof(pm_sound_data[0]));
 		} else {
 			m_buffers[0] = alureCreateBufferFromMemory(ring_sound_data, sizeof(ring_sound_data) / sizeof(ring_sound_data[0]));
 		}
-		if (alGetError() != AL_NO_ERROR) {
-			wxLogError(TowxString(alureGetErrorString()));
-			return NULL;
-		}
+		AssertAlureResult(AL_NONE != m_buffers[0]);
+		BailOnALError(); // Just in case... (was checked before rewrite)
+
 		alSourcei(m_sources[0], AL_BUFFER, m_buffers[0]);
-		if (alGetError() != AL_NO_ERROR) {
-			wxLogError(TowxString(alureGetErrorString()));
-			return NULL;
-		}
+		BailOnALError();
+
+
 		isdone = false;
-		if (alurePlaySource(m_sources[0], eos_callback, &isdone) == AL_FALSE) {
-			wxLogError(TowxString(alureGetErrorString()));
-		}
+		AssertAlureResult(AL_FALSE != alurePlaySource(m_sources[0], eos_callback, &isdone));
+
 		while (!isdone) {
 			alureSleep(0.125);
 			alureUpdate();
 		}
+
 		alureStopSource(m_sources[0], AL_FALSE);
 		alDeleteSources(1, m_sources);
 		alureShutdownDevice();

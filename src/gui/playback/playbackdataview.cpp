@@ -7,6 +7,7 @@
 #include "exception.h"
 #include "gui/basedataviewmodel.h"
 #include "gui/customdialogs.h"
+#include "gui/iconscollection.h"
 #include "gui/ui.h"
 #include "iplaybacklist.h"
 #include "log.h"
@@ -30,19 +31,26 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 	PlaybackDataModel* m_PlaybackDataModel = new PlaybackDataModel();
 	AssociateModel(m_PlaybackDataModel);
 
-	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
-	AppendIconTextColumn(_("Date"), DATE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Game"), GAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Map"), MAP, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Players"), PLAYERS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Duration"), DURATION, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Engine"), ENGINE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Filesize"), FILESIZE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("File"), FILENAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	const IconsCollection& ici = *IconsCollection::Instance();
+	const int size = wxCOL_WIDTH_AUTOSIZE;
+	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
+	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
+	const int flags_hidden = flags | wxDATAVIEW_COL_HIDDEN;
+
+	AppendIconTextColumn(_("Date"), DATE,     cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Duration"), DURATION, cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(ici.BMP_BROOM, PLAYERS,  cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Game"),     GAME,     cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Map"),      MAP,      cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Engine"),   ENGINE,   cm, size, wxALIGN_NOT, flags_hidden);
+	AppendTextColumn(_("Filesize"), FILESIZE, cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("File"),     FILENAME, cm, size, wxALIGN_NOT, flags_hidden);
+
 
 	m_ContextMenu = new wxMenu(wxEmptyString);
-	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMAP_ID, _("Download &map"));
+	m_ContextMenu->Append(REPLAY_DATAVIEW_DLENGINE_ID, _("Download &engine"));
 	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMOD_ID, _("Download &game"));
+	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMAP_ID, _("Download &map"));
 
 	LoadColumnProperties();
 }
@@ -75,13 +83,22 @@ void PlaybackDataView::OnContextMenu(wxDataViewEvent& /*event*/)
 	PopupMenu(m_ContextMenu);
 }
 
+void PlaybackDataView::OnDLEngine(wxCommandEvent& /*event*/)
+{
+	const StoredGame* storedGame = GetSelectedItem();
+	if (storedGame == nullptr) {
+		return;
+	}
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_ENGINE);
+}
+
 void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)
 {
 	const StoredGame* storedGame = GetSelectedItem();
 	if (storedGame == nullptr) {
 		return;
 	}
-	ui().NeedsDownload(&storedGame->battle);
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_MAP);
 }
 
 void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
@@ -92,7 +109,7 @@ void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
 		return;
 	}
 
-	ui().NeedsDownload(&storedGame->battle);
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_GAME);
 }
 
 void PlaybackDataView::DeletePlayback()
@@ -111,7 +128,8 @@ void PlaybackDataView::DeletePlayback()
 		} else {
 			RemovePlayback(*storedGame);
 		}
-	} catch (std::runtime_error&) {
+	} catch (std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		//Do nothing
 	}
 }

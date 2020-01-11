@@ -35,18 +35,21 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	BattleroomDataViewModel* model = new BattleroomDataViewModel();
 	AssociateModel(model);
 
-	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
-	AppendBitmapColumn(_("Status"), STATUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Ingame"), INGAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Faction"), FACTION, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Colour"), COLOUR, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Country"), COUNTRY, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Rank"), RANK, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Nickname"), NICKNAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("TrueSkill"), TRUESKILL, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Team"), TEAM, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Ally"), ALLY, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Resource Bonus"), BONUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	const int size = wxCOL_WIDTH_AUTOSIZE;
+	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
+	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
+
+	AppendBitmapColumn(wxEmptyString,COUNTRY,   cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Status"),  STATUS,    cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Ingame"),  INGAME,    cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Faction"), FACTION,   cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Rank"),    RANK,      cm, size, wxALIGN_CENTER, flags);
+	AppendTextColumn(_("TrueSkill"), TRUESKILL, cm, size, wxALIGN_NOT,    flags);
+	AppendBitmapColumn(wxEmptyString,COLOUR,    cm, size, wxALIGN_CENTER, flags);
+	AppendTextColumn(_("Nickname"),  NICKNAME,  cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Player ID"), TEAM,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Team ID"),   ALLY,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Bonus"),     BONUS,     cm, size, wxALIGN_NOT,    flags);
 
 	//Hide "ingame" column if not needed
 	if (!showInGame) {
@@ -369,13 +372,14 @@ void BattleroomDataViewCtrl::UpdateContextMenuSides()
 	}
 
 	try {
-		const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_Battle->GetHostGameName()));
+		const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_Battle->GetHostGameNameAndVersion()));
 		for (unsigned int i = 0; i < sides.GetCount(); i++) {
 			wxMenuItem* side = new wxMenuItem(m_sides, BATTLEROOM_VIEW_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL);
 			m_sides->Append(side);
 			side_vector.push_back(side);
 			Connect(BATTLEROOM_VIEW_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(BattleroomDataViewCtrl::OnSideSelect));
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }

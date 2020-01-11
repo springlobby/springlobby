@@ -7,6 +7,7 @@
 #include <wx/combobox.h>
 #include <wx/defs.h>
 #include <wx/event.h>
+#include <wx/log.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -45,7 +46,8 @@ void tab_simple::getSetUpResolutionCBX()
 		try {
 			x_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[0].key), FromwxString(RC_TEXT[0].def));
 			y_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[1].key), FromwxString(RC_TEXT[1].def));
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 	wxString currentRes;

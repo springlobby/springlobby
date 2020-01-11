@@ -227,13 +227,6 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 	rep.battle.StartSpring();
 }
 
-void PlaybackTab::AskForceWatch(StoredGame& rep) const
-{
-	if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)"), _("Invalid replay"), wxYES_NO | wxICON_QUESTION | wxCANCEL) == wxYES) {
-		rep.battle.StartSpring();
-	}
-}
-
 void PlaybackTab::OnDelete(wxCommandEvent& /*unused*/)
 {
 	m_replay_dataview->DeletePlayback();
@@ -262,7 +255,7 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
-			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
+			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameNameAndVersion()));
 			m_engine_text->SetLabel(rep.battle.GetEngineName() + ' ' + rep.battle.GetEngineVersion());
 			m_minimap->SetBattle(&(rep.battle));
 			m_minimap->UpdateMinimap();
@@ -273,10 +266,12 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 				try {
 					User& usr = rep.battle.GetUser(i);
 					m_players->AddUser(usr);
-				} catch (...) {
+				} catch (const std::exception& e) {
+					wxLogWarning(_T("Exception: %s"), e.what());
 				}
 			}
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 			Deselect();
 		}
 		event.Skip();

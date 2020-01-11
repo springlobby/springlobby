@@ -135,30 +135,15 @@ static void FixSpringVersion(std::string& springVersion)
 
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
 {
-	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
 	ret.type = StoredGame::REPLAY;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
-	std::string engineVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
-
-	FixSpringVersion(engineVersion);
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
 		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
 		MarkBroken(ret);
 		return false;
 	}
-
-	//try to get date from filename
-	wxDateTime rdate;
-
-	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
-		wxLogWarning(wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str()));
-		MarkBroken(ret);
-		return false;
-	}
-	ret.date = rdate.GetTicks(); // now it is sorted properly
-	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
 
 	if (ret.size <= 0) {
 		MarkBroken(ret);
@@ -176,7 +161,25 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 
 
 	const int replay_version = replayVersion(*replay);
+
+
 	ret.battle.SetScript(GetScriptFromReplay(*replay, replay_version));
+
+
+	uint64_t ts = GetStartTimeStampFromReplay(*replay, replay_version);
+	ret.date = static_cast<time_t> (ts);
+	wxDateTime rdate = ret.date;
+	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
+
+
+	std::string engineVersion = GetEngineVersionFromReplay(*replay, replay_version);
+	FixSpringVersion(engineVersion);
+	if (engineVersion.empty()) {
+		wxLogWarning(_T("Failed to obtain the engine version from %s (or it was empty)!"), ReplayPath.c_str());
+		MarkBroken(ret);
+		delete replay;
+		return false;
+	}
 
 	if (ret.battle.GetScript().empty()) {
 		wxLogWarning(wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str()));
@@ -188,11 +191,32 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	GetHeaderInfo(*replay, ret, replay_version);
 	ret.battle.GetBattleFromScript(false);
 	ret.battle.SetBattleType(BT_Replay);
-	ret.battle.SetEngineName("spring");
+	ret.battle.SetEngineName("Spring");
 	ret.battle.SetEngineVersion(engineVersion);
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	delete replay;
 	return true;
+}
+
+std::string ReplayList::GetEngineVersionFromReplay(PlayBackDataReader& replay, const int version) const
+{
+	// The engine version is stored as a 16 (demofile v1..v4) or 256 (demofile v5) string at
+	const int engineVersionOffset = 24;
+
+	char engineVersionString[256];
+	if (replay.Seek(engineVersionOffset) == wxInvalidOffset) {
+		wxLogWarning("Couldn't seek to engine version from demo: %s (%d)", replay.GetName().c_str());
+		std::string empty;
+		return empty;
+	}
+
+	if (version < 5)
+		replay.Read(engineVersionString, 16);
+	else
+		replay.Read(engineVersionString, 256);
+
+	std::string engineVersion(engineVersionString);
+	return engineVersion;
 }
 
 std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const int version) const
@@ -222,6 +246,17 @@ std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const in
 	script.resize(scriptSize, 0);
 	replay.Read(&script[0], scriptSize);
 	return script;
+}
+
+uint64_t ReplayList::GetStartTimeStampFromReplay(PlayBackDataReader& replay, const int version) const
+{
+	uint64_t ts;
+	const int seek = 16 + 4 + 4 + (version < 5 ? 16 : 256) + 16;
+	if (!replay.Get(ts, seek)) {
+		wxLogWarning("Unable to obtain version from replay %s", replay.GetName().c_str());
+		ts = 0;
+	}
+	return ts;
 }
 
 // see https://github.com/spring/spring/blob/develop/rts/System/LoadSave/demofile.h

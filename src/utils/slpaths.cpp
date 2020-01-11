@@ -220,10 +220,8 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 			wxLogWarning("The default engine version %s couldn't be found, resetting to %s", defaultver.c_str(), lastver.c_str());
 			SetUsedSpringIndex(lastver);
 		}
-	} catch (const std::runtime_error& e) {
-		wxLogError(wxString::Format(_T("Could not get a list of Spring engine versions: %s"), e.what()));
-	} catch (...) {
-		wxLogError(_T("Unknown Execption caught in SlPaths::RefreshSpringVersionList"));
+	} catch (const std::exception& e) {
+		wxLogError(_T("Exception! Could not get a list of Spring engine versions: %s"), e.what());
 	}
 }
 
@@ -266,8 +264,8 @@ std::string SlPaths::GetSpringConfigFilePath(const std::string& /*FIXME: impleme
 	std::string path;
 	try {
 		path = LSL::usync().GetConfigFilePath();
-	} catch (std::runtime_error& e) {
-		wxLogError(wxString::Format(_T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()));
+	} catch (const std::runtime_error& e) {
+		wxLogError(_T("Couldn't get SpringConfigFilePath, exception caught: %s"), e.what());
 	}
 	return path;
 }
@@ -337,6 +335,10 @@ void SlPaths::SetEditorPath(const std::string& path)
 	cfg().Write(_T( "/GUI/Editor" ), TowxString(path));
 }
 
+std::string SlPaths::GetLobbyLogDir()
+{
+	return LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "logs");
+}
 
 std::string SlPaths::GetLobbyWriteDir()
 {
@@ -451,8 +453,8 @@ bool SlPaths::ValidatePaths()
 				return false;
 			}
 		}
-	} catch (...) {
-		wxLogError(_("SlPaths::ValidatePaths() : Failed to validate data directories!"));
+	} catch (const std::exception& e) {
+		wxLogError(_T("Exception! Failed to validate data directories: %s"), e.what());
 		return false;
 	}
 
@@ -529,4 +531,3 @@ bool SlPaths::VersionSyncCompatible(const std::string& ver1, const std::string& 
 {
 	return !ver1.empty() && !ver2.empty() && ver1 == ver2;
 }
-

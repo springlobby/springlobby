@@ -17,8 +17,10 @@ class wxEvtHandler;
 
 #include <wx/string.h>
 #include <wx/timer.h>
+
 #include "downloader/prdownloader.h"
 #include "utils/mixins.h"
+
 //! @brief UI main class
 class Ui : public wxTimer, public SL::NonCopyable
 {
@@ -48,6 +50,7 @@ public:
 	void AddServerWindow(const wxString&);
 
 	bool Ask(const wxString& heading, const wxString& question) const;
+	int AskCrashReporter(const wxString& heading, const wxString& question, const wxString& filePath) const;
 	bool AskText(const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword(const wxString& heading, const wxString& message, wxString& password);
 	void ShowMessage(const wxString& heading, const wxString& message) const;

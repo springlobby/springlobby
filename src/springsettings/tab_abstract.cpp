@@ -106,8 +106,10 @@ bool abstract_panel::loadValuesIntoMap()
 		for (int i = 0; i < floatControls_size; ++i) {
 			floatSettings[floatControls[i].key] = LSL::usync().GetSpringConfigFloat(STD_STRING(floatControls[i].key), FromwxString(floatControls[i].def));
 		}
-	} catch (...) {
-		customMessageBox(SS_MAIN_ICON, _("Could not access your settings.\n"), _("Error"), wxOK | wxICON_HAND, 0);
+	} catch (const std::exception& e) {
+		customMessageBox(SS_MAIN_ICON, wxString::Format(
+		  _("Could not access your settings. Exception: %s\n"), e.what()),
+		  _("Error"), wxOK | wxICON_HAND, 0);
 		abstract_panel::settingsChanged = false;
 		return false;
 	}
@@ -593,8 +595,10 @@ bool abstract_panel::saveSettings()
 		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end(); ++f) {
 			LSL::usync().SetSpringConfigFloat(STD_STRING(f->first), f->second);
 		}
-	} catch (...) {
-		customMessageBox(SS_MAIN_ICON, _("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK | wxICON_HAND, 0);
+	} catch (const std::exception& e) {
+		customMessageBox(SS_MAIN_ICON, wxString::Format(
+		  _("Could not save, unitsync not properly loaded. Exception: %s"), e.what()),
+		  _("SpringSettings Error"), wxOK | wxICON_HAND, 0);
 		return false;
 	}
 

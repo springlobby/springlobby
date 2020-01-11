@@ -27,10 +27,11 @@ public:
 	SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab);
 	~SinglePlayerTab();
 
-	void UpdateMinimap();
-	void ReloadMaplist();
-	void ReloadModlist();
 	void ReloadEngineList();
+	void ReloadGameList();
+	void ReloadMapList();
+
+	void UpdateMinimap();
 	void UpdatePresetList();
 
 	IBattle& GetBattle()
@@ -40,8 +41,8 @@ public:
 
 	bool ValidSetup() const;
 
+	void OnGameSelect(wxCommandEvent& event);
 	void OnMapSelect(wxCommandEvent& event);
-	void OnModSelect(wxCommandEvent& event);
 	void OnEngineSelect(wxCommandEvent& event);
 	void OnMapBrowse(wxCommandEvent& event);
 	void OnAddBot(wxCommandEvent& event);
@@ -54,8 +55,8 @@ public:
 	void OnUnitsyncReloaded(wxCommandEvent& /*data*/);
 	void ResetUsername();
 
+	void SetGame(unsigned int index);
 	void SetEngine(unsigned int index);
-	void SetMod(unsigned int index);
 	void SetMap(unsigned int index);
 
 private:
@@ -64,11 +65,11 @@ private:
 
 	MapCtrl* m_minimap;
 	wxWindow* m_nominimap;
-	wxChoice* m_map_pick;
 	wxChoice* m_engine_choice;
 	wxChoice* m_game_choice;
+	wxChoice* m_map_choice;
+	wxStaticText* m_game_lbl;
 	wxStaticText* m_map_lbl;
-	wxStaticText* m_mod_lbl;
 	wxButton* m_select_btn;
 	wxButton* m_addbot_btn;
 	wxStaticLine* m_buttons_sep;
@@ -83,7 +84,7 @@ private:
 
 	enum {
 		SP_MAP_PICK = wxID_HIGHEST,
-		SP_MOD_PICK,
+		SP_GAME_PICK,
 		SP_ENGINE_PICK,
 		SP_BROWSE_MAP,
 		SP_ADD_BOT,

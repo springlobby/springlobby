@@ -6,6 +6,7 @@
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/regex.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -451,7 +452,8 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 							break;
 						}
 					}
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 		}
 
@@ -526,7 +528,8 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 				   m_filter_host_edit->GetValue(),
 				   m_filter_host_expression))
 			return false;
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	//Map:
@@ -536,7 +539,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		return false;
 
 	//Game:
-	if (!StringMatches(TowxString(battle.GetHostGameName()),
+	if (!StringMatches(TowxString(battle.GetHostGameNameAndVersion()),
 			   m_filter_game_edit->GetValue(),
 			   m_filter_game_expression))
 		return false;

@@ -15,6 +15,20 @@
 #include "gui/ui.h"
 #include "utils/conversion.h"
 
+std::string GetCurrentTimeString(const char* format)
+{
+	char buffer[512];
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	const struct tm* tm_info = localtime(&tv.tv_sec);
+	const size_t len = strftime(buffer, sizeof(buffer), format, tm_info);
+	if (len <= 0)
+		return "";
+	return std::string(buffer);
+}
+
 static bool gui = false;
 
 const char* wxLogLevelToString(wxLogLevel level)
@@ -51,7 +65,7 @@ public:
 		if (!logfilepath.empty()) {
 			// even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
 			// TODO: it will?
-			FILE* log = fopen(C_STRING(logfilepath), "wb+");
+			FILE* log = fopen(C_STRING(logfilepath), "a+b");
 			if (nullptr == log)
 				wxLogError("Unable to open log file %s for writing!", logfilepath);
 			else

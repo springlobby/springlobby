@@ -15,22 +15,23 @@
 #include "gui/hosting/battleroommmoptionstab.h"
 #include "gui/singleplayertab.h"
 #include "gui/slbook.h"
-#include "images/battle.xpm"
 #include "images/battle_settings.xpm"
 #include "log.h"
 #include "utils/conversion.h"
 
 MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
-    : wxPanel(parent, -1)
+    : wxPanel(parent, -1),
+	// These three null-initialisations are because in the following code, SinglePlayerTab's
+	// constructor creates a chain of function calls that culminate in m_mm_opts_tab being
+	// accessed while the latter is not yet initialised. However, there is already a protective
+	// (!= nullptr) wrapper, so these starting calls get converted into what is right now a group
+	// of harmless startup warnings.
+	m_sp_tab(nullptr), m_opts_tab(nullptr), m_mm_opts_tab(nullptr)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	GetAui().manager->AddPane(this, wxLEFT, _T( "mainsingleplayertab" ));
 	m_tabs = new SLNotebook(this, _T( "mainsingleplayertab" ), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE);
 	m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
-
-	m_imagelist = new wxImageList(12, 12);
-	m_imagelist->Add(wxIcon(battle_xpm));
-	m_imagelist->Add(wxIcon(battle_settings_xpm));
 
 	m_sp_tab = new SinglePlayerTab(m_tabs, *this);
 	m_tabs->AddPage(m_sp_tab, _("Game"), true, wxNullBitmap);
@@ -48,7 +49,6 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
-	wxDELETE(m_imagelist);
 	//    if ( sett().GetAutosavePerspective() )
 	//        SavePerspective();
 }
@@ -67,7 +67,8 @@ void MainSinglePlayerTab::UpdateMinimap()
 {
 	try {
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -78,12 +79,13 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 	try {
 		GetSinglePlayerTab().ResetUsername();
 		wxLogMessage(_T( "Reloading map list" ));
-		GetSinglePlayerTab().ReloadMaplist();
+		GetSinglePlayerTab().ReloadMapList();
 		wxLogMessage(_T( "Reloading game list" ));
-		GetSinglePlayerTab().ReloadModlist();
+		GetSinglePlayerTab().ReloadGameList();
 		wxLogMessage(_T( "Reloading minimap" ));
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -92,7 +94,8 @@ void MainSinglePlayerTab::ReloadRestrictions()
 {
 	try {
 		GetOptionsTab().ReloadRestrictions();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -101,7 +104,8 @@ void MainSinglePlayerTab::ReloadMapOptContrls()
 {
 	try {
 		GetMMOptionsTab().OnReloadControls(LSL::Enum::MapOption);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -110,7 +114,8 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	try {
 		GetMMOptionsTab().OnReloadControls(LSL::Enum::ModOption);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -138,10 +143,12 @@ void MainSinglePlayerTab::ReloadPresetList()
 {
 	try {
 		GetSinglePlayerTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetMMOptionsTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }

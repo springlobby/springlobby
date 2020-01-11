@@ -33,7 +33,7 @@ public:
 	void UpdateUser(User& user);
 
 	void Update(const wxString& Tag);
-	void ReloadMaplist();
+	void ReloadMapList();
 
 	void SetMap(int index);
 	void SetBattle(IBattle* battle);

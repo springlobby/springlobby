@@ -97,15 +97,15 @@ void ChatPanel::Init(const wxString& panelname)
 ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
-    , m_votePanel(0)
-    , m_nicklist(0)
+    , m_votePanel(nullptr)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(&chan)
-    , m_server(0)
-    , m_user(0)
-    , m_battle(0)
+    , m_server(nullptr)
+    , m_user(nullptr)
+    , m_battle(nullptr)
     , m_type(CPT_Channel)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(2)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -121,15 +121,15 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
-    , m_nicklist(0)
+    , m_votePanel(nullptr)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
-    , m_channel(0)
-    , m_server(0)
+    , m_channel(nullptr)
+    , m_server(nullptr)
     , m_user(&user)
-    , m_battle(0)
+    , m_battle(nullptr)
     , m_type(CPT_User)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(3)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -145,15 +145,15 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
-    , m_votePanel(0)
-    , m_nicklist(0)
+    , m_votePanel(nullptr)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
-    , m_channel(0)
+    , m_channel(nullptr)
     , m_server(&serv)
-    , m_user(0)
-    , m_battle(0)
+    , m_user(nullptr)
+    , m_battle(nullptr)
     , m_type(CPT_Server)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(1)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -169,15 +169,15 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
-    , m_nicklist(0)
+    , m_votePanel(nullptr)
+    , m_nicklist(nullptr)
     , m_chat_tabs(0)
-    , m_channel(0)
-    , m_server(0)
-    , m_user(0)
+    , m_channel(nullptr)
+    , m_server(nullptr)
+    , m_user(nullptr)
     , m_battle(battle)
     , m_type(CPT_Battle)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
@@ -190,15 +190,15 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
 ChatPanel::ChatPanel(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
-    , m_nicklist(0)
+    , m_votePanel(nullptr)
+    , m_nicklist(nullptr)
     , m_chat_tabs(0)
-    , m_channel(0)
-    , m_server(0)
-    , m_user(0)
-    , m_battle(0)
+    , m_channel(nullptr)
+    , m_server(nullptr)
+    , m_user(nullptr)
+    , m_battle(nullptr)
     , m_type(CPT_Debug)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
@@ -212,15 +212,15 @@ ChatPanel::~ChatPanel()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
-	if (m_server != 0) {
+	if (m_server != nullptr) {
 		if (m_server->panel == this)
 			m_server->panel = 0;
 	}
-	if (m_user != 0) {
+	if (m_user != nullptr) {
 		if (m_user->panel == this)
 			m_user->panel = nullptr;
 	}
-	if (m_channel != 0) {
+	if (m_channel != nullptr) {
 		if (m_channel->panel == this)
 			m_channel->panel = nullptr;
 	}
@@ -279,7 +279,7 @@ void ChatPanel::CreateControls()
 
 		m_chat_panel = this;
 		m_nick_sizer = 0;
-		m_nicklist = 0;
+		m_nicklist = nullptr;
 		m_splitter = 0;
 		m_nick_filter = 0;
 	}
@@ -288,13 +288,12 @@ void ChatPanel::CreateControls()
 
 	m_chatlog_text = new wxTextCtrl(m_chat_panel, CHAT_LOG, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 					wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
-	m_chan_opts_button = NULL;
 	if (m_type == CPT_Channel) {
 		m_chatlog_text->SetToolTip(_("right click for options (like autojoin)"));
 	}
 
 	wxBitmap ico;
-	if (m_type == CPT_User && (m_user != NULL)) {
+	if (m_type == CPT_User && (m_user != nullptr)) {
 		ico = IconsCollection::Instance()->GetUserBattleStateBmp(m_user->GetStatus());
 	} else {
 		ico = IconsCollection::Instance()->BMP_CHANNEL_OPTIONS;
@@ -308,7 +307,7 @@ void ChatPanel::CreateControls()
 	m_say_button = new wxButton(m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT));
 
 	// Adding elements to sizers
-	if (m_chan_opts_button != NULL)
+	if (m_chan_opts_button != nullptr)
 		m_say_sizer->Add(m_chan_opts_button);
 	m_say_sizer->Add(m_say_text, 1, wxEXPAND);
 	m_say_sizer->Add(m_say_button);
@@ -348,7 +347,7 @@ void ChatPanel::CreateControls()
 
 void ChatPanel::CreatePopup()
 {
-	if (m_popup_menu != NULL)
+	if (m_popup_menu != nullptr)
 		return;
 	slLogDebugFunc("");
 	m_popup_menu = new ChatPanelMenu(this);
@@ -359,7 +358,7 @@ User* ChatPanel::GetSelectedUser() const
 	if (m_type == CPT_User) {
 		return m_user;
 	}
-	if (!m_show_nick_list || (m_nicklist == 0))
+	if (!m_show_nick_list || (m_nicklist == nullptr))
 		return 0;
 
 	return m_nicklist->GetSelectedItem();
@@ -520,7 +519,7 @@ void ChatPanel::OnLinkEvent(wxTextUrlEvent& event)
 void ChatPanel::OnChanOpts(wxCommandEvent& /*unused*/)
 {
 	CreatePopup();
-	if ((m_chan_opts_button == NULL) || (m_popup_menu == 0))
+	if ((m_chan_opts_button == nullptr) || (m_popup_menu == nullptr))
 		return;
 	m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
@@ -651,7 +650,7 @@ void ChatPanel::CheckForPromotion(const wxString& /*who*/, const wxString& actio
 void ChatPanel::DidAction(const wxString& who, const wxString& action)
 {
 	//Handle vote events in chat by VotePanel
-	if (m_votePanel != NULL) {
+	if (m_votePanel != nullptr) {
 		m_votePanel->OnChatAction(who, action);
 	}
 
@@ -680,7 +679,7 @@ void ChatPanel::Motd(const wxString& message)
 
 void ChatPanel::StatusMessage(const wxString& message)
 {
-	if (m_chatlog_text == 0) {
+	if (m_chatlog_text == nullptr) {
 		wxLogMessage(_T( "m_chatlog_text is NULL" ));
 	} else {
 		if (CPT_Server == m_type)
@@ -761,7 +760,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 		OutputLine(_T( "** " ) + wxString::Format(_("%s left %s (%s)."), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if (m_type == CPT_Channel) {
-		if (m_channel == 0)
+		if (m_channel == nullptr)
 			return;
 		if (me_parted) {
 			m_channel->panel = nullptr;
@@ -804,14 +803,15 @@ void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 
 void ChatPanel::UserStatusUpdated(User& who)
 {
-	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != NULL)) {
+	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != nullptr)) {
 		m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->GetUserListStateBmp(who.GetStatus(), false, who.GetBattle() != 0));
 	}
 	if (!m_show_nick_list || (m_nicklist == nullptr))
 		return;
 	try {
 		m_nicklist->UserUpdated(who);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 }
@@ -825,7 +825,7 @@ void ChatPanel::SetChannel(Channel* chan)
 {
 	ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel");
 
-	if ((chan == 0) && (m_channel != 0)) {
+	if ((chan == nullptr) && (m_channel != nullptr)) {
 		m_channel->panel = nullptr;
 	}
 	if (m_nicklist != nullptr) {
@@ -833,7 +833,7 @@ void ChatPanel::SetChannel(Channel* chan)
 		UpdateUserCountLabel();
 	}
 
-	if (chan != 0) {
+	if (chan != nullptr) {
 		chan->panel = this;
 		if (chan != m_channel) {
 			SetLogFile(TowxString(chan->GetName()));
@@ -842,7 +842,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	m_channel = chan;
 
 	//set back to false so when we rejoin this channel SetTopic doesn;t update the chan icon
-	if (!m_channel)
+	if (m_channel == nullptr)
 		m_topic_set = false;
 }
 
@@ -878,16 +878,16 @@ void ChatPanel::SetUser(User* usr)
 {
 	ASSERT_LOGIC(m_type == CPT_User, "Not of type user");
 
-	if (usr == NULL) {
-		if (m_user != NULL) {
+	if (usr == nullptr) {
+		if (m_user != nullptr) {
 			m_user->panel = nullptr;
-			if (m_chan_opts_button != NULL) {
+			if (m_chan_opts_button != nullptr) {
 				m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->BMP_EMPTY);
 			}
 		}
 	} else {
 		usr->panel = this;
-		if (m_chan_opts_button != NULL) {
+		if (m_chan_opts_button != nullptr) {
 			const wxBitmap icon = IconsCollection::Instance()->GetUserListStateIcon(usr->GetStatus(), false, usr->GetBattle() != 0);
 			m_chan_opts_button->SetBitmapLabel(icon);
 		}
@@ -952,7 +952,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		if (m_type == CPT_Channel) {
 
-			if (m_channel == 0) {
+			if (m_channel == nullptr) {
 				OutputError(_("You are not in channel or channel does not exist."));
 				return true;
 			}
@@ -968,7 +968,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		} else if (m_type == CPT_Battle) {
 
-			if (m_battle == 0) {
+			if (m_battle == nullptr) {
 				OutputError(_("You are not in battle or battle does not exist, use /help for a list of available commands."));
 				return true;
 			}
@@ -984,7 +984,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		} else if (m_type == CPT_User) {
 
-			if (m_user == 0) {
+			if (m_user == nullptr) {
 				OutputError(_("User is offline."));
 				return true;
 			}
@@ -999,7 +999,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 			m_user->Say(STD_STRING(line));
 
 		} else if (m_type == CPT_Server) {
-			if (m_server == 0) {
+			if (m_server == nullptr) {
 				OutputError(_("Not connected to server"));
 				return true;
 			}
@@ -1022,7 +1022,7 @@ void ChatPanel::Part()
 {
 	slLogDebugFunc("");
 	if (m_type == CPT_Channel) {
-		if (m_channel == 0)
+		if (m_channel == nullptr)
 			return;
 		m_channel->Leave();
 		m_channel->panel = 0;
@@ -1032,13 +1032,13 @@ void ChatPanel::Part()
 bool ChatPanel::IsOk() const
 {
 	if (m_type == CPT_Channel)
-		return (m_channel != 0);
+		return m_channel != nullptr;
 	if (m_type == CPT_Server)
-		return (m_server != 0);
+		return (m_server != nullptr);
 	if (m_type == CPT_User)
-		return (m_user != 0);
+		return (m_user != nullptr);
 	if (m_type == CPT_Battle)
-		return (m_battle != 0);
+		return (m_battle != nullptr);
 	return false;
 }
 
@@ -1102,7 +1102,7 @@ void ChatPanel::OnMouseDown(wxMouseEvent& event)
 		m_url_at_pos = FindUrl(pos);
 	}
 	CreatePopup();
-	if (m_popup_menu != NULL) {
+	if (m_popup_menu != nullptr) {
 		PopupMenu(m_popup_menu->GetMenu());
 	} else {
 		event.Skip();
@@ -1118,7 +1118,7 @@ void ChatPanel::UpdateNicklistHighlights()
 
 void ChatPanel::SortNickList()
 {
-	if (m_show_nick_list && (m_nicklist != 0))
+	if (m_show_nick_list && (m_nicklist != nullptr))
 		m_nicklist->Resort();
 }
 
@@ -1178,11 +1178,11 @@ void ChatPanel::SetBattle(IBattle* battle)
 		return;
 	}
 
-	if (m_battle != NULL) {
+	if (m_battle != nullptr) {
 		OutputLine(_T("** ") + _("Left Battle."), sett().GetChatColorNotification());
 	}
 
-	if (battle == NULL) {
+	if (battle == nullptr) {
 		SetLogFile(wxEmptyString);
 		return;
 	}
@@ -1202,9 +1202,8 @@ void ChatPanel::OnLogin(wxCommandEvent& /*data*/)
 {
 	switch (m_type) {
 		case CPT_Channel:
-			if (m_channel) {
+			if (m_channel != nullptr)
 				m_channel->Rejoin();
-			}
 			break;
 		case CPT_Server:
 			assert(m_server != nullptr);
@@ -1244,7 +1243,7 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
  */
 void ChatPanel::UpdateUserCountLabel()
 {
-	if (m_usercount_label == NULL)
+	if (m_usercount_label == nullptr)
 		return;
 
 	unsigned int numusers = 0;
@@ -1257,7 +1256,7 @@ void ChatPanel::UpdateUserCountLabel()
 			numusers = GetChannel()->GetNumUsers();
 		}
 		//Server channel
-	} else if ((m_type == CPT_Server) && (m_server != NULL)) {
+	} else if ((m_type == CPT_Server) && (m_server != nullptr)) {
 		if (m_nicklist != nullptr) {
 			numusers = m_nicklist->GetUsersCount();
 		} else {
