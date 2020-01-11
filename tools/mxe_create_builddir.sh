@@ -2,7 +2,7 @@
 
 set -e
 
-COMMIT=228c26086d675f9e279e292c6484abe022e24703
+COMMIT=f6f5612022bb32d4938715933ac197895fa11405
 REPO=https://github.com/abma/mxe.git
 
 if [ ! -d mxe ]; then
