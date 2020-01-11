@@ -18,6 +18,9 @@ addons:
     - gcc-8
     - g++-8
 
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-8" CC="gcc-8"; fi
+
 before_script:
 # optional dependencies
   - git submodule update --init --recursive
