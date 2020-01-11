@@ -20,7 +20,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif()
 
 # check for minimal gcc version
-set(MIN_GCC_VER "4.7")
+set(MIN_GCC_VER "8.0")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${MIN_GCC_VER}")
 		message(FATAL_ERROR "gcc >=${MIN_GCC_VER} required")
