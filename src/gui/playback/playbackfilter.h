@@ -15,7 +15,7 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 class PlaybackTab;
-class StoredGame;
+struct StoredGame;
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */
