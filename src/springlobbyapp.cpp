@@ -237,7 +237,9 @@ void SpringLobbyApp::OnFatalException()
 	wxLogError("Fatal exception!");
 
 	StackTrace stackTracer;
+#if wxUSE_ON_FATAL_EXCEPTION
 	stackTracer.WalkFromException();
+#endif
 	auto trace = stackTracer.GetStackTrace();
 
 	wxLogError("Stack trace: " + trace);
