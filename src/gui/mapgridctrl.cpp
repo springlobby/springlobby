@@ -395,7 +395,7 @@ void MapGridCtrl::DrawBackground(wxDC& dc)
 	GetClientSize(&width, &height);
 
 	dc.SetPen(wxPen(*wxLIGHT_GREY));
-	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxSOLID));
+	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxBRUSHSTYLE_SOLID));
 
 	dc.DrawRectangle(0, 0, width, height);
 }

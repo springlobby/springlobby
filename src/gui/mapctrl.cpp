@@ -618,7 +618,7 @@ void MapCtrl::DrawStartRect(wxDC& dc, int index, wxRect& sr, const wxColour& col
 		dc.SetPen(wxPen(*wxBLACK));
 		dc.DrawRectangle(sr.x, sr.y, sr.width, sr.height);
 
-		dc.SetBrush(wxBrush(*wxBLACK, wxSOLID));
+		dc.SetBrush(wxBrush(*wxBLACK, wxBRUSHSTYLE_SOLID));
 		dc.DrawRectangle(sr.x, sr.y, boxsize, boxsize);
 		dc.DrawRectangle(sr.x + sr.width - boxsize, sr.y + sr.height - boxsize, boxsize, boxsize);
 		//dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
@@ -657,7 +657,7 @@ void MapCtrl::DrawBackground(wxDC& dc)
 	GetClientSize(&width, &height);
 
 	dc.SetPen(wxPen(*wxLIGHT_GREY));
-	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxSOLID));
+	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxBRUSHSTYLE_SOLID));
 
 	if (m_battle == nullptr) {
 		dc.DrawRectangle(0, 0, width, height);
@@ -965,7 +965,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 			dc.DrawBitmap(wxBitmap(up_down_xpm), r.x + updownhandicaprect.x, r.y + updownhandicaprect.y, true);
 
 		dc.SetPen(wxPen(col));
-		dc.SetBrush(wxBrush(col, wxSOLID));
+		dc.SetBrush(wxBrush(col, wxBRUSHSTYLE_SOLID));
 
 		dc.DrawRectangle(r.x + 1, r.y + 1, r.width - 2, 18);
 
@@ -981,7 +981,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 	} else {
 		/* Just drawing an icon */
 		dc.SetPen(wxPen(ColourDelta(col, -40)));
-		dc.SetBrush(wxBrush(col, wxSOLID));
+		dc.SetBrush(wxBrush(col, wxBRUSHSTYLE_SOLID));
 		dc.DrawRectangle(r.x, r.y, r.width, r.height);
 		dc.DrawBitmap(*img, r.x + USER_BOX_ICON_PADDING, r.y + USER_BOX_ICON_PADDING, true);
 
