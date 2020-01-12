@@ -95,7 +95,7 @@ bool abstract_panel::loadValuesIntoMap()
 {
 	try {
 		//special treatment for resolution that'll set proper defaults for res
-		wxDisplay display();
+		wxDisplay display;
 		//		wxRect display_rect ( display.GetGeometry() );
 		//		const int current_x_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
 		//		const int current_y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
