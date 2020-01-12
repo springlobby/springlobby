@@ -1,4 +1,10 @@
 ChangeLog of Springlobby
+## 0.270
+ - fix finished downloads not reporting 100% of state in download tab
+ - fix #940: connecting hangs to server when tls 1.3 is used
+ - grey out battles with no players in battle list
+ - convert some dialogs to wxformbuilder
+
 ## 0.269
  - don't send deprecated compatibility flags to lobby server
  - fix #936: missing file in archive
