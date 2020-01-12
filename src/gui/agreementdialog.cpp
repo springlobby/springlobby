@@ -63,7 +63,7 @@ AgreementDialog::AgreementDialog(wxWindow* parent, const wxString& agreement, st
 
 	m_main_sizer->Add(m_button_sizer, 0, wxEXPAND, 5);
 
-	m_no_btn->SetDefault();
+	m_yes_btn->SetDefault();
 
 	SetSizerAndFit(m_main_sizer);
 	Layout();
