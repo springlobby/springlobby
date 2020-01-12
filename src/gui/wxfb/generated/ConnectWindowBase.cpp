@@ -11,7 +11,7 @@
 
 ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( 200,386 ), wxDefaultSize );
 
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
