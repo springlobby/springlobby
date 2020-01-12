@@ -462,7 +462,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0")
-		target_link_libraries(springlobby c++fs)
+		target_link_libraries(springlobby stdc++fs)
 	endif()
 endif()
 
