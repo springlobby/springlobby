@@ -231,7 +231,7 @@ void updatelistener(int downloaded, int filesize)
 		m_progress = new PrDownloader::DownloadProgress();
 
 	static struct timespec lastupdate = {0, 0};
-	struct timespec now;
+	struct timespec now = {0, 0};
 	clock_gettime(CLOCK_MONOTONIC, &now);
 
 	// rate limit

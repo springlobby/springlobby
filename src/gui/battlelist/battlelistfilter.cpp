@@ -241,7 +241,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 
 	m_filter_host_edit = new wxTextCtrl(this, BATTLE_FILTER_HOST_EDIT, f_values.host, wxDefaultPosition, wxDefaultSize, 0 | wxSIMPLE_BORDER);
-	m_filter_host_edit->SetFont(wxFont(wxNORMAL_FONT->GetPointSize(), 70, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString));
+	m_filter_host_edit->SetFont(wxFont(wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString));
 	m_filter_host_edit->SetMinSize(wxSize(220, -1));
 	m_filter_host_text = new wxStaticText(this, wxID_ANY, _("Host:"));
 	m_filter_host_text->Wrap(-1);
