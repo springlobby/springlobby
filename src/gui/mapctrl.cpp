@@ -563,7 +563,7 @@ void MapCtrl::DrawStartRect(wxDC& dc, int index, wxRect& sr, const wxColour& col
 	if (sr.width * sr.height <= 0)
 		return;
 
-	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxTRANSPARENT));
+	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxBRUSHSTYLE_TRANSPARENT));
 
 	wxImage img(sr.width, sr.height);
 	wxColour light;

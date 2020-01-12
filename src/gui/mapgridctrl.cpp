@@ -378,7 +378,7 @@ void MapGridCtrl::DrawMap(wxDC& dc, MapData& map, int x, int y)
 			// draw selection
 			if (&map == m_selected_map) {
 				dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)));
-				dc.SetBrush(wxBrush(wxColour(0, 0, 0), wxTRANSPARENT));
+				dc.SetBrush(wxBrush(wxColour(0, 0, 0), wxBRUSHSTYLE_TRANSPARENT));
 				dc.DrawRectangle(x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2);
 			}
 			break;
