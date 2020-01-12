@@ -295,7 +295,7 @@ CreditsDialog::CreditsDialog(wxWindow* parent, wxString title, int whichIcon)
 
 void CreditsDialog::AddCredit(wxString person, wxString message)
 {
-	wxFont heavyFont(10, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD);
+	wxFont heavyFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour, wxNullColour, heavyFont));
 	text_ctrl->AppendText(person);
 	if (!message.IsEmpty()) {
