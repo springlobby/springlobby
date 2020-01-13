@@ -1,5 +1,13 @@
 ChangeLog of Springlobby
 ## 0.270
+ - use <filesystem> in several places, this requires gcc >= 8
+ - fix #922: fix logfile cannot be opened on fresh install
+ - fix #297: add "download engine" to replay context menu
+ - fix #284: rejoin last battle on reconnect
+ - fix #898: no engine found for some demos
+ - show infolog.txt on crash / offer to open bug report link
+ - convert dialogs to wxformbuilder: ConnectWindow, HostBattleDialog
+ - grey out empty battles in battlelist
  - fix finished downloads not reporting 100% of state in download tab
  - fix #940: connecting hangs to server when tls 1.3 is used
  - grey out battles with no players in battle list
