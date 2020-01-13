@@ -48,14 +48,14 @@ const char* GetALErrorString(ALenum& error)
 		ALenum alError; \
 		if (AL_NO_ERROR != (alError = alGetError())) { \
 			wxLogError("OpenAL error %d: %s", alError, GetALErrorString(alError)); \
-			return NULL; \
+			return nullptr; \
 		} \
 	}
 
 #define AssertAlureResult(cond) \
 	if (! (cond) ) { \
 		wxLogError("Alure error: %s", alureGetErrorString()); \
-		return NULL; \
+		return nullptr; \
 	} \
 
 ALsound& slsound()
@@ -135,18 +135,18 @@ private:
 		alureStopSource(m_sources[0], AL_FALSE);
 		alDeleteSources(1, m_sources);
 		alureShutdownDevice();
-		return NULL;
+		return nullptr;
 	}
 };
 
 ALsound::ALsound()
-    : m_thread(NULL)
+    : m_thread(nullptr)
 {
 }
 
 ALsound::~ALsound()
 {
-	if (m_thread != NULL) {
+	if (m_thread != nullptr) {
 		m_thread->Wait();
 		delete m_thread;
 	}
@@ -155,7 +155,7 @@ ALsound::~ALsound()
 void ALsound::Play(int idx)
 {
 	// use a thread to play sounds because having the sound device opened seems to require some cpu
-	if ((m_thread == NULL) || (!m_thread->IsRunning())) {
+	if ((m_thread == nullptr) || (!m_thread->IsRunning())) {
 		delete m_thread;
 		m_thread = new soundThread(idx);
 		m_thread->Run();
