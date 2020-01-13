@@ -26,7 +26,8 @@
 
 static const char *banned_AIs[] = {
 	"AAI", "CircuitAI", "CppTestAI",
-	"E323AI", "KAIK", "RAI", "Shard"
+	"E323AI", "KAIK", "RAI", "Shard",
+	"NullAI", "NullJavaAI", "NullOOJavaAI", "HughAI"
 };
 
 BEGIN_EVENT_TABLE(AddBotDialog, wxDialog)
@@ -188,6 +189,19 @@ wxString AddBotDialog::GetAiRawName()
 	return m_ais [GetSelectedAIType()];
 }
 
+static bool IsHiddenAI(const std::string& AINameVersion)
+{
+
+	for (unsigned int j = 0; j < sizeof (banned_AIs) / sizeof(char *); ++j) {
+		const char *ai_str = banned_AIs[j];
+		if (std::string::npos != AINameVersion.find(ai_str)) {
+			return true;
+		}
+	}
+	return false;
+
+}
+
 void AddBotDialog::ReloadAIList()
 {
 	LSL::StringVector ais;
@@ -204,15 +218,7 @@ void AddBotDialog::ReloadAIList()
 	m_valid_ai_index_map.clear();
 	for (unsigned int i = 0; i < ais.size(); ++i) {
 		const std::string& AINameVersion = ais.at(i);
-		bool matched = false; // either this or goto...
-
-		for (unsigned int j = 0; j < sizeof (banned_AIs) / sizeof(char *); ++j) {
-			const char *ai_str = banned_AIs[j];
-			if (std::string::npos != AINameVersion.find(ai_str)) {
-				matched = true;
-				break;
-			}
-		}
+		const bool matched = IsHiddenAI(AINameVersion);
 
 		wxString wxAINV (AINameVersion);
 		m_ais.Add(wxAINV);
@@ -221,12 +227,13 @@ void AddBotDialog::ReloadAIList()
 			m_valid_ai_index_map.push_back(i);
 		}
 	}
-	if (m_ais.GetCount() > 0) {
-		m_ai->SetStringSelection(sett().GetLastAI());
-		if (m_ai->GetStringSelection() == wxEmptyString)
-			m_ai->SetSelection(0);
-	} else {
+	if (m_ai->GetCount() <= 0) {
 		customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK);
+		return;
+	}
+	m_ai->SetStringSelection(sett().GetLastAI());
+	if (m_ai->GetStringSelection() == wxEmptyString) {
+		m_ai->SetSelection(0);
 	}
 	m_add_btn->Enable(m_ai->GetStringSelection() != wxEmptyString);
 	ShowAIInfo();
