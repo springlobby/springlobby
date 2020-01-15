@@ -191,7 +191,11 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	int user_level_choices_len = sizeof(user_level_choices) / sizeof(wxString);
 	m_user_level_choice = new wxChoice(m_user_level_sizer->GetStaticBox(), wxID_ANY,
 	   wxDefaultPosition, wxDefaultSize, user_level_choices_len, user_level_choices);
-	m_user_level_choice->SetSelection(0);
+	Settings::UserLevel userLevel = sett().GetUserLevel();
+	// Round up
+	m_user_level_choice->SetSelection(
+	  userLevel <= Settings::UserLevel::NewUser ? 0 :
+	  1);
 	m_user_level_sizer->Add(m_user_level_choice, 0, wxALL | wxEXPAND, 5);
 
 
