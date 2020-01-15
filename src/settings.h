@@ -288,7 +288,7 @@ public:
 		Developer = 1000
 	};
 
-	int GetUserLevel();
+	UserLevel GetUserLevel();
 	void SetUserLevel(int value);
 
 	/*@}*/

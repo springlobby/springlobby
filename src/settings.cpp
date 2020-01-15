@@ -1390,9 +1390,9 @@ void Settings::SetSplitBRoomHorizontally(const bool vertical)
 	cfg().Write(_T( "/GUI/SplitBRoomHorizontally" ), vertical);
 }
 
-int Settings::GetUserLevel()
+Settings::UserLevel Settings::GetUserLevel()
 {
-	return cfg().Read(_T("/General/UserLevel"), NewUser);
+	return static_cast<UserLevel> (cfg().Read(_T("/General/UserLevel"), NewUser));
 }
 
 void Settings::SetUserLevel(int level)
