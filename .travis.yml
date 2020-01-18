@@ -2,7 +2,6 @@ language: cpp
 compiler:
   - gcc
   - clang
-os: linux
 dist: bionic
 cache: ccache
 
@@ -19,16 +18,13 @@ addons:
     - gcc-8
     - g++-8
 
-env:
-   - CMAKEVARS="-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32"
-   - CMAKEVARS=""
-
 install:
 - if [ "$CXX" = "g++" ]; then export CXX="g++-8" CC="gcc-8"; fi
 
 before_script:
+# optional dependencies
   - git submodule update --init --recursive
-  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=/tmp $CMAKE_VARS .
+  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=/tmp .
 script:
   - make -j2 -k
   - make -k check
