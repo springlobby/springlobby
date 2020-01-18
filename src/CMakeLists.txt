@@ -173,9 +173,10 @@ set(wxfb_projects
 )
 
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
+set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
 # For configure_file below, all .fbp should have
 # property name="path" set to @WXFB_GENERATION_PATH@.
-set(WXFB_GENERATION_PATH ${wxfb_src}/generated)
+set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
 file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
 set(wxFB_REQUIRED_VERSION "3.9.0")
 
@@ -195,10 +196,10 @@ else()
 		message(STATUS "Processing wxFormBuilder project: ${proj}")
 		# configure_file monitors input for timestamp changes and output for
 		# content changes (checksum?). Replaces generation path.
-		configure_file(${wxfb_src}/${proj}.fbp ${wxfb_src}/${proj}.fbp @ONLY)
+		configure_file(${wxfb_src}/${proj}.fbp ${wxfb_bin}/${proj}.fbp @ONLY)
 
-		add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_src}/${proj}.fbp
-			DEPENDS ${wxfb_src}/${proj}.fbp
+		add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj}.fbp
+			DEPENDS ${wxfb_bin}/${proj}.fbp
 			OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
 			       ${WXFB_GENERATION_PATH}/${proj}Base.h
 		)
@@ -212,7 +213,7 @@ foreach(proj ${wxfb_projects})
 	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.h)
 endforeach()
 # for gcc -I
-set(generated_gui_include ${wxfb_src}) # generated/* in source
+set(generated_gui_include ${wxfb_bin}) # generated/* in source
 #-----------------------------------------------------------------------------
 # springlobby build
 #-----------------------------------------------------------------------------
