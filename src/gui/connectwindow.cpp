@@ -157,15 +157,6 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 
-	// Shortest possible: one character for account, a.b for domain?
-	wxArrayString email_components = wxStringTokenize(m_email_text->GetValue(), _T("@"));
-	if (email_components.GetCount() < 2
-	  ||email_components[0].size() < 1 || email_components[1].size() < 3) {
-		OnRegistrationDenied(_("The entered email is ill-formed.\nPlease try again"));
-		m_email_text->SetFocus();
-		return;
-	}
-
 	sett().SetServerAccountNick(HostAddress, m_nickname_text->GetValue());
 	// Save password if the user choses so
 	if (m_remember_password_check->IsChecked()) {
