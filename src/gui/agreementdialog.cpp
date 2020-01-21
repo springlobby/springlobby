@@ -4,23 +4,14 @@
 // Class: AgreementDialog
 //
 #include "agreementdialog.h"
-
 #include "utils/conversion.h"
 
 AgreementDialog::AgreementDialog(wxWindow* parent, const wxString& agreement, std::string* code)
-    : AgreementDialogBase(parent)
+	: AgreementDialogBase(parent)
 {
 	verif_code = code;
 
-	SetSizeHints(wxDefaultSize, wxDefaultSize);
-
-	// TE_WORDWRAP on m_text?
 	m_text->SetValue(agreement);
-
-	// wxALIGN_CENTER_VERTICAL on m_verif_lbl?
-
-	//SetSizerAndFit(m_main_sizer);
-	//Layout();
 }
 
 
