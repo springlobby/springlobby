@@ -167,6 +167,7 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 # wxFormBuilder
 #-----------------------------------------------------------------------------
 set(wxfb_projects
+	AgreementDialog
 	ConnectWindow
 	CrashReporterDialog
 	HostBattleDialog
