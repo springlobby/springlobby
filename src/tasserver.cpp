@@ -107,7 +107,7 @@ bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /c
 		switch (arrayparams.size()) {
 			case 3:
 				password = arrayparams[2];
-			// no break wanted, next assignement is required
+				[[fallthrough]]; // no break wanted, next assignement is required
 			case 2:
 				channel = arrayparams[1];
 				break;
