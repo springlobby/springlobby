@@ -5,7 +5,6 @@
 #include <wx/tokenzr.h>
 
 #include "gui/controls.h"
-#include "gui/customdialogs.h"
 #include "images/connect.xpm"
 #include "servermanager.h"
 #include "settings.h"
@@ -62,6 +61,8 @@ void ConnectWindow::EnterRegistrationMode()
 	m_password2_hidden_text->Show();
 	m_nickname_text->SetFocus();
 	m_ok_button->SetLabel(_("Register"));
+	m_note_text->SetValue("A verification code will immidiately be sent to your email address.");
+	m_note_text->Show();
 
 	Layout(); Fit(); Thaw();
 }
@@ -78,6 +79,7 @@ void ConnectWindow::EnterLoginMode()
 	m_password2_hidden_text->Hide();
 	m_ok_button->SetFocus();
 	m_ok_button->SetLabel(_("Login"));
+	m_note_text->Hide();
 
 	Fit(); Layout(); Thaw();
 }
@@ -109,6 +111,7 @@ void ConnectWindow::OnServerChange(wxCommandEvent&)
 
 void ConnectWindow::CleanHide()
 {
+	m_note_text->SetValue(wxEmptyString);
 	Hide();
 }
 
@@ -154,15 +157,6 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 
-	// Shortest possible: one character for account, a.b for domain?
-	wxArrayString email_components = wxStringTokenize(m_email_text->GetValue(), _T("@"));
-	if (email_components.GetCount() < 2
-	  ||email_components[0].size() < 1 || email_components[1].size() < 3) {
-		OnRegistrationDenied(_("The entered email is ill-formed.\nPlease try again"));
-		m_email_text->SetFocus();
-		return;
-	}
-
 	sett().SetServerAccountNick(HostAddress, m_nickname_text->GetValue());
 	// Save password if the user choses so
 	if (m_remember_password_check->IsChecked()) {
@@ -200,15 +194,16 @@ void ConnectWindow::OnRegistrationAccepted(const wxString& user, const wxString&
 
 void ConnectWindow::OnRegistrationDenied(const wxString& reason)
 {
-	wxLogMessage(reason);
-	customMessageBoxModal(SL_MAIN_ICON, reason, _("Registration failed"));
 	EnterRegistrationMode();
+	m_note_text->SetValue(reason);
+	m_note_text->Show();
 	Show();
 }
 
 void ConnectWindow::OnLoginDenied(const wxString& reason)
 {
-	customMessageBoxModal(SL_MAIN_ICON, reason, _("Log-in failed"));
 	EnterLoginMode();
+	m_note_text->SetValue(reason);
+	m_note_text->Show();
 	Show();
 }

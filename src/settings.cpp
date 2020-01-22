@@ -103,13 +103,13 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long settversion)
 {
 	switch (settversion) { //no breaks! thats by intention!
-		case 18: {
+		case 18:
 			//the dummy column hack was removed on win
 			cfg().DeleteGroup(_T("/GUI/ColumnWidths/"));
-		}
+			[[fallthrough]];
 		case 19:
 		case 20:
-		case 21: {
+		case 21:
 			if (translationhelper) {
 				// add locale's language code to autojoin
 				if (translationhelper->GetLocale()) {
@@ -120,38 +120,35 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 						AddChannelJoin(localecode, wxEmptyString);
 				}
 			}
-		}
-		case 22: {
+			[[fallthrough]];
+		case 22:
 			ConvertLists();
-		}
+			[[fallthrough]];
 		case 23:
-		case 24: {
+		case 24:
 			SetDisableSpringVersionCheck(false);
-		}
-		case 25: { // language id before was stored by index, now its stored by the id
+			[[fallthrough]];
+		case 25: // language id before was stored by index, now its stored by the id
 			cfg().Write(_T("/General/LanguageID"), 0);
-		}
-		case 26: {
+			[[fallthrough]];
+		case 26:
 			SetDisableSpringVersionCheck(false);
-		}
-		case 27: {
+			[[fallthrough]];
+		case 27:
 			RemoveChannelJoin(_("main"));
-		}
+			[[fallthrough]];
 		case 28:
 		case 29:
-		case 30: {
+		case 30:
 #ifdef WIN32 // https://github.com/springlobby/springlobby/issues/385
 			cfg().Write(_T("/GUI/UseNotificationPopups"), true);
 #endif
-		}
-		case 31: {
+		case 31:
 			DeleteServer(_T("Backup server 1"));
 			DeleteServer(_T("Backup server 2"));
 			SetDefaultServerSettings();
-		}
-
-		default: {
-		}
+		default:
+			break;
 	}
 
 	// after updating, set current version
