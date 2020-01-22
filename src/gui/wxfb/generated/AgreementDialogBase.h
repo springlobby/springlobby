@@ -16,45 +16,44 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/sizer.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class CrashReporterDialogBase
+/// Class AgreementDialogBase
 ///////////////////////////////////////////////////////////////////////////////
-class CrashReporterDialogBase : public wxDialog
+class AgreementDialogBase : public wxDialog
 {
 	private:
 
 	protected:
-		wxBoxSizer* m_main_sizer;
-		wxTextCtrl* m_report_text;
-		wxStaticText* m_report_file_name_label;
-		wxTextCtrl* m_report_file_text;
-		wxButton* m_bug_button;
-		wxButton* m_cancel_button;
-		wxButton* m_safe_button;
-		wxButton* m_norm_button;
+		wxTextCtrl* m_text;
+		wxStaticLine* m_verif_sep;
+		wxStaticText* m_verif_lbl;
+		wxTextCtrl* m_verif_text;
+		wxStaticLine* m_staticline2;
+		wxStaticText* m_accept_lbl;
+		wxButton* m_no_btn;
+		wxButton* m_yes_btn;
 
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnClickBugReport( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnSafe( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnNorm( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnNo( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnYes( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 
-		CrashReporterDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
-		~CrashReporterDialogBase();
+		AgreementDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Terms of Service"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		~AgreementDialogBase();
 
 };
 

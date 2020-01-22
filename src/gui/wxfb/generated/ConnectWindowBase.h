@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Jan 11 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Jan 16 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -53,11 +53,13 @@ class ConnectWindowBase : public wxDialog
 		wxCheckBox* m_password_show_check;
 		wxCheckBox* m_remember_password_check;
 		wxCheckBox* m_autoconnect_check;
+		wxTextCtrl* m_note_text;
 		wxButton* m_cancel_button;
 		wxButton* m_ok_button;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnChangeMode( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnServerChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 

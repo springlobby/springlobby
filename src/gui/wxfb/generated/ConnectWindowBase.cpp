@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Jan 11 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Jan 16 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -20,15 +20,15 @@ ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxS
 	m_mode_switch_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 
-	m_mode_switch_sizer->Add( 0, 0, 1, wxEXPAND, 5 );
+	m_mode_switch_sizer->Add( 0, 0, 1, 0, 5 );
 
 	m_loginreg_button = new wxButton( this, wxID_ANY, _("see code"), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxBU_EXACTFIT );
 	m_loginreg_button->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
 
-	m_mode_switch_sizer->Add( m_loginreg_button, 0, wxALL|wxEXPAND, 0 );
+	m_mode_switch_sizer->Add( m_loginreg_button, 0, wxALL, 0 );
 
 
-	m_main_sizer->Add( m_mode_switch_sizer, 1, wxEXPAND, 0 );
+	m_main_sizer->Add( m_mode_switch_sizer, 0, wxEXPAND, 0 );
 
 	m_server_label = new wxStaticText( this, wxID_ANY, _("Lobby server:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_server_label->Wrap( -1 );
@@ -55,14 +55,6 @@ ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxS
 	m_main_sizer->Add( m_nickname_label, 0, wxALL, 5 );
 
 	m_nickname_text = new wxTextCtrl( this, wxID_ANY, _("NewPlayer012356"), wxDefaultPosition, wxDefaultSize, 0 );
-	#ifdef __WXGTK__
-	if ( !m_nickname_text->HasFlag( wxTE_MULTILINE ) )
-	{
-	m_nickname_text->SetMaxLength( 16 );
-	}
-	#else
-	m_nickname_text->SetMaxLength( 16 );
-	#endif
 	m_nickname_text->SetToolTip( _("Can be changed later") );
 
 	m_main_sizer->Add( m_nickname_text, 0, wxEXPAND|wxLEFT|wxRIGHT, 10 );
@@ -112,6 +104,12 @@ ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxS
 
 	m_main_sizer->Add( m_autoconnect_check, 0, wxLEFT|wxRIGHT, 10 );
 
+	m_note_text = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_AUTO_URL|wxTE_BESTWRAP|wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
+	m_note_text->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_note_text->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+
+	m_main_sizer->Add( m_note_text, 1, wxEXPAND|wxALL, 5 );
+
 	wxBoxSizer* m_buttons_sizer;
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -133,6 +131,7 @@ ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxS
 
 	// Connect Events
 	m_loginreg_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnChangeMode ), NULL, this );
+	m_server_combo->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ConnectWindowBase::OnServerChange ), NULL, this );
 	m_cancel_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnCancel ), NULL, this );
 	m_ok_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnOk ), NULL, this );
 }
@@ -141,6 +140,7 @@ ConnectWindowBase::~ConnectWindowBase()
 {
 	// Disconnect Events
 	m_loginreg_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnChangeMode ), NULL, this );
+	m_server_combo->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ConnectWindowBase::OnServerChange ), NULL, this );
 	m_cancel_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnCancel ), NULL, this );
 	m_ok_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectWindowBase::OnOk ), NULL, this );
 
