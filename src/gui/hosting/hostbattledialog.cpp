@@ -68,7 +68,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_relayhost_pick->Show(m_use_relayhost_check->IsChecked());
 	m_nat_traversal_radios->SetSelection(sett().GetLastHostNATSetting());
 
-	if (sett().GetUserLevel() < Settings::UserLevel::Developer) {
+	if (sett().GetUserLevel() < Settings::UserLevel::Professional) {
 		m_use_relayhost_check->SetValue(false);
 		m_use_relayhost_check->Hide();
 		m_relayhost_pick->Hide();
