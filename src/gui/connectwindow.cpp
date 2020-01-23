@@ -169,7 +169,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 	if (m_password2_hidden_text->GetValue() != m_password1_hidden_text->GetValue() || m_password1_hidden_text->GetValue().IsEmpty()) {
-		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)"));
+		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty password)"));
 		return;
 	}
 	CleanHide();
