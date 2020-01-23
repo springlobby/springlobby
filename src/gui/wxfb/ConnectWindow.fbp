@@ -48,7 +48,7 @@
             <property name="size">-1,-1</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass">; forward_declare</property>
-            <property name="title">Connect to server</property>
+            <property name="title">Connect to lobby server</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>

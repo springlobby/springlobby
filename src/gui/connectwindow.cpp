@@ -17,7 +17,7 @@
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow(wxWindow* parent)
-    : ConnectWindowBase(parent)
+	: ConnectWindowBase(parent)
 {
 	SetIcon(wxIcon(connect_xpm));
 	wxString server = sett().GetDefaultServer();
@@ -59,11 +59,11 @@ void ConnectWindow::EnterRegistrationMode()
 	m_email_text->Show();
 	m_password2_label->Show();
 	m_password2_hidden_text->Show();
-	m_nickname_text->SetFocus();
 	m_ok_button->SetLabel(_("Register"));
 	m_note_text->SetValue("A verification code will immidiately be sent to your email address.");
 	m_note_text->Show();
 
+	m_nickname_text->SetFocus();
 	Layout(); Fit(); Thaw();
 }
 
@@ -77,10 +77,10 @@ void ConnectWindow::EnterLoginMode()
 	m_email_text->Hide();
 	m_password2_label->Hide();
 	m_password2_hidden_text->Hide();
-	m_ok_button->SetFocus();
 	m_ok_button->SetLabel(_("Login"));
 	m_note_text->Hide();
 
+	m_ok_button->SetFocus();
 	Fit(); Layout(); Thaw();
 }
 
@@ -174,9 +174,9 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	}
 	CleanHide();
 	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress),
-	                                           STD_STRING(m_email_text->GetValue()),
 	                                           STD_STRING(m_nickname_text->GetValue()),
-	                                           STD_STRING(m_password1_hidden_text->GetValue()));
+	                                           STD_STRING(m_password1_hidden_text->GetValue()),
+	                                           STD_STRING(m_email_text->GetValue()));
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)

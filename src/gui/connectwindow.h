@@ -24,10 +24,10 @@ private:
 
 	void CleanHide();
 
-	bool in_login_mode; // true if in login mode, false if in register.
-	void OnChangeMode(wxCommandEvent& event);
 	void EnterRegistrationMode();
 	void EnterLoginMode();
+	void OnChangeMode(wxCommandEvent& event);
+	bool in_login_mode; // true if in login mode, false if in register.
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
