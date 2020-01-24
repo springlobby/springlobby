@@ -1268,7 +1268,7 @@
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="current"></property>
-                                <property name="default">0</property>
+                                <property name="default">1</property>
                                 <property name="default_pane">0</property>
                                 <property name="disabled"></property>
                                 <property name="dock">Dock</property>
