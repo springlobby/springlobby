@@ -54,6 +54,8 @@ void ConnectWindow::EnterRegistrationMode()
 	in_login_mode = false;
 
 	Freeze();
+	SetMinSize(wxSize(-1, -1));
+
 	m_loginreg_button->SetLabel(_("Return to login..."));
 	m_email_label->Show();
 	m_email_text->Show();
@@ -65,6 +67,7 @@ void ConnectWindow::EnterRegistrationMode()
 
 	m_nickname_text->SetFocus();
 	Layout(); Fit(); Thaw();
+	SetMinSize(GetBestSize());
 }
 
 void ConnectWindow::EnterLoginMode()
@@ -72,6 +75,8 @@ void ConnectWindow::EnterLoginMode()
 	in_login_mode = true;
 
 	Freeze();
+	SetMinSize(wxSize(-1, -1));
+
 	m_loginreg_button->SetLabel(_("Create a new account..."));
 	m_email_label->Hide();
 	m_email_text->Hide();
@@ -82,6 +87,7 @@ void ConnectWindow::EnterLoginMode()
 
 	m_ok_button->SetFocus();
 	Fit(); Layout(); Thaw();
+	SetMinSize(GetBestSize());
 }
 
 void ConnectWindow::OnChangeMode(wxCommandEvent&)
