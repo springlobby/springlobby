@@ -37,7 +37,7 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	const int flags_hidden = flags | wxDATAVIEW_COL_HIDDEN;
 
 	AppendBitmapColumn(wxEmptyString,   STATUS,      cm, gds, wxALIGN_CENTER, flags);
-	AppendBitmapColumn(wxEmptyString,   COUNTRY,     cm, gds, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(wxEmptyString,   COUNTRY,     cm, gds, wxALIGN_CENTER, flags_hidden);
 	AppendBitmapColumn(wxEmptyString,   RANK,        cm, gds, wxALIGN_CENTER, flags_hidden);
 	AppendTextColumn(ici.BMP_BROOM,     PLAYERS,     cm, gds, wxALIGN_NOT, flags);
 	AppendTextColumn(_("Max"),          MAXIMUM,     cm, asds, wxALIGN_NOT, flags);
