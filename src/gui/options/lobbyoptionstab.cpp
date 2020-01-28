@@ -240,7 +240,9 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetNotificationPopupDisplayTime(m_notif_popup_time->GetValue());
 
 	switch(m_user_level_choice->GetSelection()) {
-	default: wxLogWarning(_T("Unknown selection: %d"), m_user_level_choice->GetSelection());
+	default:
+		wxLogWarning(_T("Unknown selection: %d"), m_user_level_choice->GetSelection());
+		[[fallthrough]];
 	case 0: sett().SetUserLevel(Settings::UserLevel::NewUser); break;
 	case 1: sett().SetUserLevel(Settings::UserLevel::Professional); break;
 	}
