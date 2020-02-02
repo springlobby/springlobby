@@ -622,17 +622,7 @@ void BattleRoomTab::OnPromote(wxCommandEvent& /*unused*/)
 	}
 }
 
-/*
- * Running? Spec? Founder? Action
- *    0       0      0     DL -> ready -> Ring -> OpponentCheck -> !start
- *    0       0      1     DL -> ready -> Ring -> OpponentCheck -> StartHB
- *    0       1      0     DL -> ready -> "Unspec to play"
- *    0       1      1     DL -> ready -> "Unspec to play"
- *    1       0      0     DL -> ready -> start
- *    1       0      1     DL -> ready -> start
- *    1       1      0     DL -> ready -> start
- *    1       1      1     DL -> ready -> start
- */
+
 void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 {
 	slLogDebugFunc("");
@@ -656,27 +646,39 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	m_ready_chk->SetValue(true);
 	OnImReady();
 
+/*
+ * Running? Founder? Spec? Action
+ *    1        1       1   DL -> ready -> start
+ *    1        1       0   DL -> ready -> start
+ *    1        0       1   DL -> ready -> start
+ *    1        0       0   DL -> ready -> start
+ *    0        1       1   DL -> ready -> Ring -> OpponentCheck -> StartHB (exception to allow hosting)
+ *    0        1       0   DL -> ready -> Ring -> OpponentCheck -> StartHB
+ *    0        0       1   DL -> ready -> "Unspec to play"
+ *    0        0       0   DL -> ready -> Ring -> OpponentCheck -> !start
+ * TODO: OpponentCheck? Check that we have an opponent / offer to add bots.
+ */
 	// Is remote battle running?
 	if (m_battle->GetFounder().Status().in_game) {
 		m_battle->StartSpring();
 	} else { // No, it is not running.
-		if (m_battle->GetMe().BattleStatus().spectator) {
+		if (!m_battle->IsFounderMe() && m_battle->GetMe().BattleStatus().spectator) {
 			customMessageBoxModal(SL_MAIN_ICON,
 			  _("No battle is running. You must be a player to start"), _("Error"));
-		} else { // I am a player
-			if (m_battle->IsEveryoneReady()) {
+		} else {
+			if (!m_battle->IsEveryoneReady()) {
+				int answer = customMessageBox(SL_MAIN_ICON,
+				  _("Some players are not ready, ring them?"),
+				  _("Not ready"), wxYES | wxCANCEL);
+				if (answer == wxYES)
+					m_battle->RingNotSyncedAndNotReadyPlayers();
+			} else {
 				if (m_battle->IsFounderMe()) {
 					m_battle->SaveMapDefaults(); // save map presets
 					m_battle->StartHostedBattle();
 				} else {
 					m_battle->m_autohost_manager->GetAutohostHandler().Start();
 				}
-			} else {
-				int answer = customMessageBox(SL_MAIN_ICON,
-				  _("Some players are not ready, ring them?"),
-				  _("Not ready"), wxYES | wxCANCEL);
-				if (answer == wxYES)
-					m_battle->RingNotSyncedAndNotReadyPlayers();
 			}
 		}
 	}
