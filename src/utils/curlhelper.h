@@ -18,6 +18,6 @@ size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream);
 }
 
 wxString Paste2Pastebin(const wxString& message);
-
+wxString Paste2Logs(const wxString& body);
 
 #endif // CURLHELPER_H

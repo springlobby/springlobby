@@ -12,6 +12,7 @@
 #include <wx/wfstream.h>
 
 #include "uiutils.h"
+#include "utils/curlhelper.h"
 
 CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath)
     : CrashReporterDialogBase(parent)
@@ -63,6 +64,7 @@ CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& headi
 
 void CrashReporterDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(CANCEL);
 }
 
@@ -79,12 +81,14 @@ void CrashReporterDialog::OnClickBugReport(wxCommandEvent& event)
 
 void CrashReporterDialog::OnNorm(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(RERUN_NORMAL);
 }
 
 
 void CrashReporterDialog::OnSafe(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(RERUN_SAFE);
 }
 
@@ -93,4 +97,10 @@ int CrashReporterDialog::RunCrashReporterDialog(wxWindow* parent, const wxString
 {
 	CrashReporterDialog dialog(parent, heading, message, filePath);
 	return dialog.ShowModal();
+}
+
+
+void CrashReporterDialog::UploadCrashReport()
+{
+	Paste2Logs(m_report_file_text->GetValue());
 }
