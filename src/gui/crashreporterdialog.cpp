@@ -102,5 +102,8 @@ int CrashReporterDialog::RunCrashReporterDialog(wxWindow* parent, const wxString
 
 void CrashReporterDialog::UploadCrashReport()
 {
+	if (!m_log_upload_check->IsChecked())
+		return;
+
 	Paste2Logs(m_report_file_text->GetValue());
 }
