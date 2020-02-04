@@ -31,7 +31,7 @@ size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
 } //end extern "C"
 
 
-wxString Paste2Logs(const wxString& body)
+wxString Paste2Logs(const wxString& body, const wxString& comment)
 {
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
@@ -46,9 +46,14 @@ wxString Paste2Logs(const wxString& body)
 
 	//we need to keep these buffers around for curl op duration
 	wxString myNick = sett().GetServerAccountNick(sett().GetDefaultServer());
+	wxString name(_T("Springlobby engine crash report"));
+	if (!comment.IsEmpty()) {
+		name += _(": ");
+		name += comment;
+	}
 
 	Json::Value root;
-	root["name"] = "ThinkSome-SLTestCrash";
+	root["name"] = STD_STRING(name);
 	root["text"] = STD_STRING(body);
 	root["tags"].append("type=test");
 	root["tags"].append(STD_STRING(wxString::Format("lobbyNick=%s", myNick)));

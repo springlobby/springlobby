@@ -19,6 +19,9 @@ CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& headi
     , WindowHintsPickle(_T("crashreporterdialog"), this, wxSize(410, 520))
 {
 	SetLabel(heading);
+
+	m_log_comment_text->SetHint("(optional) additional information about crash");
+
 	m_report_text->ChangeValue(message);
 	m_report_text->InvalidateBestSize();
 	m_report_text->SetClientSize(m_report_text->GetBestSize());
@@ -105,5 +108,5 @@ void CrashReporterDialog::UploadCrashReport()
 	if (!m_log_upload_check->IsChecked())
 		return;
 
-	Paste2Logs(m_report_file_text->GetValue());
+	Paste2Logs(m_report_file_text->GetValue(), m_log_comment_text->GetValue());
 }
