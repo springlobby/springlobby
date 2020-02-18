@@ -42,6 +42,7 @@ wxString Paste2Logs(const wxString& body, const wxString& comment)
 	static const char* url = "http://logs.springrts.com/logfiles/";
 	// these header lines will overwrite/add to cURL defaults
 	m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: application/json");
+	// Necessary, otherwise the server returns error 417 for long POSTs.
 	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:");
 
 	//we need to keep these buffers around for curl op duration
@@ -55,13 +56,13 @@ wxString Paste2Logs(const wxString& body, const wxString& comment)
 	Json::Value root;
 	root["name"] = STD_STRING(name);
 	root["text"] = STD_STRING(body);
-	root["tags"].append("type=test");
+	//root["tags"].append("type=test");
 	root["tags"].append(STD_STRING(wxString::Format("lobbyNick=%s", myNick)));
 	root["tags"].append(STD_STRING(wxString::Format("lobbyClientName=%s", GetSpringlobbyName(/*lowercase=*/true))));
 	root["tags"].append(STD_STRING(wxString::Format("lobbyClientVersion=%s", GetSpringlobbyVersion())));
 
 	std::string serialised(root.toStyledString());
-	wxLogDebug("JSON: %s", serialised);
+	//wxLogDebug("JSON: %s", serialised);
 
 	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
 	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
