@@ -508,7 +508,7 @@ void TASServer::ExecuteCommand(const std::string& in)
 	} catch (const std::exception& e) {
 		// catch everything so the app doesn't crash, may make SL behave oddly,
 		// but it's better than crashing randomly for normal users.
-		wxLogWarning(_T("Exception: %s"), e.what());
+		wxLogWarning(_T("Exception: %s %s %s"), e.what(), cmd, params);
 	}
 }
 
