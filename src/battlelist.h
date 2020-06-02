@@ -16,6 +16,7 @@ lsl/container/battlelist.h
 
 
 #include <map>
+#include <string>
 #include "utils/mixins.h"
 
 class IBattle;
