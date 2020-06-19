@@ -1,5 +1,7 @@
 ChangeLog of Springlobby
 ## 0.270
+ - improve error handling
+ - use https for rapid downloads
  - use <filesystem> in several places, this requires gcc >= 8
  - fix #922: fix logfile cannot be opened on fresh install
  - fix #297: add "download engine" to replay context menu
