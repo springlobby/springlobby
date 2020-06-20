@@ -1,5 +1,7 @@
 ChangeLog of Springlobby
 ## 0.270
+ - add newbie (default) gui which hides a lot of advanced settings:
+    edit->lobby preferences -> general -> gui user level
  - improve error handling
  - use https for rapid downloads
  - use <filesystem> in several places, this requires gcc >= 8
