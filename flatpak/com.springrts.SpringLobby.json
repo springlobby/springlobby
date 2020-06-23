@@ -17,6 +17,21 @@
 			]
 		},
 		{
+			"name": "boost",
+			"buildsystem": "simple",
+			"build-commands": [
+				"./bootstrap.sh --prefix=/app --with-libraries=filesystem,system",
+				"./b2 -j $FLATPAK_BUILDER_N_JOBS install"
+			],
+			"sources": [
+				{
+					"type": "archive",
+					"url": "https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.tar.bz2",
+					"sha256": "4eb3b8d442b426dc35346235c8733b5ae35ba431690e38c6a8263dce9fcbb402"
+				}
+			]
+		},
+		{
 			"name": "wxWidgets",
 			"config-opts": "--with-gtk=3 --with-opengl --with-libjpeg --disable-shared --enable-monolithic--with-libtiff --with-libpng --with-zlib --disable-sdltest --enable-unicode --enable-display --enable-propgrid --disable-webkit --disable-webview --disable-webviewwebkit --with-libiconv=/usr --without-subdirs --without-gtkprint --disable-gtktest --disable-gtktest",
 			"cxxflags": [
