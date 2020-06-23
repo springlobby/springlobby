@@ -156,8 +156,9 @@ void ChatPanelMenu::CreateNickListMenu()
 
 	m_user_menu = new ChatPanelMenu::UserMenu(this, this);
 	if (m_chatpanel->m_type != CPT_User and !bridge_user) {
-		wxMenuItem* chatitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_CHAT, _("Open Chat"), wxEmptyString, wxITEM_NORMAL);
-		m_user_menu->Append(chatitem);
+		m_user_menu->Append(new wxMenuItem(m_user_menu, CHAT_MENU_US_CHAT, _("Open Chat"), wxEmptyString, wxITEM_NORMAL));
+		m_user_menu->Append(new wxMenuItem(m_user_menu, CHAT_MENU_US_IGNORE, _("Ignore User"), wxEmptyString, wxITEM_NORMAL));
+		m_user_menu->Append(new wxMenuItem(m_user_menu, CHAT_MENU_US_UNIGNORE, _("Unignore User"), wxEmptyString, wxITEM_NORMAL));
 	}
 	if (!bridge_user) {
 		wxMenuItem* joinbattleitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_JOIN, _("Join same battle"), wxEmptyString, wxITEM_NORMAL);
@@ -720,6 +721,22 @@ void ChatPanelMenu::OnUserMenuCreateGroup(wxCommandEvent& /*unused*/)
 	}
 }
 
+void ChatPanelMenu::OnUserMenuIgnore(wxCommandEvent& /*unused*/)
+{
+	const User* user = m_chatpanel->GetSelectedUser();
+	if (user == nullptr)
+		return;
+	serverSelector().GetServer().SendCmd("IGNORE", "userName=" + user->GetNick());
+}
+
+void ChatPanelMenu::OnUserMenuUnignore(wxCommandEvent& /*unused*/)
+{
+	const User* user = m_chatpanel->GetSelectedUser();
+	if (user == nullptr)
+		return;
+	serverSelector().GetServer().SendCmd("UNIGNORE", "userName=" + user->GetNick());
+}
+
 void ChatPanelMenu::OnMenuItem(wxCommandEvent& event)
 {
 	if (event.GetId() == CHAT_MENU_SHOW_MUTELIST)
@@ -748,6 +765,10 @@ void ChatPanelMenu::OnMenuItem(wxCommandEvent& event)
 	else if (event.GetId() == CHAT_MENU_SV_BROADCAST)
 		OnServerMenuBroadcast(event);
 
+	else if (event.GetId() == CHAT_MENU_US_IGNORE)
+		OnUserMenuIgnore(event);
+	else if (event.GetId() == CHAT_MENU_US_UNIGNORE)
+		OnUserMenuUnignore(event);
 	else if (event.GetId() == CHAT_MENU_US_CHAT)
 		OnUserMenuOpenChat(event);
 	else if (event.GetId() == CHAT_MENU_US_JOIN)

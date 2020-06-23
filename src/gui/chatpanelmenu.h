@@ -41,6 +41,8 @@ public:
 	void OnServerMenuBroadcast(wxCommandEvent& event);
 
 	void OnUserMenuOpenChat(wxCommandEvent& event);
+	void OnUserMenuIgnore(wxCommandEvent& event);
+	void OnUserMenuUnignore(wxCommandEvent& event);
 	void OnUserMenuJoinSame(wxCommandEvent& event);
 	void OnUserMenuSlap(wxCommandEvent& event);
 	void OnUserMenuMute(wxCommandEvent& event);
@@ -122,6 +124,8 @@ static const long CHAT_MENU_SV_CHPWD = wxNewId();
 static const long CHAT_MENU_SV_ACCESS = wxNewId();
 static const long CHAT_MENU_SV_BROADCAST = wxNewId();
 
+static const long CHAT_MENU_US_IGNORE = wxNewId();
+static const long CHAT_MENU_US_UNIGNORE = wxNewId();
 static const long CHAT_MENU_US_CHAT = wxNewId();
 static const long CHAT_MENU_US_JOIN = wxNewId();
 static const long CHAT_MENU_US_SLAP = wxNewId();
