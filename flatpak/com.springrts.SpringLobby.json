@@ -6,6 +6,16 @@
 	"sdk": "org.freedesktop.Sdk",
 	"modules": [
 		{
+			"name": "alure",
+			"buildsystem": "cmake-ninja",
+			"sources": [
+				{
+					"type": "git",
+					"url": "https://github.com/kcat/alure.git"
+				}
+			]
+		},
+		{
 			"name": "wxWidgets",
 			"config-opts": "--with-gtk=3 --with-opengl --with-libjpeg --disable-shared --enable-monolithic--with-libtiff --with-libpng --with-zlib --disable-sdltest --enable-unicode --enable-display --enable-propgrid --disable-webkit --disable-webview --disable-webviewwebkit --with-libiconv=/usr",
 			"cxxflags": [
