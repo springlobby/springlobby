@@ -383,6 +383,9 @@ set(springlobbySrc
 
 )
 
+if(SPRINGLOBBY_UPDATER)
+	set_source_files_properties(gui/ui.cpp PROPERTIES COMPILE_FLAGS "-DAUTOUPDATE=1")
+endif()
 
 if (EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h)
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_SOURCE_DIR}) # needed for out of source builds with a tarball

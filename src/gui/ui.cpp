@@ -59,7 +59,15 @@
 #endif
 
 
-SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
+#if AUTOUPDATE
+#define AUTOUPDATE_DEFAULT true
+#else
+#define AUTOUPDATE_DEFAULT false
+#endif
+
+SLCONFIG("/General/AutoUpdate", AUTOUPDATE_DEFAULT, "Determines if springlobby should check for updates on startup");
+
+
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_MULTIPLAYER, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", true, "Connect to server on startup");
