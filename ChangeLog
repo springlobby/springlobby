@@ -45,7 +45,7 @@ ChangeLog of Springlobby
 
 ## 0.265
  - more verbose logging when starting spring / log exit code
- - Rearrangement and realignment buttons in singleplayer and battleroom tabs
+ - rearrangement and realignment buttons in singleplayer and battleroom tabs
  - remove warning message when starting a match without opponet
  - more verbose connect / disconnect messages
  - use tls for https://api.springfiles.com / https://paste.springfiles.com
