@@ -45,7 +45,7 @@ ChangeLog of Springlobby
 
 ## 0.265
  - more verbose logging when starting spring / log exit code
- - Rearange and realign buttons in singleplayer and battleroom tabs
+ - rearrangement and realignment of buttons in singleplayer and battleroom tabs
  - remove warning message when starting a match without opponet
  - more verbose connect / disconnect messages
  - use tls for https://api.springfiles.com / https://paste.springfiles.com
@@ -186,7 +186,7 @@ ChangeLog of Springlobby
 
 ## 0.242
  - keep selection when lists are resorted
- - intergrate windows installer to the build process
+ - integrate windows installer to the build process
 
 ## 0.238 - 0.241
  - skipped due build error
@@ -266,7 +266,7 @@ ChangeLog of Springlobby
  - don't flash window titlebar when chat is active
  - fix tooltips not shown on windows
  - fix memleak: unitsync wasn't probably unloaded
- - automaticly rejoin all channels on restart
+ - automatically rejoin all channels on restart
 
 ## 0.217
  - fix startpos not selectable in lobby
@@ -355,7 +355,7 @@ ChangeLog of Springlobby
 ## 0.197
  - fix osx compile
  - store default DownloadDir in springlobby.conf
- - fix rapid repo isn't automaticly updated
+ - fix rapid repo isn't automatically updated
  - don't crash when cached images are broken
  - fix some wx3.0 bugs/crashes, some cleanups
  - remove reconnect dialog
@@ -396,7 +396,7 @@ ChangeLog of Springlobby
  - fix win32 compile
 
 ## 0.187
- - fix problems with non-asscii chars in HOME path
+ - fix problems with non-ascii chars in HOME path
  - fix some unitsync related crashes
  - more verbose "Timeout assumed" message / maybe fix it
 
@@ -404,8 +404,8 @@ ChangeLog of Springlobby
  - fix crash in battle room at map change
 
 ## 0.185
- - improve caching, most data is now shared accross multiple spring/unitsync versions:
-   at first start the cache folder is automaticly cleared and cache files are recreated in background!
+ - improve caching, most data is now shared across multiple spring/unitsync versions:
+   at first start the cache folder is automatically cleared and cache files are recreated in background!
    this will can take a very long time. don't wonder when springlobby takes 100% cpu while doing this.
  - fix team colors/faction in replay list
  - fix demo playback
