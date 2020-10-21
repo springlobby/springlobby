@@ -4,16 +4,14 @@ set -e
 
 if [ -z "$CMAKE" ]; then
 	CMAKE=cmake
-else
-	echo "Using $CMAKE"
 fi
 
-if [ ! -x $(which $CMAKE) ]; then
+if [ -x "$(which $CMAKE)" ]; then
+	echo CMAKE=$CMAKE
+else
 	echo "$CMAKE doesn't exist"
 	ls -lah $(dirname $CMAKE)
 	exit 1
-else
-	echo CMAKE=$CMAKE
 fi
 
 SOURCEDIR=$(readlink -f $(dirname $0)/..)
