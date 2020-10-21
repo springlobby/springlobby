@@ -3,10 +3,17 @@
 set -e
 
 if [ -z "$CMAKE" ]; then
-	echo "CMAKE isn't set, using default 'cmake'"
 	CMAKE=cmake
 else
 	echo "Using $CMAKE"
+fi
+
+if [ ! -x $(which $CMAKE) ]; then
+	echo "$CMAKE doesn't exist"
+	ls -lah $(dirname $CMAKE)
+	exit 1
+else
+	echo CMAKE=$CMAKE
 fi
 
 SOURCEDIR=$(readlink -f $(dirname $0)/..)
