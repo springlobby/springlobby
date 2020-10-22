@@ -316,7 +316,7 @@ wxArrayString SelectUsersDialog::GetSelection()
 	return GetSelectionFromText();
 }
 
-int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long /*unused*/)
+int wxCALLBACK SelectUsersDialog::CompareName(wxIntPtr item1, wxIntPtr item2, wxIntPtr /*unused*/)
 {
 	//wxListCtrl* user_list = (wxListCtrl*)sortData;
 	wxString* s1 = (wxString*)item1;
