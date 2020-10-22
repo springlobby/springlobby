@@ -13,6 +13,7 @@
 #include <wx/stattext.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
+#include <cstdint>
 
 #include "gui/controls.h"
 #include "ibattle.h"
@@ -185,7 +186,7 @@ static MapGridCtrl::SortKey GetSelectedSortKey(wxChoice* choice)
 	const int selection = choice->GetSelection();
 	if (selection == wxNOT_FOUND) //default to first entry
 		return MapGridCtrl::SortKey_Name;
-	return (MapGridCtrl::SortKey)(int)(long)choice->GetClientData(selection);
+	return (MapGridCtrl::SortKey)(uintptr_t)choice->GetClientData(selection);
 }
 
 namespace
