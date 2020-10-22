@@ -35,7 +35,7 @@ const std::string GetSpringlobbyAgent()
 
 	agent += " ";
 
-#if __WORDSIZE == 64
+#if __WORDSIZE == 64 || _WIN64 || __x86_64__ || __ppc64__
 	agent += "x64";
 #else
 	agent += "x32";
