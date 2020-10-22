@@ -59,7 +59,8 @@ private:
 	long AddUserToList(const wxString& nick, const int& flag);
 	void RemoveUserFromList(long item);
 
-	static int wxCALLBACK CompareName(long item1, long item2, long sortData);
+	static int wxCALLBACK CompareName(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
+
 
 	void Sort();
 
