@@ -1,8 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 #include "log.h"
 
-#include <sys/time.h>
-#include <time.h>
+#include <ctime>
 #include <wx/log.h>
 #include <algorithm>
 #include <cstdio>
@@ -18,12 +17,12 @@
 std::string GetCurrentTimeString(const char* format)
 {
 	char buffer[512];
-	struct timeval tv;
+	struct tm * timeinfo;
+	time_t rawtime;
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
 
-	gettimeofday(&tv, NULL);
-
-	const struct tm* tm_info = localtime(&tv.tv_sec);
-	const size_t len = strftime(buffer, sizeof(buffer), format, tm_info);
+	const size_t len = strftime(buffer, sizeof(buffer), format, timeinfo);
 	if (len <= 0)
 		return "";
 	return std::string(buffer);
@@ -77,15 +76,15 @@ public:
 	{
 		char buffer[512];
 		char buffer2[512];
-		struct timeval tv;
 
-		gettimeofday(&tv, NULL);
+		time_t rawtime;
+		time (&rawtime);
 
-		const struct tm* tm_info = localtime(&tv.tv_sec);
+		const struct tm* tm_info = localtime(&rawtime);
 		const size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tm_info);
 		if (len <= 0)
 			return "";
-		const int res = snprintf(buffer2, sizeof(buffer2), "%s.%03ld", buffer, tv.tv_usec / 1000);
+		const int res = snprintf(buffer2, sizeof(buffer2), "%s.%03ld", buffer, rawtime / 1000);
 		if (res > 0)
 			return std::string(buffer2, res);
 		return "";

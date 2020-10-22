@@ -327,5 +327,5 @@ int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long /*unu
 void SelectUsersDialog::Sort()
 {
 	wxWindowUpdateLocker noUpdates(m_user_list);
-	m_user_list->SortItems(CompareName, (wxUIntPtr)m_user_list);
+	m_user_list->SortItems(CompareName, (wxIntPtr)m_user_list);
 }
