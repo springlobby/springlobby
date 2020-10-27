@@ -7,10 +7,10 @@
 # The 'reconfig' target will tell a buildmaster to reload its config file.
 
 start:
-	buildbot start master
+	buildbot start buildbot
 
 stop:
-	buildbot stop master
+	buildbot stop buildbot
 
 reconfig:
 	kill -HUP `cat twistd.pid`
