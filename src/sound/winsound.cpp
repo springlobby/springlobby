@@ -13,16 +13,16 @@ ALsound::ALsound()
 
 ALsound::~ALsound()
 {
-	PlaySound(NULL, 0, 0); // STOP ANY PLAYING SOUND
+	PlaySoundA(NULL, 0, 0); // STOP ANY PLAYING SOUND
 }
 
 void ALsound::ring()
 {
-	PlaySound((LPCSTR)ring_sound_data, NULL, SND_MEMORY | SND_ASYNC);
+	PlaySoundA((LPCSTR)ring_sound_data, NULL, SND_MEMORY | SND_ASYNC);
 }
 void ALsound::pm()
 {
-	PlaySound((LPCSTR)pm_sound_data, NULL, SND_MEMORY | SND_ASYNC);
+	PlaySoundA((LPCSTR)pm_sound_data, NULL, SND_MEMORY | SND_ASYNC);
 }
 
 ALsound& slsound()
