@@ -25,6 +25,7 @@ ENDIF(NOT MSVC)
 if(WIN32)
 	add_definitions(-DBOOST_THREAD_USE_LIB)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)
+	add_definitions(-DUNICODE -D_UNICODE)
 	set(Boost_THREADAPI win32)
 endif(WIN32)
 
