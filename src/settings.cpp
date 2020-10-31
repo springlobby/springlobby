@@ -140,7 +140,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 28:
 		case 29:
 		case 30:
-#ifdef WIN32 // https://github.com/springlobby/springlobby/issues/385
+#ifdef _WIN32 // https://github.com/springlobby/springlobby/issues/385
 			cfg().Write(_T("/GUI/UseNotificationPopups"), true);
 #endif
 		case 31:

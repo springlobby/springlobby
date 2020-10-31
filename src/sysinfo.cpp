@@ -3,7 +3,7 @@
 #if defined(__unix__) || defined(__APPLE__)
 #include <unistd.h>
 #define WRITABLE W_OK
-#elif defined(__WIN32__) || defined(_MSC_VER)
+#elif defined(_WIN32) || defined(_MSC_VER)
 #include <io.h>
 #define WRITABLE 02
 #else
@@ -74,7 +74,7 @@ std::string GetSpringlobbyInfo()
 			continue;
 		}
 
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if defined(_WIN32) || defined(_MSC_VER)
 		path = Utf8ToLocalEncoding(path.c_str());
 #endif
 		res += stdprintf("%s (%s)\n", paths[i].m_desc.c_str(), path.c_str());
@@ -90,7 +90,7 @@ std::string GetSpringlobbyInfo()
 			dummy_fn += _T("dummy.txt");
 
 			std::string dummyFileString = dummy_fn.ToStdString();
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if defined(_WIN32) || defined(_MSC_VER)
 			dummyFileString = Utf8ToLocalEncoding(dummyFileString.c_str());
 #endif
 			of.open(dummyFileString);

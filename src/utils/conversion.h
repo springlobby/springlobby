@@ -18,7 +18,7 @@ wxString TowxString(const std::string& arg);
 wxString TowxString(int);
 std::string strtolower(std::string str);
 
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if defined(_WIN32) || defined(_MSC_VER)
 std::string Utf8ToLocalEncoding(const char* str);
 #endif
 

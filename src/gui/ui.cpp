@@ -795,7 +795,7 @@ void Ui::OnLobbyDownloaded(wxCommandEvent& data)
 	}
 	const wxString m_newexe = TowxString(SlPaths::GetUpdateDir()) + _T("springlobby_updater.exe");
 	wxArrayString params;
-#ifdef WIN32
+#ifdef _WIN32
 	DWORD id = GetCurrentProcessId();
 #else
 	long id = wxThread::GetCurrentId();

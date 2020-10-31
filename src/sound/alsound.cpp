@@ -8,7 +8,7 @@
 #include <AL/al.h>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 //win32 compile uses static libs
 #define ALURE_STATIC_LIBRARY
 #endif

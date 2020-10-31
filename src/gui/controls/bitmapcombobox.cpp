@@ -48,7 +48,7 @@ void BitmapComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int /*item*/
 	} else {
 		dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 
-#ifdef WIN32
+#ifdef _WIN32
 		wxColour selCol = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
 #else
 		wxColour selCol = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);

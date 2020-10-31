@@ -289,7 +289,7 @@ void ChatLog::FillLastLineArray()
 
 	const wxChar* wc_EOL(wxTextBuffer::GetEOL());
 	const size_t eol_num_chars(wxStrlen(wc_EOL));
-#ifndef WIN32
+#ifndef _WIN32
 	char* eol(static_cast<char*>(alloca(eol_num_chars)));
 #else
 	char* eol(new char[eol_num_chars]);
@@ -299,7 +299,7 @@ void ChatLog::FillLastLineArray()
 	const size_t lines_added = find_tail_sequences(m_logfile, eol, eol_num_chars, num_lines, m_last_lines);
 	wxLogMessage(_T("ChatLog::FillLastLineArray: Loaded %lu lines from %s."), lines_added, GetCurrentLogfilePath().c_str());
 
-#ifdef WIN32
+#ifdef _WIN32
 	delete[] eol;
 #endif
 	m_logfile.SeekEnd();

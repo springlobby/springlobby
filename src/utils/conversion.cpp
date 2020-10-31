@@ -5,7 +5,7 @@
 #include <wx/tokenzr.h>
 #include <algorithm>
 #include <sstream>
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if defined(_WIN32) || defined(_MSC_VER)
 #include <windows.h>
 #endif
 
@@ -61,7 +61,7 @@ std::string strtolower(std::string str)
 	return str;
 }
 
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if defined(_WIN32) || defined(_MSC_VER)
 std::string Utf8ToLocalEncoding(const char* multyByteString)
 {
 	std::string res;

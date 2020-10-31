@@ -198,7 +198,7 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 	wxLogDebug("%s %d %d", progress.name.c_str(), progress.downloaded, progress.filesize);
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 #define BILLION (1E9)
 
 static BOOL g_first_time = 1;

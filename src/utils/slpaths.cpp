@@ -14,7 +14,7 @@
 #include <wx/string.h>
 #include <algorithm>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <shlobj.h>
 #include <windows.h>
 #endif
@@ -32,7 +32,7 @@ std::string SlPaths::m_user_defined_config_path = "";
 // returns my documents dir on windows, HOME on windows
 static std::string GetMyDocumentsDir()
 {
-#ifdef WIN32
+#ifdef _WIN32
 	wchar_t my_documents[MAX_PATH];
 	HRESULT result = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
 	if (result == S_OK)
@@ -46,7 +46,7 @@ static std::string GetMyDocumentsDir()
 #endif
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring"), "Path where springlobby stores downloads");
 #else
 SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring"), "Path where springlobby stores downloads");
@@ -403,7 +403,7 @@ std::string SlPaths::GetExecutableFolder()
 std::string SlPaths::GetConfigfileDir()
 {
 	std::string path = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
-#ifndef WIN32
+#ifndef _WIN32
 	path += ".";
 #endif
 	path += GetSpringlobbyName(true);

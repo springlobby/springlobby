@@ -8,7 +8,7 @@
 #include <sys/ioctl.h>
 #endif
 
-#if defined(WIN32) || defined(_WIN32)
+#if defined(_WIN32)
 
 bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 {
