@@ -6,6 +6,7 @@
 
 #include SPRINGLOBBY_CONFIGH
 #include "version.h"
+#include <lsl/lslutils/platform.h>
 
 const std::string GetSpringlobbyName(bool lowercase)
 {
@@ -25,21 +26,7 @@ const std::string GetSpringlobbyAgent()
 	std::string agent = GetSpringlobbyName() + " ";
 	agent += GetSpringlobbyVersion();
 	agent += " (";
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-	agent += "win";
-#elif __APPLE__
-	agent += "osx";
-#else
-	agent += "unix";
-#endif
-
-	agent += " ";
-
-#if __WORDSIZE == 64 || _WIN64 || __x86_64__ || __ppc64__
-	agent += "x64";
-#else
-	agent += "x32";
-#endif
+	agent += LSL::Util::GetPlatformString(LSL::Util::GetPlatform());
 	agent += ")";
 
 	return agent;
