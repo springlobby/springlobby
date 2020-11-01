@@ -2,7 +2,8 @@ ChangeLog of Springlobby
 ## 0.271
  - add ignore/unignore to user right-click menu
  - fix game / map info caching not working for games / maps with special chars
- - use architecutre specific download path for the spring engine: linux32/linux64/windows32/windows64/macosx
+ - use platform specific download path for the spring engine: linux32/linux64/windows32/windows64/macosx
+ - use platform specific config file sections to store spring engine paths
 
 ## 0.270
  - add newbie (default) gui which hides a lot of advanced settings:
