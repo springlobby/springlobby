@@ -135,6 +135,11 @@ void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVecto
 	}
 }
 
+static const wxString GetConfigEngineSectionName()
+{
+	return _T( "/Spring/Paths" ) + TowxString(LSL::Util::GetCurrentPlatformString());
+}
+
 void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle* additionalbundle)
 {
 	/*
@@ -184,7 +189,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		}
 	}
 
-	wxArrayString list = cfg().GetGroupList(_T( "/Spring/Paths" ));
+	wxArrayString list = cfg().GetGroupList(GetConfigEngineSectionName());
 	const int count = list.GetCount();
 	for (int i = 0; i < count; i++) {
 		LSL::SpringBundle bundle;
@@ -195,7 +200,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		usync_paths.push_back(bundle);
 	}
 
-	cfg().DeleteGroup(_T("/Spring/Paths"));
+	cfg().DeleteGroup(GetConfigEngineSectionName());
 
 	m_spring_versions.clear();
 	try {
@@ -255,7 +260,7 @@ void SlPaths::DeleteSpringVersionbyIndex(const std::string& index)
 	if (index.empty()) {
 		return;
 	}
-	cfg().DeleteGroup(_T( "/Spring/Paths/" ) + TowxString(index));
+	cfg().DeleteGroup(GetConfigEngineSectionName() + _T("/") + TowxString(index));
 	if (GetCurrentUsedSpringIndex() == index)
 		SetUsedSpringIndex("");
 }
@@ -274,29 +279,29 @@ std::string SlPaths::GetSpringConfigFilePath(const std::string& /*FIXME: impleme
 
 std::string SlPaths::GetUnitSync(const std::string& index)
 {
-	return STD_STRING(cfg().Read(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), wxEmptyString));
+	return STD_STRING(cfg().Read(GetConfigEngineSectionName() + _T("/") + TowxString(index) + _T( "/UnitSyncPath" ), wxEmptyString));
 }
 
 std::string SlPaths::GetSpringBinary(const std::string& index)
 {
-	return STD_STRING(cfg().Read(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), wxEmptyString));
+	return STD_STRING(cfg().Read(GetConfigEngineSectionName() + _T("/") + TowxString(index) + _T( "/SpringBinPath" ), wxEmptyString));
 }
 
 void SlPaths::SetUnitSync(const std::string& index, const std::string& path)
 {
-	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), TowxString(path));
+	cfg().Write(GetConfigEngineSectionName() + _T("/") + TowxString(index) + _T( "/UnitSyncPath" ), TowxString(path));
 	// reconfigure unitsync in case it is reloaded
 	ReconfigureUnitsync();
 }
 
 void SlPaths::SetSpringBinary(const std::string& index, const std::string& path)
 {
-	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), TowxString(path));
+	cfg().Write(GetConfigEngineSectionName() + _T("/") + TowxString(index) + _T( "/SpringBinPath" ), TowxString(path));
 }
 
 void SlPaths::SetBundle(const std::string& index, const std::string& path)
 {
-	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBundlePath" ), TowxString(path));
+	cfg().Write(GetConfigEngineSectionName() + _T("/") + TowxString(index) + _T( "/SpringBundlePath" ), TowxString(path));
 }
 
 std::string SlPaths::GetChatLogLoc()

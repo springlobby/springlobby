@@ -26,7 +26,7 @@ const std::string GetSpringlobbyAgent()
 	std::string agent = GetSpringlobbyName() + " ";
 	agent += GetSpringlobbyVersion();
 	agent += " (";
-	agent += LSL::Util::GetPlatformString(LSL::Util::GetPlatform());
+	agent += LSL::Util::GetCurrentPlatformString();
 	agent += ")";
 
 	return agent;
