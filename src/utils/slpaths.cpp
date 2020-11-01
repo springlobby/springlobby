@@ -5,6 +5,7 @@
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 #include <lslutils/conversion.h>
+#include <lslutils/platform.h>
 #endif
 
 #include <lslutils/misc.h>
@@ -118,8 +119,9 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 */
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
+	const std::string enginesubdir = std::string("engine") + PATH_DELIMITER + LSL::Util::GetPlatformString(LSL::Util::GetPlatform());
 	for (const std::string basedir : basedirs) {
-		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir) + "engine");
+		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir) + enginesubdir);
 		wxDir dir(TowxString(enginedir));
 
 		if (dir.IsOpened()) {
