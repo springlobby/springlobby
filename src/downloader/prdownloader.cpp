@@ -132,6 +132,7 @@ private:
 			case DownloadEnum::CAT_ENGINE:
 			case DownloadEnum::CAT_ENGINE_LINUX:
 			case DownloadEnum::CAT_ENGINE_WINDOWS:
+			case DownloadEnum::CAT_ENGINE_WINDOWS64:
 			case DownloadEnum::CAT_ENGINE_LINUX64:
 			case DownloadEnum::CAT_ENGINE_MACOSX: {
 				SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
