@@ -53,6 +53,19 @@ endif(NOT DEFINED SPRINGLOBBY_REV)
 FIND_PACKAGE( PkgConfig )
 
 
+include(CMakePushCheckState)
+include(CheckCXXCompilerFlag)
+function(check_linker_flag flag out_var)
+  cmake_push_check_state()
+  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} ${flag}")
+  check_cxx_compiler_flag("" ${out_var})
+  cmake_pop_check_state()
+endfunction()
+check_linker_flag("-Wl,--exclude-libs,ALL" LINKER_HAS_EXCLUDELIBS)
+if (LINKER_HAS_EXCLUDELIBS)
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--exclude-libs,ALL")
+endif()
+
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
