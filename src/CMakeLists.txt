@@ -430,7 +430,7 @@ IF(WIN32)
 ENDIF()
 add_subdirectory(updater)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
+add_executable(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 		${generated_gui_cpp}
