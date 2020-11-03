@@ -382,24 +382,20 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 		User& user = battle.GetUser(nick);
 		// this is necessary since the user will be deleted when the gui function is called
 		bool isbot = user.BattleStatus().IsBot();
-		std::map<std::string, User*> user_map = battle.GetUsers();
 		user.BattleStatus().scriptPassword.clear();
 		battle.OnUserRemoved(user);
 		ui().OnUserLeftBattle(battle, user, isbot);
 
-		std::list<User*> toremove;
+		std::map<std::string, User*> user_map = battle.GetUsers();
 		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
 			User& user = *p.second;
 			if (!user.IsBridged())
 				continue;
 			std::string nick = p.first;
 			if (!m_serv.UserIsOnBridge(nick)) {
+				ui().OnUserOffline(user);
 				m_serv._RemoveUser(nick);
-				toremove.push_back(&user);
 			}
-		}
-		for (auto user: toremove) {
-			ui().OnUserOffline(*user);
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogWarning(_T("Exception: %s"), e.what());
