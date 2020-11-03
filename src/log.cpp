@@ -32,19 +32,17 @@ static bool gui = false;
 
 const char* wxLogLevelToString(wxLogLevel level)
 {
-	assert(level < 8); // just in case
-
-	static const char* levelNames[] = {
-	    "Fatal",
-	    "Error",
-	    "Warning",
-	    "Message",
-	    "Status",
-	    "Info",
-	    "Debug",
-	    "Trace"};
-
-	return levelNames[static_cast<int>(level)];
+	switch(level) {
+		case wxLOG_FatalError: return "Fatal";
+		case wxLOG_Error:      return "Error";
+		case wxLOG_Warning:    return "Warning";
+		case wxLOG_Message:    return "Message";
+		case wxLOG_Status:     return "Status";
+		case wxLOG_Info:       return "Info";
+		case wxLOG_Debug:      return "Debug";
+		case wxLOG_Trace:      return "Trace";
+	}
+	return "Unknown level";
 }
 
 class myLogger : public wxLog
