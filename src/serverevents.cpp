@@ -387,6 +387,7 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 		battle.OnUserRemoved(user);
 		ui().OnUserLeftBattle(battle, user, isbot);
 
+		std::list<std::string> toremove;
 		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
 			User& user = *p.second;
 			if (!user.IsBridged())
@@ -394,8 +395,11 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 			std::string nick = p.first;
 			if (!m_serv.UserIsOnBridge(nick)) {
 				ui().OnUserOffline(user);
-				m_serv._RemoveUser(nick);
+				toremove.push_back(nick);
 			}
+		}
+		for (const std::string nick: toremove) {
+			m_serv._RemoveUser(nick);
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogWarning(_T("Exception: %s"), e.what());
