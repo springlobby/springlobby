@@ -229,7 +229,7 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, size_t fr
 {
 
 	if (gameName.empty() || !LSL::usync().GameExists(gameName)) {
-		wxLogWarning("SideIcon %zu for game %s not found!", fractionId, gameName.c_str());
+		wxLogDebug("SideIcon %zu for game %s not found!", fractionId, gameName.c_str());
 		// game doesn't exist, dl needed?!
 		return BMP_EMPTY;
 	}
