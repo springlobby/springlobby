@@ -41,6 +41,7 @@ const char* wxLogLevelToString(wxLogLevel level)
 		case wxLOG_Info:       return "Info";
 		case wxLOG_Debug:      return "Debug";
 		case wxLOG_Trace:      return "Trace";
+		default: break;
 	}
 	return "Unknown level";
 }
