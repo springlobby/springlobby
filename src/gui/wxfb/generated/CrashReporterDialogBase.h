@@ -17,11 +17,13 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/stattext.h>
-#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/statline.h>
+#include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/sizer.h>
+#include <wx/button.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -39,6 +41,9 @@ class CrashReporterDialogBase : public wxDialog
 		wxTextCtrl* m_report_text;
 		wxStaticText* m_report_file_name_label;
 		wxTextCtrl* m_report_file_text;
+		wxCheckBox* m_log_upload_check;
+		wxStaticLine* m_staticline1;
+		wxTextCtrl* m_log_comment_text;
 		wxButton* m_bug_button;
 		wxButton* m_cancel_button;
 		wxButton* m_safe_button;

@@ -117,6 +117,8 @@ ConnectWindowBase::ConnectWindowBase( wxWindow* parent, wxWindowID id, const wxS
 	m_buttons_sizer->Add( m_cancel_button, 1, wxEXPAND|wxALL, 5 );
 
 	m_ok_button = new wxButton( this, wxID_ANY, _("Login"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	m_ok_button->SetDefault();
 	m_buttons_sizer->Add( m_ok_button, 1, wxALL|wxEXPAND, 5 );
 
 

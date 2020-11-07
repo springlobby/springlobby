@@ -66,7 +66,7 @@ class ConnectWindowBase : public wxDialog
 
 	public:
 
-		ConnectWindowBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Connect to server"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		ConnectWindowBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Connect to lobby server"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~ConnectWindowBase();
 
 };

@@ -27,6 +27,24 @@ CrashReporterDialogBase::CrashReporterDialogBase( wxWindow* parent, wxWindowID i
 	m_report_file_text = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxTE_MULTILINE|wxTE_RICH );
 	m_main_sizer->Add( m_report_file_text, 1, wxEXPAND|wxALL, 5 );
 
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_log_upload_check = new wxCheckBox( this, wxID_ANY, _("Upload log"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_log_upload_check->SetValue(true);
+	m_log_upload_check->SetToolTip( _("4") );
+
+	bSizer3->Add( m_log_upload_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer3->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+
+	m_log_comment_text = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_log_comment_text, 1, wxALL, 5 );
+
+
+	m_main_sizer->Add( bSizer3, 0, wxEXPAND, 5 );
+
 	wxBoxSizer* m_buttons_sizer;
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
