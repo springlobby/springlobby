@@ -12,12 +12,16 @@
 #include <wx/wfstream.h>
 
 #include "uiutils.h"
+#include "utils/curlhelper.h"
 
 CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath)
     : CrashReporterDialogBase(parent)
     , WindowHintsPickle(_T("crashreporterdialog"), this, wxSize(410, 520))
 {
 	SetLabel(heading);
+
+	m_log_comment_text->SetHint("(optional) additional information about crash");
+
 	m_report_text->ChangeValue(message);
 	m_report_text->InvalidateBestSize();
 	m_report_text->SetClientSize(m_report_text->GetBestSize());
@@ -63,6 +67,7 @@ CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& headi
 
 void CrashReporterDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(CANCEL);
 }
 
@@ -79,12 +84,14 @@ void CrashReporterDialog::OnClickBugReport(wxCommandEvent& event)
 
 void CrashReporterDialog::OnNorm(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(RERUN_NORMAL);
 }
 
 
 void CrashReporterDialog::OnSafe(wxCommandEvent& /*unused*/)
 {
+	UploadCrashReport();
 	EndModal(RERUN_SAFE);
 }
 
@@ -93,4 +100,13 @@ int CrashReporterDialog::RunCrashReporterDialog(wxWindow* parent, const wxString
 {
 	CrashReporterDialog dialog(parent, heading, message, filePath);
 	return dialog.ShowModal();
+}
+
+
+void CrashReporterDialog::UploadCrashReport()
+{
+	if (!m_log_upload_check->IsChecked())
+		return;
+
+	Paste2Logs(m_report_file_text->GetValue(), m_log_comment_text->GetValue());
 }

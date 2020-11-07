@@ -48,7 +48,7 @@
             <property name="size">-1,-1</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass">; forward_declare</property>
-            <property name="title">Connect to server</property>
+            <property name="title">Connect to lobby server</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -1268,7 +1268,7 @@
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
                                 <property name="current"></property>
-                                <property name="default">0</property>
+                                <property name="default">1</property>
                                 <property name="default_pane">0</property>
                                 <property name="disabled"></property>
                                 <property name="dock">Dock</property>

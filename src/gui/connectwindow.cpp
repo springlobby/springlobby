@@ -17,7 +17,7 @@
 //!
 //! @param parent Parent window
 ConnectWindow::ConnectWindow(wxWindow* parent)
-    : ConnectWindowBase(parent)
+	: ConnectWindowBase(parent)
 {
 	SetIcon(wxIcon(connect_xpm));
 	wxString server = sett().GetDefaultServer();
@@ -54,17 +54,20 @@ void ConnectWindow::EnterRegistrationMode()
 	in_login_mode = false;
 
 	Freeze();
+	SetMinSize(wxSize(-1, -1));
+
 	m_loginreg_button->SetLabel(_("Return to login..."));
 	m_email_label->Show();
 	m_email_text->Show();
 	m_password2_label->Show();
 	m_password2_hidden_text->Show();
-	m_nickname_text->SetFocus();
 	m_ok_button->SetLabel(_("Register"));
 	m_note_text->SetValue("A verification code will immidiately be sent to your email address.");
 	m_note_text->Show();
 
+	m_nickname_text->SetFocus();
 	Layout(); Fit(); Thaw();
+	SetMinSize(GetBestSize());
 }
 
 void ConnectWindow::EnterLoginMode()
@@ -72,16 +75,19 @@ void ConnectWindow::EnterLoginMode()
 	in_login_mode = true;
 
 	Freeze();
+	SetMinSize(wxSize(-1, -1));
+
 	m_loginreg_button->SetLabel(_("Create a new account..."));
 	m_email_label->Hide();
 	m_email_text->Hide();
 	m_password2_label->Hide();
 	m_password2_hidden_text->Hide();
-	m_ok_button->SetFocus();
 	m_ok_button->SetLabel(_("Login"));
 	m_note_text->Hide();
 
+	m_ok_button->SetFocus();
 	Fit(); Layout(); Thaw();
+	SetMinSize(GetBestSize());
 }
 
 void ConnectWindow::OnChangeMode(wxCommandEvent&)
@@ -169,14 +175,14 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 	if (m_password2_hidden_text->GetValue() != m_password1_hidden_text->GetValue() || m_password1_hidden_text->GetValue().IsEmpty()) {
-		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)"));
+		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty password)"));
 		return;
 	}
 	CleanHide();
 	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress),
-	                                           STD_STRING(m_email_text->GetValue()),
 	                                           STD_STRING(m_nickname_text->GetValue()),
-	                                           STD_STRING(m_password1_hidden_text->GetValue()));
+	                                           STD_STRING(m_password1_hidden_text->GetValue()),
+	                                           STD_STRING(m_email_text->GetValue()));
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)

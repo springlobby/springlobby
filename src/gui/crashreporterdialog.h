@@ -23,6 +23,8 @@ private:
 	void OnClickBugReport(wxCommandEvent& event);
 	void OnNorm(wxCommandEvent& event);
 	void OnSafe(wxCommandEvent& event);
+
+	void UploadCrashReport();
 };
 
 namespace SL
