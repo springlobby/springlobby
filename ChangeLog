@@ -4,6 +4,9 @@ ChangeLog of Springlobby
  - fix game / map info caching not working for games / maps with special chars
  - use platform specific download path for the spring engine: linux32/linux64/windows32/windows64/macosx
  - use platform specific config file sections to store spring engine paths
+ - add engine crash upload dialog
+ - fix crash because of channel/user bridge support
+ - fix a lot of minor auto downloader bugs
 
 ## 0.270
  - add newbie (default) gui which hides a lot of advanced settings:
