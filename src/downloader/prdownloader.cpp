@@ -53,7 +53,7 @@ public:
 	void Run()
 	{
 		slLogDebugFunc("");
-		wxLogInfo("Starting download of filename: %s, name: %s", m_filename.c_str(), m_name.c_str());
+		wxLogInfo("Starting download of filename: %s, name: %s, category: %s", m_filename.c_str(), m_name.c_str(), DownloadEnum::getCat(m_category).c_str());
 
 		{
 			std::lock_guard<std::mutex> lock(dlProgressMutex);
@@ -375,6 +375,7 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 
 bool PrDownloader::DownloadUrl(const std::string& httpurl, std::string& res)
 {
+	UpdateSettings();
 	{
 		std::lock_guard<std::mutex> lock(dlProgressMutex);
 		if (m_progress == nullptr)
