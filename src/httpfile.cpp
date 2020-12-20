@@ -25,6 +25,7 @@ std::string ConvToIRI(const std::string& str)
 //! @brief download a file via http(s) to a string
 std::string GetHttpFile(const std::string& httpurl)
 {
+	wxLogInfo("Downloading %s", httpurl.c_str());
 	std::string res;
 	if (!prDownloader().DownloadUrl(httpurl, res)) {
 		wxLogWarning("Error downloading %s", httpurl.c_str());

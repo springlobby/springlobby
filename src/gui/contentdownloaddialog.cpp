@@ -84,7 +84,7 @@ void ContentDownloadDialog::Search(const wxString& str)
 	const std::string param = ConvToIRI(STD_STRING(str));
 	const std::string query = stdprintf("https://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s", param.c_str(), param.c_str());
 	std::string res;
-	CHttpDownloader::DownloadUrl(query, res);
+	prDownloader().DownloadUrl(query, res);
 	CHttpDownloader::ParseResult(STD_STRING(str), res, dls);
 	wxCommandEvent e;
 	OnSearchCompleted(e);
