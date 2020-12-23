@@ -552,9 +552,6 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	tdf.AppendLineBreak();
 
 	std::set<int> parsedallys;
-	if (NumUsers != battle.GetLastRectIdx()) {
-		wxLogWarning("# of BattleStartRectangles and # of users mismatch: %d vs %d ", NumUsers, battle.GetLastRectIdx());
-	}
 	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& usr = battle.GetUser(i);
 		UserBattleStatus& status = usr.BattleStatus();
@@ -567,6 +564,10 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		if (parsedallys.find(ally) != parsedallys.end())
 			continue; // skip duplicates
 		sr = battle.GetStartRect(ally);
+
+		if (!sr.IsOk()) {
+			wxLogWarning("No Battle Start rect for Team %d Ally %d ",status.team, ally);
+		}
 		parsedallys.insert(ally);
 
 		tdf.EnterSection(stdprintf("ALLYTEAM%d", ally));
