@@ -551,10 +551,11 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 
 	tdf.AppendLineBreak();
 
-	unsigned int maxiter = std::max(NumUsers, battle.GetLastRectIdx() + 1);
 	std::set<int> parsedallys;
-	for (unsigned int i = 0; i < maxiter; i++) {
-
+	if (NumUsers != battle.GetLastRectIdx()) {
+		wxLogWarning("# of BattleStartRectangles and # of users mismatch: %d vs %d ", NumUsers, battle.GetLastRectIdx());
+	}
+	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& usr = battle.GetUser(i);
 		UserBattleStatus& status = usr.BattleStatus();
 		BattleStartRect sr = battle.GetStartRect(i);
