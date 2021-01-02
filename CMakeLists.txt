@@ -29,6 +29,8 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	endif()
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
