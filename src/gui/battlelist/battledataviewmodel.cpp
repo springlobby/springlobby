@@ -11,6 +11,7 @@
 #include "utils/slconfig.h"
 #include "utils/slpaths.h"
 #include "utils/sortutil.h"
+#include "utils/conversion.h"
 
 SLCONFIG("/BattleListTab/InactiveRoomColor", "#888888", "Font color for battle rows with no active players");
 SLCONFIG("/BattleListTab/UseSmartSorting", true, "Apply secondary sorting rules when sorting by game or players");
@@ -82,7 +83,7 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case DESCRIPTION:
-			variant = wxVariant(wxString(opts.description));
+			variant = wxVariant(TowxString(opts.description));
 			break;
 
 		case MAP:
