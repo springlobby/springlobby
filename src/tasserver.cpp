@@ -482,7 +482,7 @@ void TASServer::Notify()
 
 void TASServer::ExecuteCommand(const std::string& in)
 {
-	wxLogDebug(_T("%s"), TowxString(in).c_str());
+	wxLogDebug(_T("%s"), in);
 	wxString cmd;
 	wxString params = TowxString(in);
 	long replyid = 0;
