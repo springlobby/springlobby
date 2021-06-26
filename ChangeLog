@@ -2,6 +2,7 @@ ChangeLog of Springlobby
 ## 0.272
  - fix #985: fix crash when more battlestartrects are defined as users
  - fix #854: GetMapOptionCount: ... could not open file MapOptions.lua error message on some maps
+ - fix #996: use after free when bot in battle is removed
  - replace boost/thread with c++17
 
 ## 0.271
