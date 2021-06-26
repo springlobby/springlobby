@@ -753,7 +753,7 @@ private:
 
 	std::string m_preset;
 
-	UserVec m_internal_bot_list;
+	unsigned int m_bot_size = 0;
 
 	/// replay&savegame stuff
 	std::string m_script;

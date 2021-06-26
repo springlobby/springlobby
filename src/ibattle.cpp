@@ -255,16 +255,16 @@ User& IBattle::OnUserAdded(User& user)
 
 User& IBattle::OnBotAdded(const std::string& nick, const UserBattleStatus& bs)
 {
-	m_internal_bot_list[nick] = User(nick);
-	User& user = m_internal_bot_list[nick];
-	user.UpdateBattleStatus(bs);
-	User& usr = OnUserAdded(user);
-	return usr;
+	User* user = new User(nick);
+	user->UpdateBattleStatus(bs);
+	OnUserAdded(*user);
+	m_bot_size++;
+	return *user;
 }
 
 unsigned int IBattle::GetNumBots() const
 {
-	return m_internal_bot_list.size();
+	return m_bot_size;
 }
 
 unsigned int IBattle::GetNumPlayers() const
@@ -361,15 +361,12 @@ void IBattle::OnUserRemoved(User& user)
 	if (&user == &GetMe()) {
 		OnSelfLeftBattle();
 	}
-	UserList::RemoveUser(user.GetNick());
 	if (!bs.IsBot())
 		user.SetBattle(0);
 	else {
-		UserVecIter itor = m_internal_bot_list.find(user.GetNick());
-		if (itor != m_internal_bot_list.end()) {
-			m_internal_bot_list.erase(itor);
-		}
+		m_bot_size --;
 	}
+	UserList::RemoveUser(user.GetNick());
 }
 
 
