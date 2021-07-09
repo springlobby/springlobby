@@ -5,6 +5,7 @@ ChangeLog of Springlobby
  - fix #854: GetMapOptionCount: ... could not open file MapOptions.lua error message on some maps
  - fix #996: use after free when bot in battle is removed
  - replace boost/thread with c++17
+ - make TLS mandatory (requires openssl)
 
 ## 0.271
  - add ignore/unignore to user right-click menu
