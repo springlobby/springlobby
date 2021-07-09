@@ -100,7 +100,6 @@ private:
 	int m_sent;
 	std::string m_buffer;
 	bool m_starttls;
-#ifdef SSL_SUPPORT
 	void StopTLS();
 	void DoSSLHandshake();
 	bool VerifyCertificate();
@@ -111,7 +110,6 @@ private:
 	BIO* m_outbio;
 	std::string m_fingerprint;
 	std::string m_excepted_fingerprint;
-#endif
 
 	DECLARE_EVENT_TABLE();
 };
