@@ -23,13 +23,11 @@ lsl/networking/socket.h
 class iNetClass;
 class wxCriticalSection;
 
-#ifdef SSL_SUPPORT
 #include <openssl/ssl.h>
 
 //win compile hack
 #ifdef GetUserName
 #undef GetUserName
-#endif
 #endif
 
 enum SockState {

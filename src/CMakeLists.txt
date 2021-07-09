@@ -443,10 +443,9 @@ target_include_directories(springlobby
                 PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
         )
 
-FIND_PACKAGE(OpenSSL)
+FIND_PACKAGE(OpenSSL REQUIRED)
 if(OPENSSL_FOUND)
 	message(STATUS "Building with OpenSSL support: ${OPENSSL_VERSION}")
-	target_compile_definitions(springlobby PRIVATE -DSSL_SUPPORT)
 	target_include_directories(springlobby PRIVATE ${OPENSSL_INCLUDE_DIR})
 	target_link_libraries(springlobby ${OPENSSL_LIBRARIES})
 else()

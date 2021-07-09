@@ -540,12 +540,10 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	UserBattleStatus bstatus;
 
 	if (cmd == "TASSERVER") {
-#ifdef SSL_SUPPORT
 		if (!m_sock->IsTLS()) {
 			Stop(); //don't send ping until TLS handshake is complete
 			SendCmd("STLS", "");
 		} else {
-#endif
 			m_ser_ver = GetIntParam(params);
 			m_supported_spring_version = GetWordParam(params);
 			m_nat_helper_port = (unsigned long)GetIntParam(params);
@@ -558,9 +556,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			} else {
 				m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 			}
-#ifdef SSL_SUPPORT
 		}
-#endif
 	} else if (cmd == "OK") {
 		if (!m_sock->IsTLS()) {
 			wxLogInfo("%s:%d %s", m_serverinfo.hostname.c_str(), m_serverinfo.port, m_serverinfo.fingerprint.c_str());

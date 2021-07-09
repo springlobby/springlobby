@@ -25,12 +25,10 @@ lsl/networking/socket.cpp
 #include <algorithm>
 #include <stdexcept>
 
-#ifdef SSL_SUPPORT
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
-#endif
 
 #include "address.h"
 #include "inetclass.h"
@@ -85,14 +83,11 @@ Socket::Socket(iNetClass& netclass)
 
 {
 
-#ifdef SSL_SUPPORT
 	m_verified = false;
 	m_sslctx = nullptr;
 	m_ssl = nullptr;
-#endif
 }
 
-#ifdef SSL_SUPPORT
 
 // http://roxlu.com/2014/042/using-openssl-with-memory-bios
 
@@ -219,12 +214,6 @@ bool Socket::VerifyCertificate()
 	m_verified = true;
 	return true;
 }
-#else
-void Socket::StartTLS(const std::string& /*fingerprint*/)
-{
-	wxLogWarning("TLS requested but not supported!");
-}
-#endif
 
 
 //! @brief Destructor
@@ -274,11 +263,9 @@ void Socket::SetTimeout(const int seconds)
 //! @brief Disconnect from remote host if connected.
 void Socket::Disconnect()
 {
-#ifdef SSL_SUPPORT
 	if (m_starttls) {
 		StopTLS();
 	}
-#endif
 	const bool wasconnected = m_sock.IsConnected();
 	m_buffer.clear();
 	m_sock.Close();
@@ -299,7 +286,6 @@ bool Socket::Send(const std::string& data)
 			crop = max;
 	}
 	std::string send = m_buffer.substr(0, crop);
-#ifdef SSL_SUPPORT
 	if (m_starttls) {
 		int res = 0;
 		if (!SSL_is_init_finished(m_ssl)) {
@@ -332,7 +318,6 @@ bool Socket::Send(const std::string& data)
 		return true;
 	}
 	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-#endif
 	m_sock.Write(send.c_str(), send.length());
 	if (m_sock.Error()) {
 		return false;
@@ -399,13 +384,10 @@ wxString Socket::Receive()
 	do {
 		m_sock.Read(buf, chunk_size);
 		readnum = m_sock.LastCount();
-#ifdef SSL_SUPPORT
 		if (!m_starttls && (readnum == 0)) {
 			return res;
 		}
-#endif
 		wxLogDebug("Receive() %d", readnum);
-#ifdef SSL_SUPPORT
 		if (m_starttls) {
 			if (readnum > 0) {
 				const int written = BIO_write(m_inbio, buf, readnum);
@@ -437,11 +419,8 @@ wxString Socket::Receive()
 				} while (ret > 0);
 			}
 		} else {
-#endif
 			res += convert(buf, readnum);
-#ifdef SSL_SUPPORT
 		}
-#endif
 	} while (readnum > 0);
 
 	return res;
