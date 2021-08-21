@@ -34,7 +34,7 @@ bz2 = glob.glob(srcdir + "/*.tar.bz2")
 
 for srcfile in installer + zip + tgz + bz2:
 	print(srcfile, " -> ", outdir)
-	shutil.move(srcfile, outdir)
+	shutil.move(srcfile, os.path.join(outdir, os.path.basename(srcfile)))
 
 print("Rsync...")
 try:
