@@ -1,5 +1,10 @@
 ChangeLog of Springlobby
 
+## 0.273
+ - change download api url to https://springfiles.springrts.com/json.php
+ - remove partial download support
+ - fix downloads without pieces
+
 ## 0.272
  - fix #985: fix crash when more battlestartrects are defined as users
  - fix #854: GetMapOptionCount: ... could not open file MapOptions.lua error message on some maps
