@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Jan 16 2020)
+// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -57,7 +57,7 @@ class ConnectWindowBase : public wxDialog
 		wxButton* m_cancel_button;
 		wxButton* m_ok_button;
 
-		// Virtual event handlers, overide them in your derived class
+		// Virtual event handlers, override them in your derived class
 		virtual void OnChangeMode( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnServerChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
@@ -67,6 +67,7 @@ class ConnectWindowBase : public wxDialog
 	public:
 
 		ConnectWindowBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Connect to lobby server"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+
 		~ConnectWindowBase();
 
 };

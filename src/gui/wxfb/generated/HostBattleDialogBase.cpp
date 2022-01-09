@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Jan 16 2020)
+// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -23,7 +23,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 	m_top_sizer->SetMinSize( wxSize( 350,-1 ) );
 	m_battle_name_label = new wxStaticText( this, wxID_ANY, _("Battle name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_battle_name_label->Wrap( -1 );
-	m_battle_name_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_battle_name_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	m_top_sizer->Add( m_battle_name_label, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_RIGHT, 5 );
 
@@ -34,7 +34,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 
 	m_game_label = new wxStaticText( this, wxID_ANY, _("Game:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_game_label->Wrap( -1 );
-	m_game_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_game_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	m_top_sizer->Add( m_game_label, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 
@@ -47,7 +47,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 
 	m_engine_label = new wxStaticText( this, wxID_ANY, _("Engine:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_engine_label->Wrap( -1 );
-	m_engine_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_engine_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	m_top_sizer->Add( m_engine_label, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 
@@ -60,7 +60,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 
 	m_password_label = new wxStaticText( this, wxID_ANY, _("Password:\n(no spaces)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_password_label->Wrap( -1 );
-	m_password_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_password_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	m_top_sizer->Add( m_password_label, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 
@@ -71,7 +71,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 
 	m_port_label = new wxStaticText( this, wxID_ANY, _("Port:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_label->Wrap( -1 );
-	m_port_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_port_label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 
 	m_top_sizer->Add( m_port_label, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 
@@ -81,7 +81,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 	m_top_sizer->Add( m_port_spinctrl, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_use_relayhost_check = new wxCheckBox( this, wxID_ANY, _("Use relayhost"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_use_relayhost_check->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_use_relayhost_check->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_use_relayhost_check->SetToolTip( _("host and control game on remote server, helps if you have trouble hosting") );
 
 	m_top_sizer->Add( m_use_relayhost_check, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
@@ -140,7 +140,7 @@ HostBattleDialogBase::HostBattleDialogBase( wxWindow* parent, wxWindowID id, con
 	m_buttons_sizer->Add( m_cancel_button, 0, wxALL, 5 );
 
 	m_host_button = new wxButton( this, wxID_ANY, _("Host!"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_host_button->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	m_host_button->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_host_button->SetToolTip( _("Start hosting the battle.") );
 
 	m_buttons_sizer->Add( m_host_button, 0, wxALL, 5 );

@@ -179,7 +179,7 @@ set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
 # property name="path" set to @WXFB_GENERATION_PATH@.
 set(WXFB_GENERATION_PATH ${wxfb_src}/generated)
 file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
-set(wxFB_REQUIRED_VERSION "3.9.0")
+set(wxFB_REQUIRED_VERSION "3.10.0")
 
 find_program(wxFB_EXECUTABLE NAMES wxformbuilder wxFormBuilder)
 if ("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
