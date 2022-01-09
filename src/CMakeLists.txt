@@ -188,7 +188,7 @@ else()
 	message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
 	execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
 		OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-	if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
+	if (NOT ("${wxFB_VERSION}" VERSION_LESS "${wxFB_REQUIRED_VERSION}"))
 		message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
 	endif()
 
