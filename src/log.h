@@ -23,6 +23,7 @@ public:
 	static wxLogWindow* InitializeLoggingTargets(wxWindow* parent, bool console, const wxString& logfilepath, bool showgui, int verbosity);
 	static void Shutdown();
 	static void ShowDebugWindow(bool show);
+	static void RemoveOldLogfiles(const wxString& logdirpath, unsigned int maxhours);
 
 private:
 };

@@ -62,6 +62,8 @@
 #include "utils/wxTranslationHelper.h"
 
 SLCONFIG("/ResetLayout", false, "reset layout on restart");
+SLCONFIG("/General/LocalePath", "", "Path to locales");
+SLCONFIG("/General/MaxLogFileage", 7l * 24, "Log files older than x hours are automaticly deleted.");
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -94,7 +96,6 @@ The error was 'RenderBadPicture (invalid Picture parameter)'.
 #endif
 }
 
-SLCONFIG("/General/LocalePath", "", "Path to locales");
 
 static wxString getLocalePath()
 {
@@ -142,6 +143,8 @@ bool SpringLobbyApp::OnInit()
 	SlPaths::mkDir(logDir);
 	const wxString m_log_file_path = logDir + GetCurrentTimeString("%Y%m%d_%H%M%S-springlobby.log");
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
+	const unsigned int maxlogage = cfg().ReadLong("/General/MaxLogFileage");
+	Logger::RemoveOldLogfiles(logDir, maxlogage);
 	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets(0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 
 	wxLogMessage(_T("%s started"), TowxString(GetSpringlobbyAgent()).c_str());

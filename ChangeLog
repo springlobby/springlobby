@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.275
+ - automaticly delete springlobby log files older than 7 * 24 hours( /General/MaxLogFileage )
+
 ## 0.273
  - change download api url to https://springfiles.springrts.com/json.php
  - remove partial download support

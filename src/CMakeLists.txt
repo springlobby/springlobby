@@ -255,6 +255,7 @@ set(springlobbySrc
 	useractions.cpp
 	userlist.cpp
 	log.cpp
+	logclear.cpp
 	settings.cpp
 	updatehelper.cpp
 	stacktrace.cpp

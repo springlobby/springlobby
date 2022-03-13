@@ -13,6 +13,7 @@
 #include "gui/mainwindow.h"
 #include "gui/ui.h"
 #include "utils/conversion.h"
+#include "logclear.h"
 
 std::string GetCurrentTimeString(const char* format)
 {
@@ -257,3 +258,11 @@ extern void L_LOG(const char* fileName, int line, const char* funcName,
 	const wxLogRecordInfo info(fileName, line, funcName, PRD_LOG_COMPONENT);
 	wxLog::OnLog(lvl, buf, info);
 }
+
+
+void Logger::RemoveOldLogfiles(const wxString& logdirpath, unsigned int maxhours)
+{
+	const std::filesystem::path cleandir = logdirpath.wc_str();
+	remove_files_older_than(cleandir, maxhours);
+}
+
