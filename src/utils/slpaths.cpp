@@ -120,7 +120,7 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
 	const std::string enginesubdir = std::string("engine") + PATH_DELIMITER + LSL::Util::GetPlatformString(LSL::Util::GetPlatform());
-	for (const std::string basedir : basedirs) {
+	for (const std::string& basedir : basedirs) {
 		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir) + enginesubdir);
 		wxDir dir(TowxString(enginedir));
 
@@ -165,7 +165,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		std::vector<std::string> basedirs;
 		basedirs.push_back(GetLobbyWriteDir());
 		EngineSubPaths(basedirs, lobbysubpaths);
-		for (const std::string path : lobbysubpaths) {
+		for (const std::string& path : lobbysubpaths) {
 			LSL::SpringBundle bundle;
 			bundle.path = path;
 			usync_paths.push_back(bundle);
@@ -181,7 +181,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 			std::vector<std::string> paths;
 			PossibleEnginePaths(paths);
-			for (const std::string path : paths) {
+			for (const std::string& path : paths) {
 				LSL::SpringBundle bundle;
 				bundle.path = path;
 				usync_paths.push_back(bundle);
@@ -384,7 +384,7 @@ std::string SlPaths::GetDataDir(const std::string& /*FIXME: implement index */)
 std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 {
 	const auto versionlist = SlPaths::GetSpringVersionList();
-	for (const auto pair : versionlist) {
+	for (const auto& pair : versionlist) {
 		const std::string ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
 		if (VersionSyncCompatible(neededversion, ver)) {
