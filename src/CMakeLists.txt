@@ -437,6 +437,8 @@ add_executable(springlobby WIN32 MACOSX_BUNDLE
 		${generated_gui_cpp}
 	)
 
+add_dependencies(springlobby version)
+
 set(CXX_STANDARD_REQUIRED ON)
 set_property(TARGET springlobby PROPERTY CXX_STANDARD 17)
 
