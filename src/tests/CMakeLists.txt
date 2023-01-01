@@ -1,23 +1,23 @@
 add_subdirectory(headercheck)
 
-FIND_PACKAGE(Boost 1.35.0 COMPONENTS unit_test_framework)
+find_package(Boost 1.35.0 COMPONENTS unit_test_framework)
 
-If    (NOT Boost_FOUND)
-        Message(STATUS "Note: Unit tests will not be built: Boost::test library was not found")
-Else  (NOT Boost_FOUND)
+if(NOT Boost_FOUND)
+        message(STATUS "Note: Unit tests will not be built: Boost::test library was not found")
+else()
 
-If      (NOT (WIN32 OR Boost_USE_STATIC_LIBS))
+if(NOT (WIN32 OR Boost_USE_STATIC_LIBS))
 	#Win32 tests links static
 	add_definitions(-DBOOST_TEST_DYN_LINK)
-EndIf   (NOT (WIN32 OR Boost_USE_STATIC_LIBS))
+endif()
 add_definitions(-DTESTS)
 
 add_custom_target(tests)
 add_custom_target(check ${CMAKE_CTEST_COMMAND} --output-on-failure -V)
 add_custom_target(install-tests)
 
-macro (add_springlobby_test target sources libraries flags)
-	ADD_TEST(NAME test${target} COMMAND test_${target})
+macro(add_springlobby_test target sources libraries flags)
+	add_test(NAME test${target} COMMAND test_${target})
 	add_dependencies(tests test_${target})
 	add_dependencies(check test_${target})
 	add_dependencies(install-tests test_${target})
@@ -26,15 +26,14 @@ macro (add_springlobby_test target sources libraries flags)
 	target_include_directories(test_${target}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
-		PRIVATE ${Boost_INCLUDE_DIRS}
-	)
+		PRIVATE ${Boost_INCLUDE_DIRS})
 	set_target_properties(test_${target} PROPERTIES COMPILE_FLAGS "${flags}")
 	#install(TARGETS test_${target} DESTINATION ${BINDIR})
 endmacro()
 
 ################################################################################
 set(test_name GlobalEvents)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/utils/globalevents.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/globalevents.cpp"
 )
@@ -47,7 +46,7 @@ set(test_libs
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "")
 ################################################################################
 set(test_name Config)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
@@ -65,7 +64,7 @@ set(test_libs
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "")
 ################################################################################
 set(test_name ChatLog)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/chatlog.cpp"
 	"${springlobby_SOURCE_DIR}/src/chatlog.cpp"
 )
@@ -78,7 +77,7 @@ set(test_libs
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
 set(test_name lobbyid)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lobbyid.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/crc.cpp"
 	"${springlobby_SOURCE_DIR}/src/address.cpp"
@@ -94,7 +93,7 @@ endif()
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
 set(test_name lslconversion)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
@@ -112,7 +111,7 @@ add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
 
 set(test_name slpaths)
-Set(test_src
+set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/misc.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/conversion.cpp"

@@ -6,7 +6,7 @@ set(PRD_ARCHIVE_SUPPORT ON CACHE BOOL "disable archive support as it interferes 
 mark_as_advanced(FORCE CONSOLETOOL SHAREDLIB DEVELOP_FILES DO_INSTALL)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/CMakeLists.txt")
-	MESSAGE(FATAL_ERROR "lib/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
+	message(FATAL_ERROR "lib/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
 else()
 	set(ADD_WXCONVERT ON CACHE BOOL "" FORCE)
 	set(LSLSERVER OFF CACHE BOOL "build lsl server" FORCE)
@@ -14,6 +14,6 @@ else()
 	set(PRD_ENABLE_LSL ON CACHE BOOL "build lsl lib" FORCE)
 	set(PRD_DEFAULT_LOGGER OFF CACHE BOOL "build defaukt logger" FORCE)
 	add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
-	Add_Subdirectory(lib)
+	add_subdirectory(lib)
 endif()
 

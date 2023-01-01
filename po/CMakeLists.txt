@@ -1,12 +1,12 @@
-FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
+find_program(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 
-IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
-	MESSAGE(
+if(NOT GETTEXT_MSGFMT_EXECUTABLE)
+	message(
 "------
                  NOTE: msgfmt not found. Translations will *not* be installed
 ------")
-ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
-	SET(catalogname springlobby)
+else()
+	set(catalogname springlobby)
 	# ls *.po
 	set(LANGUAGES
 		ar
@@ -27,8 +27,8 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 		zh_CN
 	)
 
-	SET(mofiles "")
-	FOREACH(_lang ${LANGUAGES})
+	set(mofiles "")
+	foreach(_lang ${LANGUAGES})
 		set(moDir ${CMAKE_CURRENT_BINARY_DIR}/locale/${_lang}/LC_MESSAGES)
 		set(moFile ${moDir}/${catalogname}.mo)
 		set(poFile ${CMAKE_CURRENT_SOURCE_DIR}/${_lang}.po)
@@ -39,9 +39,9 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 			DEPENDS ${poFile})
 		INSTALL(FILES ${moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_MESSAGES/)
 		LIST(APPEND mofiles ${moFile})
-	ENDFOREACH()
+	endforeach()
 	add_custom_target(translations ALL DEPENDS ${mofiles})
-ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
+endif()
 
 file(GLOB_RECURSE srcfiles RELATIVE ${springlobby_SOURCE_DIR}/ FOLLOW_SYMLINKS
 	${springlobby_SOURCE_DIR}/src/*.h
@@ -49,26 +49,26 @@ file(GLOB_RECURSE srcfiles RELATIVE ${springlobby_SOURCE_DIR}/ FOLLOW_SYMLINKS
 	${springlobby_SOURCE_DIR}/src/*.hpp
 )
 list(SORT srcfiles)
-SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
+set(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
 
-FIND_PROGRAM( XGETTEXT NAMES "xgettext" )
+find_program(XGETTEXT NAMES "xgettext")
 
-IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
+if(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
 	MESSAGE(STATUS "Warning: xgettext not found - will not update springlobby.pot")
-ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
-	MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
-	ADD_CUSTOM_TARGET(
+else()
+	message(STATUS "Found xgettext: ${XGETTEXT}")
+	add_custom_target(
 		update-potfile
 		COMMAND ${XGETTEXT} -d springlobby --keyword=_ --from-code=utf-8 --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
 		DEPENDS springlobby
 		WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
 	)
-ENDIF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
+endif()
 
-FIND_PROGRAM( MSGMERGE NAMES "msgmerge" )
-IF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+find_program(MSGMERGE NAMES "msgmerge")
+if(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 	MESSAGE(STATUS "Warning: msgmerge not found - will not update po files")
-ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+else()
 	MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
 
 	ADD_CUSTOM_TARGET( update-po )
@@ -79,8 +79,8 @@ ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 				DEPENDS ${_poFile} ${MESSAGES_POT_FILE})
 	ENDFOREACH(_poFile ${PO_FILES})
   
-ENDIF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+endif()
 
-ADD_CUSTOM_TARGET( update-translations
+add_custom_target(update-translations
 		DEPENDS update-potfile update-po)
 
