@@ -1,7 +1,7 @@
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
-IF(NOT MSVC)
+if(NOT MSVC)
 	IF( NOT MINGW )
 		#wxMSW generates > 9000 warnings with -wextra...
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
@@ -18,9 +18,9 @@ IF(NOT MSVC)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -ggdb")
 		message(STATUS "DEBUG")
 	endif()
-ELSE(NOT MSVC)
+else(NOT MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
-ENDIF(NOT MSVC)
+endif(NOT MSVC)
 
 if(WIN32)
 	add_definitions(-DBOOST_THREAD_USE_LIB)
@@ -35,10 +35,10 @@ if( ${CMAKE_CROSSCOMPILING} )
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
-FIND_PACKAGE(Boost 1.42.0 COMPONENTS system REQUIRED)
+find_package(Boost 1.42.0 COMPONENTS system REQUIRED)
 
 
-ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
+add_definitions( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 
 
@@ -103,9 +103,9 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/cmake/" ${CMAKE_MODULE_PATH} )
 find_package(Jsoncpp)
 if (${Jsoncpp_FOUND})
-	OPTION(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" FALSE)
+	option(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" FALSE)
 else()
-	OPTION(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" TRUE)
+	option(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" TRUE)
 endif()
 
 
@@ -124,23 +124,23 @@ endif()
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
-IF( MINGW )
+if( MINGW )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gstabs")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gstabs")
 	LINK_LIBRARIES( intl)
-ENDIF( MINGW )
+endif( MINGW )
 
-FIND_PACKAGE(CURL REQUIRED)
-IF( NOT CURL_FOUND )
+find_package(CURL REQUIRED)
+if( NOT CURL_FOUND )
 	MESSAGE( FATAL_ERROR "required library libCURL not found" )
-ENDIF( NOT CURL_FOUND )
+endif( NOT CURL_FOUND )
 
 if(DEFINED PKG_CONFIG_EXECUTABLE) # override CURL_LIBRARIES if curl-config is set
 	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--libs"
 		OUTPUT_VARIABLE CURL_LINKFLAGS
 		OUTPUT_STRIP_TRAILING_WHITESPACE )
 
-	SET(CURL_LINKFLAGS "${CURL_LINKFLAGS}" CACHE STRING "" FORCE)
+	set(CURL_LINKFLAGS "${CURL_LINKFLAGS}" CACHE STRING "" FORCE)
 	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_LINKFLAGS} for linking to libcurl")
 
 	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--cflags-only-other"
@@ -152,17 +152,17 @@ endif()
 
 
 
-ADD_DEFINITIONS( ${CURL_CFLAGS} )
+add_definitions( ${CURL_CFLAGS} )
 #add_to_global(link_directories  ${CURL_LIB_DIRS} )
 
 #----------------------------------------------------------------------------------------------------
 # libnotify dependency check
 #----------------------------------------------------------------------------------------------------
 
-IF( OPTION_NOTIFY AND NOT WIN32 )
+if( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( LIBNOTIFY libnotify )
 	pkg_check_modules( GLIB glib-2.0 )
-ENDIF( OPTION_NOTIFY AND NOT WIN32 )
+endif( OPTION_NOTIFY AND NOT WIN32 )
 
 #-----------------------------------------------------------------------------
 # wxFormBuilder
@@ -395,22 +395,20 @@ else()
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_BINARY_DIR})
 endif()
 
-add_custom_target(version ALL ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR})
 add_custom_command(OUTPUT ${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h
-			COMMAND ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
-		)
-
-set_property(SOURCE utils/version.cpp APPEND PROPERTY OBJECT_DEPENDS ${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h)
-
+	COMMAND ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
+)
+add_custom_target(version ALL ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
+	DEPENDS ${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h
+)
 set_source_files_properties(utils/version.cpp PROPERTIES COMPILE_DEFINITIONS SPRINGLOBBY_CONFIGH="${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h")
 
-
-FILE( GLOB header "*.h" )
-FILE( GLOB header2 "*/*.h" )
+file( GLOB header "*.h" )
+file( GLOB header2 "*/*.h" )
 # FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
-SET( templatesources
+set( templatesources
 	gui/basedataviewmodel.cpp
 	gui/virtualdatactrl.cpp
 )
@@ -424,18 +422,20 @@ add_subdirectory(sound)
 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 
+
 #mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
-IF(WIN32)
+if(WIN32)
 	set(springlobby_RC_FILE springlobby.rc springlobby.exe.manifest)
-ENDIF()
+endif()
 add_subdirectory(updater)
 
 add_executable(springlobby WIN32 MACOSX_BUNDLE
-		${springlobbySrc}
-		${springlobby_RC_FILE}
-		${generated_gui_cpp}
-	)
+	${springlobbySrc}
+	${springlobby_RC_FILE}
+	${generated_gui_cpp}
+	${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h
+)
 
 add_dependencies(springlobby version)
 
@@ -443,10 +443,10 @@ set(CXX_STANDARD_REQUIRED ON)
 set_property(TARGET springlobby PROPERTY CXX_STANDARD 17)
 
 target_include_directories(springlobby
-                PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
-        )
+	PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
+)
 
-FIND_PACKAGE(OpenSSL REQUIRED)
+find_package(OpenSSL REQUIRED)
 if(OPENSSL_FOUND)
 	message(STATUS "Building with OpenSSL support: ${OPENSSL_VERSION}")
 	target_include_directories(springlobby PRIVATE ${OPENSSL_INCLUDE_DIR})
@@ -455,11 +455,11 @@ else()
 	message(WARNING "SSL support disabled!")
 endif()
 
-IF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
+if( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
 	target_include_directories(springlobby PRIVATE ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS})
 	target_compile_definitions(springlobby PRIVATE -DHAVE_LIBNOTIFY)
-ENDIF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
+endif( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
@@ -477,43 +477,43 @@ endif()
 
 
 #the updater needs to be build for windows only
-IF(WIN32)
-	TARGET_LINK_LIBRARIES( springlobby
+if(WIN32)
+	target_link_libraries( springlobby
 		iphlpapi
 		ws2_32
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
-ELSE (WIN32)
+else (WIN32)
 	install(TARGETS springlobby
 		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 		BUNDLE DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin
-		)
-ENDIF (WIN32)
-
-TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static
-		${Boost_LIBRARIES}
-		${CURL_LIBRARIES}
-		${CURL_LINKFLAGS}
-		${WX_LD_FLAGS}
-		sound
 	)
+endif (WIN32)
+
+target_link_libraries(springlobby lsl-utils lsl-unitsync pr-downloader_static
+	${Boost_LIBRARIES}
+	${CURL_LIBRARIES}
+	${CURL_LINKFLAGS}
+	${WX_LD_FLAGS}
+	sound
+)
 target_include_directories(springlobby
-		PRIVATE ${CURL_INCLUDE_DIR}
-		PRIVATE ${Boost_INCLUDE_DIRS}
-		PRIVATE ${springlobby_SOURCE_DIR}/src
-		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src
-		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
-		PRIVATE ${generated_gui_include}
-	)
+	PRIVATE
+		${CURL_INCLUDE_DIR}
+		${Boost_INCLUDE_DIRS}
+		${springlobby_SOURCE_DIR}/src
+		${springlobby_SOURCE_DIR}/src/downloader/lib/src
+		${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
+		${generated_gui_include}
+)
 
-IF(UNIX)
+if(UNIX)
 	FIND_PACKAGE(X11 REQUIRED)
 	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})
-ENDIF(UNIX)
+endif(UNIX)
 
-ENABLE_TESTING()
+enable_testing()
 add_subdirectory(tests)
 
 add_analyze(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
-#add_format(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings} ${templatesources} ${header} ${header2})
 

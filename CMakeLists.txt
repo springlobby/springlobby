@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_COLOR_MAKEFILE ON)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
 
-if (CMAKE_GENERATOR MATCHES "Ninja")
+if(CMAKE_GENERATOR MATCHES "Ninja")
 	message(STATUS "Ninja detected, enabling install workarround")
 	# fixes "ninja install" error:
 	#	  file INSTALL cannot find
@@ -170,5 +170,4 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
 			cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
 			cmake "-DCMAKE_CXX_FLAGS:STRING=-O0" . && ${CMAKE_MAKE_PROGRAM})
 add_dependencies( distcheck dist )
-#add_dependencies( versiontest version )
 
