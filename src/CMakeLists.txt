@@ -2,32 +2,32 @@
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
 if(NOT MSVC)
-	IF( NOT MINGW )
+	if( NOT MINGW )
 		#wxMSW generates > 9000 warnings with -wextra...
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
-	ENDIF( NOT MINGW )
+	endif()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-strict-aliasing")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-strict-aliasing")
-	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		#FIXME: hide wxwidgets 3.0.2 error spam (should be fixed in 3.0.3)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
 	endif()
-	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -ggdb")
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -ggdb")
 		message(STATUS "DEBUG")
 	endif()
-else(NOT MSVC)
-	ADD_DEFINITIONS(-D_RC_MSVC)
-endif(NOT MSVC)
+else()
+	add_definitions(-D_RC_MSVC)
+endif()
 
 if(WIN32)
 	add_definitions(-DBOOST_THREAD_USE_LIB)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)
 	add_definitions(-DUNICODE -D_UNICODE)
 	set(Boost_THREADAPI win32)
-endif(WIN32)
+endif()
 
 set(Boost_USE_MULTITHREADED      ON)
 if( ${CMAKE_CROSSCOMPILING} )
@@ -42,7 +42,7 @@ add_definitions( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 
 
-if (CMAKE_CROSSCOMPILING)
+if(CMAKE_CROSSCOMPILING)
 	message(STATUS "Crosscompiling: using static flags for wxwidgets")
 	set(WXSTATIC "--static")
 	#FIXME: autodetect thise flags:
@@ -51,7 +51,7 @@ else()
 	set(WXSTATIC "")
 endif()
 find_program(wxWidgets_CONFIG_EXECUTABLE NAMES wx-config-3.0 wx-config ONLY_CMAKE_FIND_ROOT_PATH)
-if (wxWidgets_CONFIG_EXECUTABLE-NOTFOUND)
+if(wxWidgets_CONFIG_EXECUTABLE-NOTFOUND)
 	message(FATAL_ERROR "couldn't find wx-config!")
 else()
 	message(STATUS "found wx-config: ${wxWidgets_CONFIG_EXECUTABLE}")
@@ -77,17 +77,17 @@ message(STATUS "found wxwidgets: ${WX_VERSION}")
 
 execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_CXX_FLAGS
-	OUTPUT_STRIP_TRAILING_WHITESPACE )
+	OUTPUT_STRIP_TRAILING_WHITESPACE)
 message(STATUS "Using WX_CXX_FLAGS: ${WX_CXX_FLAGS}")
 
 execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_C_FLAGS
-	OUTPUT_STRIP_TRAILING_WHITESPACE )
+	OUTPUT_STRIP_TRAILING_WHITESPACE)
 message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
 
 execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "net,qa,richtext,adv,aui,core" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
-	OUTPUT_STRIP_TRAILING_WHITESPACE )
+	OUTPUT_STRIP_TRAILING_WHITESPACE)
 message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
@@ -95,21 +95,21 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 
 
 include(CheckIncludeFileCXX)
-CHECK_INCLUDE_FILE_CXX(wx/config.h HAS_WXGTKHEADERS)
-if (NOT HAS_WXGTKHEADERS)
+check_include_file_cxx(wx/config.h HAS_WXGTKHEADERS)
+if(NOT HAS_WXGTKHEADERS)
 	message(FATAL_ERROR "Couldn't find wx/config.h, is wxgtk-dev installed?")
 endif()
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/cmake/" ${CMAKE_MODULE_PATH} )
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/cmake/" ${CMAKE_MODULE_PATH})
 find_package(Jsoncpp)
-if (${Jsoncpp_FOUND})
+if(${Jsoncpp_FOUND})
 	option(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" FALSE)
 else()
 	option(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" TRUE)
 endif()
 
 
-if (PRD_JSONCPP_INTERNAL)
+if(PRD_JSONCPP_INTERNAL)
 	# use bundled JsonCpp
 	set(PRD_JSONCPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/src/lib/jsoncpp/include/)
 	set(PRD_JSONCPP_LIBRARIES "")
@@ -124,28 +124,28 @@ endif()
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
-if( MINGW )
+if(MINGW)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gstabs")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gstabs")
-	LINK_LIBRARIES( intl)
-endif( MINGW )
+	link_libraries(intl)
+endif()
 
 find_package(CURL REQUIRED)
-if( NOT CURL_FOUND )
-	MESSAGE( FATAL_ERROR "required library libCURL not found" )
-endif( NOT CURL_FOUND )
+if(NOT CURL_FOUND)
+	message( FATAL_ERROR "required library libCURL not found" )
+endif()
 
 if(DEFINED PKG_CONFIG_EXECUTABLE) # override CURL_LIBRARIES if curl-config is set
 	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--libs"
 		OUTPUT_VARIABLE CURL_LINKFLAGS
-		OUTPUT_STRIP_TRAILING_WHITESPACE )
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 	set(CURL_LINKFLAGS "${CURL_LINKFLAGS}" CACHE STRING "" FORCE)
 	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_LINKFLAGS} for linking to libcurl")
 
 	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--cflags-only-other"
 		OUTPUT_VARIABLE CURL_DEFINITONS
-		OUTPUT_STRIP_TRAILING_WHITESPACE )
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
 	add_definitions(${CURL_DEFINITONS})
 	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_DEFINITONS} for compiling with libcurl")
 endif()
@@ -159,10 +159,10 @@ add_definitions( ${CURL_CFLAGS} )
 # libnotify dependency check
 #----------------------------------------------------------------------------------------------------
 
-if( OPTION_NOTIFY AND NOT WIN32 )
+if(OPTION_NOTIFY AND NOT WIN32)
 	pkg_check_modules( LIBNOTIFY libnotify )
 	pkg_check_modules( GLIB glib-2.0 )
-endif( OPTION_NOTIFY AND NOT WIN32 )
+endif()
 
 #-----------------------------------------------------------------------------
 # wxFormBuilder
@@ -182,13 +182,13 @@ file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
 set(wxFB_REQUIRED_VERSION "3.10.0")
 
 find_program(wxFB_EXECUTABLE NAMES wxformbuilder wxFormBuilder)
-if ("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
+if("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
 	message(WARNING "Couldn't find wxFormBuilder! Please install wxFB (${wxFB_REQUIRED_VERSION})")
 else()
 	message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
 	execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
 		OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-	if (NOT ("${wxFB_VERSION}" VERSION_LESS "${wxFB_REQUIRED_VERSION}"))
+	if(NOT ("${wxFB_VERSION}" VERSION_LESS "${wxFB_REQUIRED_VERSION}"))
 		message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
 	endif()
 
@@ -202,8 +202,7 @@ else()
 		add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_src}/${proj}.fbp
 			DEPENDS ${wxfb_src}/${proj}.fbp
 			OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
-			       ${WXFB_GENERATION_PATH}/${proj}Base.h
-		)
+			       ${WXFB_GENERATION_PATH}/${proj}Base.h)
 	endforeach()
 endif()
 
@@ -389,7 +388,7 @@ if(SPRINGLOBBY_UPDATER)
 	set_source_files_properties(gui/ui.cpp PROPERTIES COMPILE_FLAGS "-DAUTOUPDATE=1")
 endif()
 
-if (EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h)
+if(EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h)
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_SOURCE_DIR}) # needed for out of source builds with a tarball
 else()
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_BINARY_DIR})
@@ -408,7 +407,7 @@ file( GLOB header2 "*/*.h" )
 # FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
-set( templatesources
+set(templatesources
 	gui/basedataviewmodel.cpp
 	gui/virtualdatactrl.cpp
 )
@@ -420,7 +419,7 @@ remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 add_subdirectory(sound)
 
 
-set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
+set_source_files_properties(${templatesources} PROPERTIES HEADER_FILE_ONLY 1)
 
 
 #mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
@@ -455,11 +454,11 @@ else()
 	message(WARNING "SSL support disabled!")
 endif()
 
-if( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
-	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
+if(LIBNOTIFY_FOUND AND OPTION_NOTIFY)
+	target_link_libraries(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES})
 	target_include_directories(springlobby PRIVATE ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS})
 	target_compile_definitions(springlobby PRIVATE -DHAVE_LIBNOTIFY)
-endif( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
@@ -483,12 +482,11 @@ if(WIN32)
 		ws2_32
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
-else (WIN32)
+else()
 	install(TARGETS springlobby
 		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-		BUNDLE DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin
-	)
-endif (WIN32)
+		BUNDLE DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin)
+endif()
 
 target_link_libraries(springlobby lsl-utils lsl-unitsync pr-downloader_static
 	${Boost_LIBRARIES}
@@ -508,9 +506,9 @@ target_include_directories(springlobby
 )
 
 if(UNIX)
-	FIND_PACKAGE(X11 REQUIRED)
-	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})
-endif(UNIX)
+	find_package(X11 REQUIRED)
+	target_link_libraries(springlobby ${X11_X11_LIB})
+endif()
 
 enable_testing()
 add_subdirectory(tests)
