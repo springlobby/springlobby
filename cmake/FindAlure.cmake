@@ -57,10 +57,10 @@ find_path(ALURE_INCLUDE_DIR
       ${ALURE_LIBRARY}
   )
 
-  INCLUDE(FindPackageHandleStandardArgs)
+  include(FindPackageHandleStandardArgs)
   # handle the QUIETLY and REQUIRED arguments and set ALURE_FOUND to TRUE if
   # all listed variables are TRUE
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(Alure DEFAULT_MSG ALURE_LIBRARY ALURE_INCLUDE_DIR)
+  find_package_handle_standard_args(Alure DEFAULT_MSG ALURE_LIBRARY ALURE_INCLUDE_DIR)
 
   # show the ALURE_INCLUDE_DIRS and ALURE_LIBRARIES variables only in the advanced view
   mark_as_advanced(ALURE_INCLUDE_DIRS ALURE_LIBRARIES)

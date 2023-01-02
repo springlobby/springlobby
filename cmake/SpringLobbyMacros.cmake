@@ -1,33 +1,31 @@
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-MACRO(CreateResourceCompileCommand out_var dirIn fileIn fileOut)
-# 	SET( fileIn "${dirIn}/${fileIn}" )
-	SET( fileOut "${CMAKE_CURRENT_BINARY_DIR}/${fileOut}" )
-	ADD_CUSTOM_COMMAND(
+macro(CreateResourceCompileCommand out_var dirIn fileIn fileOut)
+# 	set( fileIn "${dirIn}/${fileIn}" )
+	set( fileOut "${CMAKE_CURRENT_BINARY_DIR}/${fileOut}" )
+	add_custom_command(
 		OUTPUT
 			"${fileOut}"
 		DEPENDS
-			"${fileIn}" 
+			"${fileIn}"
 		COMMAND
 			"${CMAKE_RC_COMPILER}"
 				"-I${dirIn}"
 				"-I${wxWidgets_RC_DIR}"
-				"-i${CMAKE_CURRENT_SOURCE_DIR}/${fileIn}" 
+				"-i${CMAKE_CURRENT_SOURCE_DIR}/${fileIn}"
 				"-o" "${fileOut}"
-				"-v"
-		)
-	SET_SOURCE_FILES_PROPERTIES(${fileOut} PROPERTIES
+				"-v")
+	set_source_files_properties(${fileOut} PROPERTIES
 		GENERATED      TRUE
-		OBJECT_DEPENDS ${fileIn}
-		)
-	SET(${out_var} "${fileOut}")
-ENDMACRO (CreateResourceCompileCommand out_var dirIn fileIn fileOut)
+		OBJECT_DEPENDS ${fileIn})
+	set(${out_var} "${fileOut}")
+endmacro()
 
 macro(mylink var)
-	foreach( lib ${var})
+	foreach(lib ${var})
 		link_directories( ${lib} )
 	endforeach()
-endmacro(mylink)
+endmacro()
 
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
@@ -45,15 +43,15 @@ macro(add_analyze)
         add_custom_target("analyze" ${ANALYZER} -fixit -p=${CMAKE_CURRENT_BINARY_DIR} -analyze ${ARGN})
     else()
         message(STATUS "not adding analyze target because clang-check is missing")
-    endif(EXISTS ${ANALYZER})
-endmacro(add_analyze)
+    endif()
+endmacro()
 
 macro(add_format)
     find_program(CLANGFORMAT NAMES clang-format clang-format-3.4)
     if(CLANGFORMAT-NOTFOUND)
         message(WARNING "not adding format target because clang-format is missing")
     else()
-        add_custom_target("format" ${CLANGFORMAT} -i -style=file ${ARGN} )
+        add_custom_target("format" ${CLANGFORMAT} -i -style=file ${ARGN})
     endif()
-endmacro(add_format)
+endmacro()
 
