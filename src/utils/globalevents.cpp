@@ -87,7 +87,7 @@ void GlobalEventManager::Send(wxCommandEvent event)
 		return;
 
 	const auto& evtlist = m_eventsTable[event.GetEventType()];
-	for (const auto evt : evtlist) {
+	for (const auto& evt : evtlist) {
 		evt.first->QueueEvent(event.Clone());
 	}
 }

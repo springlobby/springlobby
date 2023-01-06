@@ -82,7 +82,7 @@ SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optionta
 			m_combobox = new wxComboBox(this, wxID_ANY, TowxString(opt.cbx_choices[index]), wxDefaultPosition, wxDefaultSize,
 						    lslTowxArrayString(opt.cbx_choices), wxCB_READONLY, wxDefaultValidator);
 			std::string tooltip = opt.description + "\n";
-			for (const auto itor : opt.listitems) {
+			for (const auto& itor : opt.listitems) {
 				tooltip += "\n" + itor.name + ": " + itor.desc;
 			}
 			m_combobox->SetToolTip(tooltip);

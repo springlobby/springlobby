@@ -195,7 +195,7 @@ void BattleMapTab::ReloadMapList()
 		return;
 	m_map_combo->Clear();
 	LSL::StringVector maps = LSL::usync().GetMapList();
-	for (const std::string map : maps) {
+	for (const std::string& map : maps) {
 		m_map_combo->Append(TowxString(map));
 	}
 }

@@ -963,7 +963,7 @@ void IBattle::SaveOptionsPreset(const std::string& name)
 		if ((LSL::Enum::GameOption)i != LSL::Enum::PrivateOptions) {
 			const auto opts = CustomBattleOptions().getOptionsMap((LSL::Enum::GameOption)i);
 			std::map<wxString, wxString> wopts;
-			for (const auto pair : opts)
+			for (const auto& pair : opts)
 				wopts.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
 			sett().SetHostingPreset(TowxString(m_preset), (LSL::Enum::GameOption)i, wopts);
 		} else {
@@ -1093,7 +1093,7 @@ void IBattle::LoadScriptMMOpts(const LSL::TDF::PDataList& node)
 		return;
 	LSL::OptionsWrapper& opts = CustomBattleOptions();
 	auto options = opts.getOptionsMap(LSL::Enum::EngineOption);
-	for (const auto i : options) {
+	for (const auto& i : options) {
 		opts.setSingleOption(i.first, node->GetString(i.first, i.second));
 	}
 }

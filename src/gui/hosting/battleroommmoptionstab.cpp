@@ -188,7 +188,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 
 	int total_count = 0;
 	int ctrl_count = 0;
-	for (const auto i : optWrap.m_opts[optFlag].bool_map) {
+	for (const auto& i : optWrap.m_opts[optFlag].bool_map) {
 		if (i.second.section == section.key) {
 			LSL::mmOptionBool current = i.second;
 			wxCheckBox* temp = new wxCheckBox(this, BOOL_START_ID + ctrl_count, TowxString(current.name));
@@ -209,7 +209,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 
 	total_count += ctrl_count;
 	ctrl_count = 0;
-	for (const auto it : optWrap.m_opts[optFlag].float_map) {
+	for (const auto& it : optWrap.m_opts[optFlag].float_map) {
 		//	    wxString seckey = it.second.section;
 		//	    wxString kkey = section.key ;
 		if (it.second.section == section.key) {
@@ -237,7 +237,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 
 	total_count += ctrl_count;
 	ctrl_count = 0;
-	for (const auto it : optWrap.m_opts[optFlag].list_map) {
+	for (const auto& it : optWrap.m_opts[optFlag].list_map) {
 		if (it.second.section == section.key) {
 			LSL::mmOptionList current = it.second;
 
@@ -249,7 +249,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 								lslTowxArrayString(current.cbx_choices),
 								wxCB_READONLY, wxDefaultValidator);
 			wxString tooltip = TowxString(current.description + std::string("\n"));
-			for (const auto itor : current.listitems) {
+			for (const auto& itor : current.listitems) {
 				tooltip += TowxString(std::string("\n") + itor.name + std::string(": ") + itor.desc);
 			}
 			tempchoice->SetToolTip(tooltip);
@@ -272,7 +272,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 
 	total_count += ctrl_count;
 	ctrl_count = 0;
-	for (const auto it : optWrap.m_opts[optFlag].string_map) {
+	for (const auto& it : optWrap.m_opts[optFlag].string_map) {
 		if (it.second.section == section.key) {
 			const LSL::mmOptionString current = it.second;
 			wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID + ctrl_count, TowxString(current.value), wxDefaultPosition,
