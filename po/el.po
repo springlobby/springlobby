@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: https://github.com/springlobby/springlobby/issues\n"
-"POT-Creation-Date: 2023-03-04 13:25+0100\n"
+"POT-Creation-Date: 2023-03-04 14:18+0100\n"
 "PO-Revision-Date: 2008-08-31 17:39+0000\n"
 "Last-Translator: Antonis Kanouras <antonis@metadosis.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -825,1622 +825,4622 @@ msgstr "Νήσοι Σβάλμπαρντ και Ζαν Μαγιέν"
 msgid "Slovakia (Slovak Republic)"
 msgstr "Σλοβακία (Σλοβάκικη Δημοκρατία)"
 
-#~ msgid "Sierra Leone"
-#~ msgstr "Σιέρρα Λεόνε"
-
-#~ msgid "San Marino"
-#~ msgstr "Σαν Μαρίνο"
-
-#~ msgid "Senegal"
-#~ msgstr "Σενεγάλη"
-
-#~ msgid "Somalia"
-#~ msgstr "Σομαλία"
-
-#~ msgid "Suriname"
-#~ msgstr "Σουρινάμ"
-
-#~ msgid "Sao Tome and Principe"
-#~ msgstr "Σάο Τομέ και Πρίνσιπε"
-
-#~ msgid "Soviet Union (former)"
-#~ msgstr "Σοβιετική Ένωση (πρώην)"
-
-#~ msgid "El Salvador"
-#~ msgstr "Ελ Σαλβαδόρ"
-
-#~ msgid "Syria"
-#~ msgstr "Συρία"
-
-#~ msgid "Swaziland"
-#~ msgstr "Σουαζιλάνδη"
-
-#~ msgid "Turks and Caicos Islands"
-#~ msgstr "Νήσοι Τούρκς και Καΐκος"
-
-#~ msgid "Chad"
-#~ msgstr "Τσαντ"
-
-#~ msgid "French Southern Territories"
-#~ msgstr "Γαλλικά Νότια Εδάφη"
-
-#~ msgid "Togo"
-#~ msgstr "Τόγκο"
-
-#~ msgid "Thailand"
-#~ msgstr "Ταϋλάνδη"
-
-#~ msgid "Tajikistan"
-#~ msgstr "Τατζικιστάν"
-
-#~ msgid "Tokelau"
-#~ msgstr "Τοκελάου"
-
-#~ msgid "Turkmenistan"
-#~ msgstr "Τουρκμενιστάν"
-
-#~ msgid "Tunisia"
-#~ msgstr "Τυνησία"
-
-#~ msgid "Tonga"
-#~ msgstr "Τόγκα"
-
-#~ msgid "East Timor"
-#~ msgstr "Ανατολικό Τιμούρ"
-
-#~ msgid "Turkey"
-#~ msgstr "Τουρκία"
-
-#~ msgid "Trinidad and Tobago"
-#~ msgstr "Τρινιδάδ και Τομπάγκο"
-
-#~ msgid "Tuvalu"
-#~ msgstr "Τουβαλού"
-
-#~ msgid "Taiwan"
-#~ msgstr "Ταϊβάν"
-
-#~ msgid "Tanzania"
-#~ msgstr "Τανζανία"
-
-#~ msgid "Ukraine"
-#~ msgstr "Ουκρανία"
-
-#~ msgid "Uganda"
-#~ msgstr "Ουγκάντα"
-
-#~ msgid "US Minor Outlying Islands"
-#~ msgstr "Μικροί Απόμεροι Νήσοι των ΗΠΑ"
-
-#~ msgid "United States"
-#~ msgstr "Ηνωμένες Πολιτείες"
-
-#~ msgid "Uruguay"
-#~ msgstr "Ουρουγουάη"
-
-#~ msgid "Uzbekistan"
-#~ msgstr "Ουζμπεκιστάν"
-
-#~ msgid "Vatican City State (Holy See)"
-#~ msgstr "Πόλη του Βατικανού (Αγία Έδρα)"
-
-#~ msgid "Saint Vincent and The Grenadines"
-#~ msgstr "Άγιος Βικέντιος και Γρεναδίνες"
-
-#~ msgid "Venezuela"
-#~ msgstr "Βενεζουέλα"
-
-#~ msgid "Virgin Islands (British)"
-#~ msgstr "Παρθένοι Νήσοι (Βρετανικές)"
-
-#~ msgid "Virgin Islands (US)"
-#~ msgstr "Παρθένοι Νήσοι (Ηνωμένων Πολιτειών)"
-
-#~ msgid "Viet Nam"
-#~ msgstr "Βιετνάμ"
-
-#~ msgid "Vanuatu"
-#~ msgstr "Βανουάτου"
-
-#~ msgid "Wallis and Futuna Islands"
-#~ msgstr "Νήσοι Ουώλλις και Φουτούνα"
-
-#~ msgid "Samoa"
-#~ msgstr "Σαμόα"
-
-#~ msgid "Yemen"
-#~ msgstr "Υεμένη"
-
-#~ msgid "Mayotte"
-#~ msgstr "Μαγιότ"
-
-#~ msgid "Yugoslavia"
-#~ msgstr "Γιουγκοσλαβία"
-
-#~ msgid "South Africa"
-#~ msgstr "Νότια Αφρική"
-
-#~ msgid "Zambia"
-#~ msgstr "Ζάμπια"
-
-#~ msgid "Zaire"
-#~ msgstr "Ζαΐρ"
-
-#~ msgid "Zimbabwe"
-#~ msgstr "Ζιμπάμπουε"
-
-#~ msgid "(Full country name not found)"
-#~ msgstr "(Δεν βρέθηκε ονομασία κράτους)"
-
-#~ msgid "Game"
-#~ msgstr "Παιχνίδι"
-
-#~ msgid "Map"
-#~ msgstr "Χάρτης"
-
-#~ msgid "Host"
-#~ msgstr "Οικοδεσπότης"
-
-#~ msgid "Download &map"
-#~ msgstr "Κατέβασμα χάρτη"
-
-#~ msgid "All"
-#~ msgstr "Όλα"
-
-#~ msgid "Status:"
-#~ msgstr "Κατάσταση:"
-
-#~ msgid "Locked"
-#~ msgstr "Κλειδωμένο"
-
-#~ msgid "Passworded"
-#~ msgstr "Με κωδικό"
-
-#~ msgid "Rank Limit:"
-#~ msgstr "Όριο βαθμού:"
-
-#~ msgid "Description:"
-#~ msgstr "Περιγραφή:"
-
-#~ msgid "Started"
-#~ msgstr "Ξεκίνησε"
-
-#~ msgid "Full"
-#~ msgstr "Πλήρης"
-
-#~ msgid "Open"
-#~ msgstr "Ανοιχτό"
-
-#~ msgid "Player:"
-#~ msgstr "Παίκτες:"
-
-#~ msgid "Map:"
-#~ msgstr "Χάρτης:"
-
-#~ msgid "    Spectator:"
-#~ msgstr "    Θεατές:"
-
-#~ msgid "Host:"
-#~ msgstr "Οικοδεσπότης:"
-
-#~ msgid "Players:"
-#~ msgstr "Παίκτες:"
-
-#~ msgid "Host new..."
-#~ msgstr "Φιλοξενία νέου..."
-
-#~ msgid "Join"
-#~ msgstr "Συμμετοχή"
-
-#~ msgid ""
-#~ "You cannot host a game while being offline. Please connect to a lobby "
-#~ "server."
-#~ msgstr ""
-#~ "Δεν μπορείτε να φιλοξενήσετε παιχνίδι εκτός σύνδεσης. Παρακαλώ συνδεθείτε "
-#~ "στο lobby."
-
-#~ msgid "Not Online."
-#~ msgstr "Εκτός Σύνδεσης."
-
-#~ msgid "Already in a battle"
-#~ msgstr "Ήδη σε μάχη"
-
-#~ msgid ""
-#~ "You are already in a battle.\n"
-#~ "\n"
-#~ "Do you want to leave current battle to start a new?"
-#~ msgstr "Είστε ήδη σε μάχη."
-
-#~ msgid "Battle password"
-#~ msgstr "Κωδικός μάχης"
-
-#~ msgid "right click for options (like autojoin)"
-#~ msgstr "κάνετε δεξί κλικ για επιλογές (όπως αυτόματη είσοδος)"
-
-#~ msgid "Send"
-#~ msgstr "Αποστολή"
-
-#~ msgid "\" params: \""
-#~ msgstr "\" παράμετροι: \""
-
+#: src/countrycodes.cpp:213
+msgid "Sierra Leone"
+msgstr "Σιέρρα Λεόνε"
+
+#: src/countrycodes.cpp:214
+msgid "San Marino"
+msgstr "Σαν Μαρίνο"
+
+#: src/countrycodes.cpp:215
+msgid "Senegal"
+msgstr "Σενεγάλη"
+
+#: src/countrycodes.cpp:216
+msgid "Somalia"
+msgstr "Σομαλία"
+
+#: src/countrycodes.cpp:217
+msgid "Suriname"
+msgstr "Σουρινάμ"
+
+#: src/countrycodes.cpp:218
+msgid "Sao Tome and Principe"
+msgstr "Σάο Τομέ και Πρίνσιπε"
+
+#: src/countrycodes.cpp:219
+msgid "Soviet Union (former)"
+msgstr "Σοβιετική Ένωση (πρώην)"
+
+#: src/countrycodes.cpp:220
+msgid "El Salvador"
+msgstr "Ελ Σαλβαδόρ"
+
+#: src/countrycodes.cpp:221
+msgid "Syria"
+msgstr "Συρία"
+
+#: src/countrycodes.cpp:222
+msgid "Swaziland"
+msgstr "Σουαζιλάνδη"
+
+#: src/countrycodes.cpp:223
+msgid "Turks and Caicos Islands"
+msgstr "Νήσοι Τούρκς και Καΐκος"
+
+#: src/countrycodes.cpp:224
+msgid "Chad"
+msgstr "Τσαντ"
+
+#: src/countrycodes.cpp:225
+msgid "French Southern Territories"
+msgstr "Γαλλικά Νότια Εδάφη"
+
+#: src/countrycodes.cpp:226
+msgid "Togo"
+msgstr "Τόγκο"
+
+#: src/countrycodes.cpp:227
+msgid "Thailand"
+msgstr "Ταϋλάνδη"
+
+#: src/countrycodes.cpp:228
+msgid "Tajikistan"
+msgstr "Τατζικιστάν"
+
+#: src/countrycodes.cpp:229
+msgid "Tokelau"
+msgstr "Τοκελάου"
+
+#: src/countrycodes.cpp:230
+msgid "Turkmenistan"
+msgstr "Τουρκμενιστάν"
+
+#: src/countrycodes.cpp:231
+msgid "Tunisia"
+msgstr "Τυνησία"
+
+#: src/countrycodes.cpp:232
+msgid "Tonga"
+msgstr "Τόγκα"
+
+#: src/countrycodes.cpp:233
+msgid "East Timor"
+msgstr "Ανατολικό Τιμούρ"
+
+#: src/countrycodes.cpp:234
+msgid "Turkey"
+msgstr "Τουρκία"
+
+#: src/countrycodes.cpp:235
+msgid "Trinidad and Tobago"
+msgstr "Τρινιδάδ και Τομπάγκο"
+
+#: src/countrycodes.cpp:236
+msgid "Tuvalu"
+msgstr "Τουβαλού"
+
+#: src/countrycodes.cpp:237
+msgid "Taiwan"
+msgstr "Ταϊβάν"
+
+#: src/countrycodes.cpp:238
+msgid "Tanzania"
+msgstr "Τανζανία"
+
+#: src/countrycodes.cpp:239
+msgid "Ukraine"
+msgstr "Ουκρανία"
+
+#: src/countrycodes.cpp:240
+msgid "Uganda"
+msgstr "Ουγκάντα"
+
+#: src/countrycodes.cpp:241
+msgid "United Kingdom"
+msgstr ""
+
+#: src/countrycodes.cpp:242
+msgid "US Minor Outlying Islands"
+msgstr "Μικροί Απόμεροι Νήσοι των ΗΠΑ"
+
+#: src/countrycodes.cpp:243
+msgid "United States"
+msgstr "Ηνωμένες Πολιτείες"
+
+#: src/countrycodes.cpp:244
+msgid "Uruguay"
+msgstr "Ουρουγουάη"
+
+#: src/countrycodes.cpp:245
+msgid "Uzbekistan"
+msgstr "Ουζμπεκιστάν"
+
+#: src/countrycodes.cpp:246
+msgid "Vatican City State (Holy See)"
+msgstr "Πόλη του Βατικανού (Αγία Έδρα)"
+
+#: src/countrycodes.cpp:247
+msgid "Saint Vincent and The Grenadines"
+msgstr "Άγιος Βικέντιος και Γρεναδίνες"
+
+#: src/countrycodes.cpp:248
+msgid "Venezuela"
+msgstr "Βενεζουέλα"
+
+#: src/countrycodes.cpp:249
+msgid "Virgin Islands (British)"
+msgstr "Παρθένοι Νήσοι (Βρετανικές)"
+
+#: src/countrycodes.cpp:250
+msgid "Virgin Islands (US)"
+msgstr "Παρθένοι Νήσοι (Ηνωμένων Πολιτειών)"
+
+#: src/countrycodes.cpp:251
+msgid "Viet Nam"
+msgstr "Βιετνάμ"
+
+#: src/countrycodes.cpp:252
+msgid "Vanuatu"
+msgstr "Βανουάτου"
+
+#: src/countrycodes.cpp:253
+msgid "Wallis and Futuna Islands"
+msgstr "Νήσοι Ουώλλις και Φουτούνα"
+
+#: src/countrycodes.cpp:254
+msgid "Samoa"
+msgstr "Σαμόα"
+
+#: src/countrycodes.cpp:255
+msgid "Yemen"
+msgstr "Υεμένη"
+
+#: src/countrycodes.cpp:256
+msgid "Mayotte"
+msgstr "Μαγιότ"
+
+#: src/countrycodes.cpp:257
+msgid "Yugoslavia"
+msgstr "Γιουγκοσλαβία"
+
+#: src/countrycodes.cpp:258
+msgid "South Africa"
+msgstr "Νότια Αφρική"
+
+#: src/countrycodes.cpp:259
+msgid "Zambia"
+msgstr "Ζάμπια"
+
+#: src/countrycodes.cpp:260
+msgid "Zaire"
+msgstr "Ζαΐρ"
+
+#: src/countrycodes.cpp:261
+msgid "Zimbabwe"
+msgstr "Ζιμπάμπουε"
+
+#: src/countrycodes.cpp:269
+msgid "(Full country name not found)"
+msgstr "(Δεν βρέθηκε ονομασία κράτους)"
+
+#: src/gui/aboutbox.cpp:18
+msgid " is a cross-platform lobby client for the Spring RTS engine"
+msgstr ""
+
+#: src/gui/aboutbox.cpp:35
+msgid "The numerous contributors from launchpad.net"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:43
+msgid "Max"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:45
+msgid "Running"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:46
+msgid "Battle Name"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:47
+#: src/gui/hosting/mainsingleplayertab.cpp:37
+#: src/gui/playback/playbackdataview.cpp:43
+msgid "Game"
+msgstr "Παιχνίδι"
+
+#: src/gui/battlelist/battledataviewctrl.cpp:48
+#: src/gui/hosting/mainjoinbattletab.cpp:49
+#: src/gui/playback/playbackdataview.cpp:44
+msgid "Map"
+msgstr "Χάρτης"
+
+#: src/gui/battlelist/battledataviewctrl.cpp:49
+msgid "Host"
+msgstr "Οικοδεσπότης"
+
+#: src/gui/battlelist/battledataviewctrl.cpp:50
+#: src/gui/playback/playbackdataview.cpp:45
+msgid "Engine"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:127
+#: src/gui/playback/playbackdataview.cpp:53
+msgid "Download &map"
+msgstr "Κατέβασμα χάρτη"
+
+#: src/gui/battlelist/battledataviewctrl.cpp:131
+#: src/gui/playback/playbackdataview.cpp:52
+msgid "Download &game"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:135
+#: src/gui/playback/playbackdataview.cpp:51
+msgid "Download &engine"
+msgstr ""
+
+#: src/gui/battlelist/battledataviewctrl.cpp:138
+msgid "Notify me when the battle has ended"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:81
+#: src/gui/battlelist/battlelistfilter.cpp:104
+#: src/gui/battlelist/battlelistfilter.cpp:105
+#: src/gui/playback/playbackfilter.cpp:80
+msgid "All"
+msgstr "Όλα"
+
+#: src/gui/battlelist/battlelistfilter.cpp:85
+#: src/gui/battlelist/battlelistfilter.cpp:136
+msgid "Status:"
+msgstr "Κατάσταση:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:87
+#: src/gui/hosting/battleroomtab.cpp:201
+msgid "Locked"
+msgstr "Κλειδωμένο"
+
+#: src/gui/battlelist/battlelistfilter.cpp:89
+msgid "Passworded"
+msgstr "Με κωδικό"
+
+#: src/gui/battlelist/battlelistfilter.cpp:91
+msgid "Highlighted only"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:101
+msgid "Rank Limit:"
+msgstr "Όριο βαθμού:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:125
+msgid "Description:"
+msgstr "Περιγραφή:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:138
+msgid "Started"
+msgstr "Ξεκίνησε"
+
+#: src/gui/battlelist/battlelistfilter.cpp:140
+msgid "Full"
+msgstr "Πλήρης"
+
+#: src/gui/battlelist/battlelistfilter.cpp:142
+msgid "Open"
+msgstr "Ανοιχτό"
+
+#: src/gui/battlelist/battlelistfilter.cpp:152
+#: src/gui/playback/playbackfilter.cpp:73
+msgid "Player:"
+msgstr "Παίκτες:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:173
+#: src/gui/battlelist/battlelisttab.cpp:73
+#: src/gui/playback/playbackfilter.cpp:106 src/gui/playback/playbacktab.cpp:57
+#: src/gui/singleplayertab.cpp:128
+msgid "Map:"
+msgstr "Χάρτης:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:178
+#: src/gui/playback/playbackfilter.cpp:123
+msgid "Only maps I have"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:188
+msgid "Max Players:"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:208
+#: src/gui/battlelist/battlelisttab.cpp:75
+#: src/gui/playback/playbackfilter.cpp:139 src/gui/playback/playbacktab.cpp:59
+#: src/gui/singleplayertab.cpp:121
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:35
+msgid "Game:"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:213
+#: src/gui/playback/playbackfilter.cpp:156
+msgid "Only games I have"
+msgstr ""
+
+#: src/gui/battlelist/battlelistfilter.cpp:223
+msgid "    Spectator:"
+msgstr "    Θεατές:"
+
+#: src/gui/battlelist/battlelistfilter.cpp:246
+#: src/gui/battlelist/battlelisttab.cpp:79
+msgid "Host:"
+msgstr "Οικοδεσπότης:"
+
+#: src/gui/battlelist/battlelisttab.cpp:71 src/gui/playback/playbacktab.cpp:55
+msgid "Players:"
+msgstr "Παίκτες:"
+
+#: src/gui/battlelist/battlelisttab.cpp:77 src/gui/playback/playbacktab.cpp:61
+#: src/gui/singleplayertab.cpp:138
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:48
+msgid "Engine:"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:85
+msgid "Notify"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:88
+msgid "Notify me when the battle ends (Only supported by bots)"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:124
+#: src/gui/hosting/battleroomtab.cpp:183
+msgid "Host new..."
+msgstr "Φιλοξενία νέου..."
+
+#: src/gui/battlelist/battlelisttab.cpp:125 src/gui/playback/playbacktab.cpp:83
+msgid "Activated"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:126 src/gui/playback/playbacktab.cpp:82
+msgid " Filter "
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:127
+msgid " Battle infos "
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:128
+msgid "0 battles displayed"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:129
+msgid "Insufficient rank"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:132
+msgid "Join"
+msgstr "Συμμετοχή"
+
+#: src/gui/battlelist/battlelisttab.cpp:180
 #, c-format
-#~ msgid "Are you sure you want to paste %d lines?"
-#~ msgstr "Είστε βέβαιος ότι θέλετε να κάνετε επικόλληση %d γραμμών;"
-
-#~ msgid "Copy"
-#~ msgstr "Αντιγραφή"
-
-#~ msgid "Clear"
-#~ msgstr "Εκκαθάριση"
-
-#~ msgid "Leave"
-#~ msgstr "Αποχώρηση"
-
-#~ msgid "Display Join/Leave Messages"
-#~ msgstr "Εμφάνιση μηνυμάτων Εισόδου/Εξόδου"
-
-#~ msgid "Channel info"
-#~ msgstr "Πληροφορίες καναλιού"
-
-#~ msgid "Set topic..."
-#~ msgstr "Ορισμός θέματος..."
-
-#~ msgid "Channel message..."
-#~ msgstr "Μήνυμα καναλιού..."
-
-#~ msgid "Lock..."
-#~ msgstr "Κλείδωμα..."
-
-#~ msgid "Unlock"
-#~ msgstr "Ξεκλείδωμα"
-
-#~ msgid "Register..."
-#~ msgstr "Εγγραφή..."
-
-#~ msgid "Unregister"
-#~ msgstr "Διαγραφή"
-
-#~ msgid "On"
-#~ msgstr "Ανοιχτό"
-
-#~ msgid "Off"
-#~ msgstr "Κλειστό"
-
-#~ msgid "Is on?"
-#~ msgstr "Είναι ανοιχτό;"
-
-#~ msgid "Spam protection"
-#~ msgstr "Προστασία από ανεπιθύμητα μηνύματα"
-
-#~ msgid "ChanServ"
-#~ msgstr "ChanServ"
-
-#~ msgid "Disconnect"
-#~ msgstr "Αποσύνδεση"
-
-#~ msgid "Reconnect"
-#~ msgstr "Επανασύνδεση"
-
-#~ msgid "Remove..."
-#~ msgstr "Αφαίρεση..."
-
-#~ msgid "Change password..."
-#~ msgstr "Αλλαγή κωδικού..."
-
-#~ msgid "Set access..."
-#~ msgstr "Ορισμός πρόσβασης..."
-
-#~ msgid "Accounts"
-#~ msgstr "Λογαριασμοί"
-
-#~ msgid "Broadcast..."
-#~ msgstr "Μετάδοση..."
-
-#~ msgid "Open Chat"
-#~ msgstr "Ανοιχτή Συνομιλία"
-
-#~ msgid "Join same battle"
-#~ msgstr "Σύνδεση στην ίδια μάχη"
-
-#~ msgid "Ingame time"
-#~ msgstr "Χρόνος παιχνιδιού"
-
-#~ msgid "Retrieve IP and Smurfs"
-#~ msgstr "Εύρεση διεύθυνσης IP και Smurf"
-
-#~ msgid "Mute..."
-#~ msgstr "Αποσιώπηση..."
-
-#~ msgid "Mute for 5 minutes"
-#~ msgstr "Αποσιώπηση για 5 λεπτά"
-
-#~ msgid "Mute for 10 minutes"
-#~ msgstr "Αποσιώπηση για 10 λεπτά"
-
-#~ msgid "Mute for 30 minutes"
-#~ msgstr "Αποσιώπηση για 30 λεπτά"
-
-#~ msgid "Mute for 2 hours"
-#~ msgstr "Αποσιώπηση για 2 ώρες"
-
-#~ msgid "Mute for 1 day"
-#~ msgstr "Αποσιώπηση για 1 ημέρα"
-
-#~ msgid "Unmute"
-#~ msgstr "Αναίρεση αποσιώπησης"
-
-#~ msgid "Mute"
-#~ msgstr "Αποσιώπηση"
-
-#~ msgid "Kick..."
-#~ msgstr "Αποπομπή..."
-
-#~ msgid "Ban..."
-#~ msgstr "Αποκλεισμός..."
-
-#~ msgid "Unban"
-#~ msgstr "Άρση αποκλεισμού"
-
-#~ msgid "Ring"
-#~ msgstr "Κλήση"
-
-#~ msgid "Slap!"
-#~ msgstr "Δώσε μπάτσα!"
-
-#~ msgid "Op"
-#~ msgstr "Κάνε διαχειριστή"
-
-#~ msgid "DeOp"
-#~ msgstr "Άρση δικαιώματος διαχείρησης"
-
-#~ msgid "ChanServ error"
-#~ msgstr "Σφάλμα ChanServ"
-
-#~ msgid "ChanServ is not in this channel."
-#~ msgstr "Το ChanServ δεν είναι σε αυτό το κανάλι"
-
-#~ msgid "What should be the new topic?"
-#~ msgstr "Ποιο πρέπει να είναι το νέο θέμα;"
-
-#~ msgid "Message:"
-#~ msgstr "Μήνυμα:"
-
-#~ msgid "Lock channel..."
-#~ msgstr "Κλείδωμα καναλιού..."
-
-#~ msgid "What should the new password be?"
-#~ msgstr "Ποιος πρέπει να είναι ο νέος κωδικός;"
-
-#~ msgid "Unlock Channel"
-#~ msgstr "Ξεκλείδωμα Καναλιού"
-
-#~ msgid "Are you sure you want to unlock this channel?"
-#~ msgstr "Επιβεβαίωση ξεκλειδώματος του καναλιού;"
-
-#~ msgid "Register Channel"
-#~ msgstr "Δήλωση Καναλιού"
-
-#~ msgid "Who should be appointed founder of this channel?"
-#~ msgstr "Ποιος πρέπει να δηλωθεί ως δημιουργός του καναλιού;"
-
-#~ msgid "Unregister Channel"
-#~ msgstr "Διαγραφή Καναλιού"
-
-#~ msgid "Are you sure you want to unregister this channel?"
-#~ msgstr "Επιβεβαίωση διαγραφής του καναλιού;"
-
-#~ msgid "Remove User Acount"
-#~ msgstr "Διαγραφή Λογαριασμού Χρήστη"
-
-#~ msgid "What user account do you want to remove today?"
-#~ msgstr "Ποιον λογαριασμό χρήστη θέλετε να διαγράψετε σήμερα;"
-
-#~ msgid "Remove Account"
-#~ msgstr "Διαγραφή λογαριασμού"
-
-#~ msgid "Are you sure you want to remove the account "
-#~ msgstr "Επιβεβαίωση διαγραφής λογαριασμού "
-
-#~ msgid "Change User Acount Password"
-#~ msgstr "Αλλαγή Κωδικού Λογαριασμού Χρήστη"
-
-#~ msgid "What user account do you want to change the password for?"
-#~ msgstr "Για ποιον λογαριασμό θέλετε να αλλάξετε τον κωδικό;"
-
-#~ msgid "What would be the new password?"
-#~ msgstr "Ποιος θα είναι ο νέος κωδικός;"
-
-#~ msgid "Error"
-#~ msgstr "Σφάλμα"
-
-#~ msgid "Not Implemented"
-#~ msgstr "Δεν έχει υλοποιηθεί"
-
-#~ msgid "Broadcast Message"
-#~ msgstr "Μετάδοση Μηνύματος"
-
-#~ msgid "Message to be broadcasted:"
-#~ msgstr "Μήνυμα προς μετάδοση:"
-
-#~ msgid "Mute User"
-#~ msgstr "Αποσιώπηση Χρήστη"
-
-#~ msgid "For how many minutes should the user be muted?"
-#~ msgstr "Πόσα λεπτά να διαρκέσει η αποσιώπηση του χρήστη;"
-
-#~ msgid "Kick User"
-#~ msgstr "Αποπομπή Χρήστη"
-
-#~ msgid "Reason:"
-#~ msgstr "Αιτία:"
-
-#~ msgid "Kick user"
-#~ msgstr "Αποπομπή χρήστη"
-
-#~ msgid "Mute user"
-#~ msgstr "Αποσιώπηση χρήστη"
-
-#~ msgid "Duration:"
-#~ msgstr "Διάρκεια:"
-
-#~ msgid "Register"
-#~ msgstr "Εγγραφή"
-
-#~ msgid "Login"
-#~ msgstr "Είσοδος"
-
-#~ msgid "Download"
-#~ msgstr "Λήψη αρχείου"
-
-#~ msgid "Yes"
-#~ msgstr "Ναι"
-
-#~ msgid "No"
-#~ msgstr "Όχι"
-
-#~ msgid "Size"
-#~ msgstr "Μέγεθος"
-
-#~ msgid "KB/s down"
-#~ msgstr "KB/s λαμβάνονται"
-
-#~ msgid "Filesize (MB)"
-#~ msgstr "μέγεθος (MB)"
-
-#~ msgid "Add bot"
-#~ msgstr "Προσθήκη bot"
-
-#~ msgid "Nickname:"
-#~ msgstr "Ψευδώνυμο:"
-
-#~ msgid "AI:"
-#~ msgstr "Τύπος bot:"
-
-#~ msgid "Choose the AI library to use with this bot."
-#~ msgstr "Επιλέξτε τον τύπο του bot."
-
-#~ msgid "Cancel"
-#~ msgstr "Ακύρωση"
-
-#~ msgid "Add Bot"
-#~ msgstr "Προσθήκη Bot"
-
-#~ msgid "No AI bots found in your Spring installation."
-#~ msgstr "Δεν βρέθηκαν bot στην εγκατάσταση σας."
-
-#~ msgid "No bot-libs found"
-#~ msgstr "Δεν βρέθηκαν bot"
-
-#~ msgid "Autobalance players into teams"
-#~ msgstr "Εξισορρόπηση παικτών σε ομάδες"
-
-#~ msgid "Method"
-#~ msgstr "Μέθοδος"
-
-#~ msgid "Divide ranks evenly"
-#~ msgstr "Ομοιόμορφο μοίρασμα βαθμών"
-
-#~ msgid "Random"
-#~ msgstr "Τυχαίο"
-
-#~ msgid "Clans"
-#~ msgstr "Ομάδες"
-
-#~ msgid "None"
-#~ msgstr "Καθόλου"
-
-#~ msgid "Fair"
-#~ msgstr "Μέτρια"
-
-#~ msgid "Always"
-#~ msgstr "Πάντα"
-
-#~ msgid ""
-#~ "Put members of same clan ( users having same clantag, like "
-#~ "'[smurfzor]Alice' and '[smurfzor]Bob' ) together into same alliance. \n"
-#~ "None: nothing special for clans.\n"
-#~ "Fair: put clanmembers into alliance, unless this makes alliances unfair.\n"
-#~ "Always: always put clanmembers into alliance, even if that alliance is "
-#~ "unfair."
-#~ msgstr ""
-#~ "Τοποθέτηση μελών της ίδιας ομάδας (παίκτες που έχουν το ίδιο τag ομάδας, "
-#~ "όπως '[smurfzor]Alice' και '[smurfzor]Bob') στην ίδια συμμαχία.\n"
-#~ "Καθόλου: τίποτα ιδιαίτερο για τις ομάδες.\n"
-#~ "Μέτρια: τοποθέτηση μελών της ίδιας ομάδας στην ίδια συμμαχία, εκτός κι αν "
-#~ "αυτό την κάνει άδικη.\n"
-#~ "Πάντα: τοποθέτηση μελών της ίδιας ομάδας στην ίδια συμμαχία, ακόμα κι αν "
-#~ "αυτό την κάνει άδικη."
-
-#~ msgid "Ok"
-#~ msgstr "Εντάξει"
-
-#~ msgid "Option"
-#~ msgstr "Επιλογή"
-
-#~ msgid "Value"
-#~ msgstr "Τιμή"
-
-#~ msgid "Windspeed"
-#~ msgstr "Ταχύτητα ανέμου"
-
-#~ msgid "Tidal strength"
-#~ msgstr "Δύναμη κυμάτων"
-
-#~ msgid "Gravity"
-#~ msgstr "Βαρύτητα"
-
-#~ msgid "Extractor radius"
-#~ msgstr "Ακτίνα εξαγωγέων"
-
-#~ msgid "Max metal"
-#~ msgstr "Μεγ. μέταλλο"
-
-#~ msgid "Fixed"
-#~ msgstr "Σταθερό"
-
-#~ msgid "Choose in game"
-#~ msgstr "Επιλ. στο παιχνίδι"
-
-#~ msgid "Startpositions"
-#~ msgstr "Αρχικές θέσεις"
-
-#~ msgid "Unit restrictions"
-#~ msgstr "Περιορισμοί μονάδων"
-
-#~ msgid "Allowed units"
-#~ msgstr "Επιτρεπτές μονάδες"
-
-#~ msgid "Units in this list will be available in the game."
-#~ msgstr "Οι μονάδες αυτής της λίστας θα είναι διαθέσιμες στο παιχνίδι."
-
-#~ msgid "Enable all units."
-#~ msgstr "Ενεργοποίηση όλων των μονάδων."
-
-#~ msgid "Restricted units"
-#~ msgstr "Περιορισμένες μονάδες"
-
-#~ msgid "Units in this list will not be available in the game."
-#~ msgstr "Οι μονάδες αυτής της λίστας δεν θα είναι διαθέσιμες στο παιχνίδι."
-
-#~ msgid "Nickname"
-#~ msgstr "Ψευδώνυμο"
-
-#~ msgid "Spectator"
-#~ msgstr "Θεατής"
-
-#~ msgid "Kick"
-#~ msgstr "Αποπομπή"
-
-#~ msgid "Team"
-#~ msgstr "Ομάδα"
-
-#~ msgid "Ally"
-#~ msgstr "Συμμαχία"
-
-#~ msgid "Side"
-#~ msgstr "Πλευρά"
-
-#~ msgid "Set color"
-#~ msgstr "Ορισμός χρώματος"
-
-#~ msgid "Set Resource Bonus"
-#~ msgstr "Ορισμός Επιδόματος Πόρων"
-
-#~ msgid "Please enter a value between 0 and 100"
-#~ msgstr "Παρακαλώ εισάγετε μια τιμή από 0 εώς 100"
-
-#~ msgid "Map Options"
-#~ msgstr "Επιλογές Χάρτη"
-
-#~ msgid "error"
-#~ msgstr "σφάλμα"
-
-#~ msgid "Players with the same team number share control of their units."
-#~ msgstr ""
-#~ "Οι παίκτες με τον ίδιο αριθμό ομάδας μοιράζονται των έλεγχο των μονάδων "
-#~ "τους."
-
-#~ msgid "Players with the same ally number work together to achieve victory."
-#~ msgstr ""
-#~ "Οι παίκτες με τον ίδιο αριθμό συμμαχίας συνεργάζονται για να πετύχουν τη "
-#~ "νίκη."
-
-#~ msgid "Select a color to identify your units in-game"
-#~ msgstr "Επιλέξτε ένα χρώμα για να ξεχωρίζουν οι μονάδες σας στο παιχνίδι"
-
-#~ msgid "Select your faction"
-#~ msgstr "Επιλέξτε την φατριά σας"
-
-#~ msgid "Spectate (watch) the battle instead of playing"
-#~ msgstr "Παρακολουθήστε τη μάχη αντί να συμμετάσχετε"
-
-#~ msgid "I'm ready"
-#~ msgstr "Είμαι έτοιμος"
-
-#~ msgid "Click this if you are content with the battle settings."
-#~ msgstr "Επιλέξτε εδώ αν συμφωνείτε με τις ρυθμίσεις της μάχης."
-
-#~ msgid "Color"
-#~ msgstr "Χρώμα"
-
-#~ msgid ""
-#~ "A preview of the selected map.  You can see the starting positions, or "
-#~ "(if set) starting boxes."
-#~ msgstr ""
-#~ "Προεπισκόπηση του επιλεγμένου χάρτη. Διακρίνετε τις αρχικές θέσεις ή (αν "
-#~ "έχουν ρυθμιστεί) τις αρχικές περιοχές."
-
-#~ msgid "Leave the battle and return to the battle list"
-#~ msgstr "Αποχώρηση από τη μάχη και επιστροφή στη λίστα μαχών"
-
-#~ msgid "Start"
-#~ msgstr "Έναρξη"
-
-#~ msgid "Start the battle"
-#~ msgstr "Έναρξη μάχης"
-
-#~ msgid "Add Bot..."
-#~ msgstr "Προσθήκη Bot..."
-
-#~ msgid "Add a computer-controlled player to the game"
-#~ msgstr "Προσθήκη bot στο παιχνίδι"
-
-#~ msgid "Prevent additional players from joining the battle"
-#~ msgstr "Αποτροπή συμμετοχής επιπλέον παιχτών στη μάχη"
-
-#~ msgid "Automatically balance players into two or more alliances"
-#~ msgstr "Αυτόματη εξισορρόπηση παιχτών σε δύο ή περισσότερες συμμαχίες"
-
-#~ msgid "Fix colours"
-#~ msgstr "Επιδιόρθωση χρωμάτων"
-
-#~ msgid "Make player colors unique"
-#~ msgstr "Κάνει τα χρώματα των παικτών μοναδικά"
-
-#~ msgid "Not ready"
-#~ msgstr "Δεν είναι έτοιμο"
-
-#~ msgid "Error starting battle."
-#~ msgstr "Πρόβλημα στην εκκίνηση μάχης."
-
-#~ msgid "No maps found"
-#~ msgstr "Δεν βρέθηκαν χάρτες"
-
-#~ msgid "Battleroom"
-#~ msgstr "Δωμάτιο μάχης"
-
-#~ msgid "Options"
-#~ msgstr "Επιλογές"
-
-#~ msgid "Cancel Download"
-#~ msgstr "Ακύρωση λήψης"
-
-#~ msgid "Search file"
-#~ msgstr "Αναζήτηση αρχείου"
-
-#~ msgid "Chat"
-#~ msgstr "Συνομιλία"
-
-#~ msgid "&Connect..."
-#~ msgstr "&Σύνδεση..."
-
-#~ msgid "&Disconnect"
-#~ msgstr "&Αποσύνδεση"
-
-#~ msgid "&Quit"
-#~ msgstr "&Τερματισμός"
-
-#~ msgid "&Join channel..."
-#~ msgstr "Είσοδος σε κανάλι..."
-
-#~ msgid "Open private &chat..."
-#~ msgstr "Έναρξη prive συνομιλίας..."
-
-#~ msgid "Check for new Version"
-#~ msgstr "Έλεγχος για νέα έκδοση"
-
-#~ msgid "&About"
-#~ msgstr "&Περί"
-
-#~ msgid "&Report a bug..."
-#~ msgstr "Αναφορά προβλήματος..."
-
-#~ msgid "&Documentation"
-#~ msgstr "&Τεκμηρίωση"
-
-#~ msgid "&Tools"
-#~ msgstr "&Εργαλεία"
-
-#~ msgid "&Help"
-#~ msgstr "&Βοήθεια"
-
-#~ msgid "Join channel..."
-#~ msgstr "Είσοδος σε κανάλι..."
-
-#~ msgid "Name of channel to join"
-#~ msgstr "Όνομα καναλιού"
-
-#~ msgid "Open Private Chat..."
-#~ msgstr "Έναρξη prive συνομιλίας..."
-
-#~ msgid "Name of user"
-#~ msgstr "Όνομα χρήστη"
-
-#~ msgid "Refresh"
-#~ msgstr "Ανανέωση"
-
-#~ msgid "side:"
-#~ msgstr "πλευρά:"
-
+msgid "%d battles displayed"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:323
+#: src/gui/hosting/battleroomtab.cpp:1341
+msgid ""
+"You cannot host a game while being offline. Please connect to a lobby server."
+msgstr ""
+"Δεν μπορείτε να φιλοξενήσετε παιχνίδι εκτός σύνδεσης. Παρακαλώ συνδεθείτε "
+"στο lobby."
+
+#: src/gui/battlelist/battlelisttab.cpp:323
+#: src/gui/hosting/battleroomtab.cpp:1341
+msgid "Not Online."
+msgstr "Εκτός Σύνδεσης."
+
+#: src/gui/battlelist/battlelisttab.cpp:330
+msgid "Already in a battle"
+msgstr "Ήδη σε μάχη"
+
+#: src/gui/battlelist/battlelisttab.cpp:330
+msgid ""
+"You are already in a battle.\n"
+"\n"
+"Do you want to leave current battle to start a new?"
+msgstr "Είστε ήδη σε μάχη."
+
+#: src/gui/battlelist/battlelisttab.cpp:435
+msgid "Already in another battle"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:435
+msgid "You are already in a battle."
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:435
+msgid "Do you want to leave your current battle and join this one?"
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:445
+msgid "Battle password"
+msgstr "Κωδικός μάχης"
+
+#: src/gui/battlelist/battlelisttab.cpp:445
+msgid "Enter password (spaces will be stripped)"
+msgstr ""
+
+#: src/gui/channel/autojoinchanneldialog.cpp:28
+msgid "Edit auto-joined channels"
+msgstr ""
+
+#: src/gui/channel/autojoinchanneldialog.cpp:37
+msgid ""
+"Add one channel per line like this:\n"
+"channelname password\n"
+"(passwords for existing channels are not displayed)"
+msgstr ""
+
+#: src/gui/channel/channelchooser.cpp:24
+msgid "Double click to join"
+msgstr ""
+
+#: src/gui/channel/channelchooser.cpp:31
+msgid "Find channel:"
+msgstr ""
+
+#: src/gui/channel/channelchooserdialog.cpp:16 src/gui/mainwindow.cpp:225
+msgid "Choose channels to join"
+msgstr ""
+
+#: src/gui/channel/channellistview.cpp:20 src/gui/slbook.cpp:116
+msgid "Channel"
+msgstr ""
+
+#: src/gui/channel/channellistview.cpp:21
+msgid "# users"
+msgstr ""
+
+#: src/gui/channel/channellistview.cpp:22
+msgid "Topic"
+msgstr ""
+
+#: src/gui/channel/channellistview.cpp:54
 #, c-format
-#~ msgid "ally:   %d"
-#~ msgstr "συμμαχία: %d"
+msgid "Displaying %d out of %d channels"
+msgstr ""
 
+#: src/gui/chatpanel.cpp:255
+msgid "Hide bots"
+msgstr ""
+
+#: src/gui/chatpanel.cpp:292
+msgid "right click for options (like autojoin)"
+msgstr "κάνετε δεξί κλικ για επιλογές (όπως αυτόματη είσοδος)"
+
+#: src/gui/chatpanel.cpp:307
+msgid "Send"
+msgstr "Αποστολή"
+
+#: src/gui/chatpanel.cpp:700
+msgid "!! Command: \""
+msgstr ""
+
+#: src/gui/chatpanel.cpp:700
+msgid "\" params: \""
+msgstr "\" παράμετροι: \""
+
+#: src/gui/chatpanel.cpp:705
 #, c-format
-#~ msgid "bonus: %d%%"
-#~ msgstr "επίδομα: %d%%"
+msgid "Error: %s"
+msgstr ""
 
-#~ msgid "s"
-#~ msgstr "κ"
+#: src/gui/chatpanel.cpp:712
+msgid "the channel"
+msgstr ""
 
-#~ msgid "c"
-#~ msgstr "χ"
+#: src/gui/chatpanel.cpp:714
+msgid "the battle"
+msgstr ""
 
-#~ msgid "r"
-#~ msgstr "β"
+#: src/gui/chatpanel.cpp:716
+msgid "the server"
+msgstr ""
 
-#~ msgid "Colors and font"
-#~ msgstr "Χρώματα και γραμματοσειρά"
-
-#~ msgid "Normal"
-#~ msgstr "Κανονικό"
-
-#~ msgid "Background"
-#~ msgstr "Φόντο"
-
-#~ msgid "Action"
-#~ msgstr "Ενέργεια"
-
-#~ msgid "Highlight"
-#~ msgstr "Επισήμανση"
-
-#~ msgid "Join/Leave"
-#~ msgstr "Είσοδος/Έξοδος"
-
-#~ msgid "My messages"
-#~ msgstr "Τα μηνύματά μου"
-
-#~ msgid "Server"
-#~ msgstr "Εξυπηρετητής"
-
-#~ msgid "Client"
-#~ msgstr "Πελάτης"
-
-#~ msgid "Timestamp"
-#~ msgstr "Χρονόσημο"
-
-#~ msgid "Notification"
-#~ msgstr "Ειδοποίηση"
-
-#~ msgid "Font:"
-#~ msgstr "Γραμματοσειρά:"
-
-#~ msgid "Select..."
-#~ msgstr "Επιλογή..."
-
-#~ msgid "Behavior"
-#~ msgstr "Συμπεριφορά"
-
-#~ msgid "Play notification sounds"
-#~ msgstr "Χρήση ήχων ειδοποίησης"
-
-#~ msgid "Chat logs"
-#~ msgstr "Καταγραφές συνομιλιών"
-
-#~ msgid "Save chat logs"
-#~ msgstr "Αποθήκευση καταγραφών συνομιλιών"
-
-#~ msgid "Highlight words"
-#~ msgstr "Επισήμανση λέξεων"
-
-#~ msgid "Words to highlight in chat:"
-#~ msgstr "Λέξεις προς επισήμανση σε συνομιλίες:"
-
-#~ msgid "enter a ; separated list"
-#~ msgstr "Εισάγετε λίστα χωρισμένη με \";\""
-
-#~ msgid "Additionally play sound/flash titlebar "
-#~ msgstr "Επιπλέον χρήση ήχων/αναβόσβημα τίτλου παραθύρου "
-
-#~ msgid "Browse"
-#~ msgstr "Αναζήτηση"
-
-#~ msgid "Web Browser"
-#~ msgstr "Περιηγητής ιστοσελίδων"
-
-#~ msgid "Default Browser."
-#~ msgstr "Εξ ορισμού"
-
-#~ msgid "Use your system-wide browser preference"
-#~ msgstr "Χρήση της ρύθμισης συστήματος"
-
-#~ msgid "Specify:"
-#~ msgstr "Προσδιορίστε:"
-
-#~ msgid "Specify the web browser you want to use"
-#~ msgstr "Προσδιορίστε τον περιηγητή που θέλετε να χρησιμοποιήσετε"
-
-#~ msgid "Use a file dialog to find the web browser"
-#~ msgstr "Χρήση διαλόγου αρχείων για αναζήτηση του περιηγητή"
-
-#~ msgid "Executables (*.exe)|*.exe|Any File (*.*)|*.*"
-#~ msgstr "Εκτελέσιμα (*.exe)|*.exe|Όλα τα αρχεία (*.*)|*.*"
-
-#~ msgid "Any file (*)|*"
-#~ msgstr "Όλα τα αρχεία (*)|*"
-
-#~ msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
-#~ msgstr "Πακέτα Εφαρμογών (*.app)|*.app|Όλα τα αρχεία (*.*)|*.*"
-
-#~ msgid "Choose a web browser executable"
-#~ msgstr "Επιλέξτε το εκτελέσιμο του περιηγητή"
-
-#~ msgid "Spring"
-#~ msgstr "Spring"
-
-#~ msgid "Apply"
-#~ msgstr "Εφαρμογή"
-
-#~ msgid "Auto Configure"
-#~ msgstr "Αυτόματη Ρύθμιση"
-
-#~ msgid "Spring executable"
-#~ msgstr "Εκτελέσιμο του Spring"
-
-#~ msgid "Location"
-#~ msgstr "Τοποθεσία"
-
-#~ msgid "Find"
-#~ msgstr "Αναζήτηση"
-
-#~ msgid "UnitSync library"
-#~ msgstr "Μονάδα UnitSync"
-
-#~ msgid "Choose a Spring executable"
-#~ msgstr "Επιλέξτε το εκτελέσιμο του Spring"
-
-#~ msgid "Choose UnitSync library"
-#~ msgstr "Επιλέξτε τη μονάδα UnitSync"
-
-#~ msgid "Choose a folder"
-#~ msgstr "Επιλογή φακέλου"
-
-#~ msgid "Spring error"
-#~ msgstr "Πρόβλημα του Spring"
-
-#~ msgid "Flood warning"
-#~ msgstr "Προειδοποίηση πλημμύρας"
-
-#~ msgid "File"
-#~ msgstr "Αρχείο"
-
-#~ msgid ""
-#~ "You can drag the sun/bot icon around to define start position.\n"
-#~ " Hover over the icon for a popup that lets you change side, ally and "
-#~ "bonus."
-#~ msgstr ""
-#~ "Μπορείτε να σύρετε το εικονίδιο ήλιου/bot για να ορίσετε την αρχική "
-#~ "θέση.\n"
-#~ " Πηγαίνετε το ποντίκι πάνω από το εικονίδιο για να αλλάξετε μεριά, "
-#~ "συμμαχία και επίδομα."
-
-#~ msgid "Add bot..."
-#~ msgstr "Προσθήκη bot..."
-
-#~ msgid "-- Select one --"
-#~ msgstr "-- Επιλέξτε κάποιο --"
-
-#~ msgid "You have to select a map first."
-#~ msgstr "Πρέπει να επιλέξετε έναν χάρτη πρώτα."
-
-#~ msgid "Global commands:"
-#~ msgstr "Γενικές εντολές:"
-
-#~ msgid "  \"/away\" - Sets your status to away."
-#~ msgstr ""
-#~ "  \"/away\" - Ορίζει την κατάσταση σας ως μακρυά από τον υπολογιστή."
-
-#~ msgid "  \"/back\" - Resets your away status."
-#~ msgstr "  \"/back\" - Ορίζει την κατάσταση σας ως κοντά στον υπολογιστή."
-
-#~ msgid "  \"/channels\" - Lists currently active channels."
-#~ msgstr "  \"/channels\" - Εμφανίζει μια λίστα των ενεργών καναλιών."
-
-#~ msgid ""
-#~ "  \"/help [topic]\" - Put topic if you want to know more specific "
-#~ "information about a command."
-#~ msgstr ""
-#~ "  \"/help [θέμα]\" - Βάλτε θέμα αν θέλετε πιο συγκεκριμένες πληροφορίες "
-#~ "για μια εντολή."
-
-#~ msgid "  \"/j\" - Alias to /join."
-#~ msgstr "  \"/j\" - Συνώνυμο του /join."
-
-#~ msgid "  \"/rename newalias\" - Changes your nickname to newalias."
-#~ msgstr ""
-#~ "  \"/rename νέοψευδώνυμο\" - Αλλάζει το ψευδώνυμο σας σε νέοψευδώνυμο."
-
-#~ msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
-#~ msgstr "  \"/testmd5 κείμενο\" - Επιστρέφει ένα md5-b64 hash του κειμένου."
-
-#~ msgid "Chat commands:"
-#~ msgstr "Εντολές συνομιλίας:"
-
-#~ msgid "  \"/me action\" - Say IRC style action message."
-#~ msgstr ""
-#~ "  \"/me δραστηριότητα\" - Στέλνει ένα μήνυμα δραστηριότητας σε στυλ IRC (/"
-#~ "e)."
-
-#~ msgid ""
-#~ "If you are missing any commands, go to #springlobby and try to type it "
-#~ "there :)"
-#~ msgstr ""
-#~ "Αν δεν μπορείτε να θυμηθείτε κάποια εντολή, πηγαίνετε στο #springlobby "
-#~ "και δοκιμάστε να την πληκτρολογήσετε εκεί :)"
-
-#~ msgid "no active chat panels open."
-#~ msgstr "καμία ενεργή συνομιλία ανοιχτή."
-
-#~ msgid "The current battle was closed by the host."
-#~ msgstr "Η τρέχουσα μάχη έκλεισε από τον οικοδεσπότη."
-
-#~ msgid ""
-#~ "There was an error checking for the latest version.\n"
-#~ "Please try again later.\n"
-#~ "If the problem persists, please use Help->Report Bug to report this bug."
-#~ msgstr ""
-#~ "Παρουσιάστηκε πρόβλημα κατά τον έλεγχο για νέα έκδοση.\n"
-#~ "Παρακαλώ προσπαθήστε αργότερα.\n"
-#~ "Αν το πρόβλημα παραμένει, παρακαλώ χρησιμοποιήστε το Βοηθεία -> Αναφορά "
-#~ "Προβλήματος για να αναφέρετε αυτό το πρόβλημα."
-
-#~ msgid "Your Version: "
-#~ msgstr "Η έκδοσή σας: "
-
-#~ msgid "Latest Version: "
-#~ msgstr "Τελευταία έκδοση: "
-
-#~ msgid "Up to Date"
-#~ msgstr "Ενημερωμένο"
-
-#~ msgid "Not up to Date"
-#~ msgstr "Μη Ενημερωμένο"
-
-#~ msgid "Couldn't launch browser. URL is: "
-#~ msgstr "Αδυναμία εκκίνησης περιηγητή. Το URL είναι: "
-
-#~ msgid "Couldn't launch browser."
-#~ msgstr "Αδυναμία εκκίνησης περιηγητή."
-
-#~ msgid ""
-#~ "\n"
-#~ "Broser path is: "
-#~ msgstr ""
-#~ "\n"
-#~ "Διαδρομή περιηγητή είναι: "
-
-#~ msgid "Do you accept the terms of this agreement?"
-#~ msgstr "Αποδέχεστε τους όρους αυτής της συμφωνίας;"
-
-#~ msgid ""
-#~ "Server to connect to. You can connect to any server you like by typing in "
-#~ "hostaddress:port format."
-#~ msgstr ""
-#~ "Εξυπηρετητής στον οποίο θα γίνει σύνδεση. Μπορείτε να συνδεθείτε σε "
-#~ "όποιον εξυπηρετητή θέλετε δηλώνοντας τον στη μορφή \"εξυπηρετητής:θύρα\""
-
-#~ msgid "Remember password"
-#~ msgstr "Αποθήκευση κωδικού πρόσβασης"
-
-#~ msgid "Autoconnect next time"
-#~ msgstr "Αυτόματη σύνδεση την επόμενη φορά"
-
-#~ msgid ""
-#~ "remember connection details and automatically connect to server on next "
-#~ "lobby startup"
-#~ msgstr ""
-#~ "Αποθήκευση των στοιχείων σύνδεσης και αυτόματη σύνδεση στον εξυπηρετητή "
-#~ "κατά την επόμενη εκκίνηση του lobby"
-
-#~ msgid "Connect to lobby server"
-#~ msgstr "Σύνδεση στον εξυπηρετητή lobby"
-
-#~ msgid ""
-#~ "A short description of the game, this will show up in the battle list."
-#~ msgstr "Σύντομη περιγραφή του παιχνιδιού, θα εμφανιστεί στη λίστα μαχών."
-
-#~ msgid "Password needed to join game. Keep empty for no password"
-#~ msgstr ""
-#~ "Κωδικός για συμμετοχή στο παιχνίδι. Αφήστε κενό για ελεύθερη συμμετοχή"
-
-#~ msgid "Hole punching"
-#~ msgstr "Διάτρηση"
-
-#~ msgid "Start hosting the battle."
-#~ msgstr "Έναρξη φιλοξενίας της μάχης."
-
-#~ msgid "Host new battle"
-#~ msgstr "Φιλοξενία νέας μάχης"
-
-#~ msgid "Join channel failed"
-#~ msgstr "Η είσοδος στο κανάλι απέτυχε"
-
-#~ msgid "Could not join channel "
-#~ msgstr "Απέτυχε η είσοδος στο κανάλι "
-
-#~ msgid " because: "
-#~ msgstr " επειδή: "
-
-#~ msgid "Server Message"
-#~ msgstr "Μήνημα Εξυπηρετητή"
-
+#: src/gui/chatpanel.cpp:728 src/gui/chatpanel.cpp:747
 #, c-format
-#~ msgid " has ip=%s"
-#~ msgstr " έχει διεύθυνση IP=%s"
-
-#~ msgid " does not really support nat traversal"
-#~ msgstr " δεν υποστηρίζει πραγματικά την Διάτρηση NAT"
-
-#~ msgid "You were kicked from the battle!"
-#~ msgstr "Εκδιωχθήκατε από τη μάχη!"
-
-#~ msgid "Kicked by Host"
-#~ msgstr "Αποπομπή από Οικοδεσπότη"
-
-#~ msgid "Scrollwheel speed"
-#~ msgstr "Ταχύτητα ροδέλας κύλισης"
-
-#~ msgid ""
-#~ "Higher values mean faster zoom with mouse wheel.\n"
-#~ "Negative values will invert zoom direction.\n"
-#~ "Results may vary depending on camera mode!"
-#~ msgstr ""
-#~ "Μεγαλύτερες τιμές σημαίνουν γρηγορότερη μεγέθυνση με τη ροδέλα του "
-#~ "ποντικιού.\n"
-#~ "Αρνητικές τιμές αντιστρέφουν την φορά μεγέθυνσης.\n"
-#~ "Φέρει διαφορετικά αποτελέσματα ανάλογα με τον τύπο κάμερας!"
-
-#~ msgid "Shadow-map size"
-#~ msgstr "Μέγεθος χάρτη σκιων"
-
-#~ msgid ""
-#~ "higher value = better looking shadows\n"
-#~ "possible values: 1024, 2048, 4096, 8192"
-#~ msgstr ""
-#~ "μεγαλύτερη τιμή = καλύτερες σκιες\n"
-#~ "επιτρεπτές τιμες: 1024, 2048, 4096, 8192"
-
-#~ msgid "Tree view-distance"
-#~ msgstr "Απόσταση εμφάνισης δέντρων"
-
-#~ msgid "sets the maximum distance at which trees will still be rendered"
-#~ msgstr "Ορίζει τη μέγιστη απόσταση που θα σχεδιάζονται τα δέντρα"
-
-#~ msgid "Terrain detail"
-#~ msgstr "Λεπτομέρειες εδάφους"
-
-#~ msgid "higher value = more terrain details"
-#~ msgstr "μεγαλύτερες τιμές = περισσότερες λεπτομέρειες εδάφους"
-
-#~ msgid "Grass detail"
-#~ msgstr "Λεπτομέρεια χορταριού"
-
-#~ msgid "Ground decals"
-#~ msgstr "Decal εδάφους"
-
-#~ msgid "Unit icon distance"
-#~ msgstr "Απόσταση εικονιδίων μονάδων"
-
-#~ msgid ""
-#~ "determines at which range units are still fully rendered\n"
-#~ "higher value = greater range = more units rendered at the same time"
-#~ msgstr ""
-#~ "Προσδιορίζει μέχρι πια απόσταση θα σχεδιάζονται πλήρως οι μονάδες\n"
-#~ "μεγαλύτερες τιμές = μεγαλύτερη απόσταση = περισσότερες μονάδες "
-#~ "σχεδιάζονται ταυτόχρονα"
-
-#~ msgid "Max simultaneous particles"
-#~ msgstr "Μέγιστος αριθμός ταυτόχρονων σωματιδίων"
-
-#~ msgid "limits how many particles are displayed at the same time"
-#~ msgstr ""
-#~ "περιορίζει το πόσα σωματίδια (κομματάκια) θα εμφανίζονται ταυτόχρονα"
-
-#~ msgid "Run full-screen"
-#~ msgstr "Εκτέλεση σε πλήρη οθόνη"
-
-#~ msgid "run fullscreen or in a window?"
-#~ msgstr "εκτέλεση σε πλήρη οθόνη ή σε παράθυρο;"
-
-#~ msgid "Dual-screen mode"
-#~ msgstr "Λειτουργία διπλής οθόνης"
-
-#~ msgid "if you have two monitors you can use both"
-#~ msgstr "αν έχετε δύο οθόνες μπορείτε να τις χρησιμοποιήσετε ταυτόχρονα"
-
-#~ msgid "V-Sync on/off"
-#~ msgstr "Ενεργός/ανενεργός κάθετος συγχρονισμός (V-Sync)"
-
-#~ msgid "16-bit Z-buffer"
-#~ msgstr "Πίνακας βάθους (Z-buffer) ανάλυσης 16-bit"
-
-#~ msgid "placeholder"
-#~ msgstr "placeholder"
-
-#~ msgid "24-bit Z-buffer"
-#~ msgstr "Πίνακας βάθους (Z-buffer) ανάλυσης 24-bit"
-
-#~ msgid "how much anti-aliasing should be applied"
-#~ msgstr "πόση εξομάλυνση γωνιών πρέπει να εφαρμοστεί"
-
-#~ msgid "Maximum simultaneous sounds"
-#~ msgstr "Μέγιστος αριθμός ταυτόχρονων ήχων"
-
-#~ msgid ""
-#~ "maximum different sounds played at the same time\n"
-#~ "Set this to zero to disable sound completely."
-#~ msgstr ""
-#~ "Μέγιστος αριθμός διαφορετικών ήχων που θα αναπαράγονται ταυτόχρονα\n"
-#~ "Ορίστε ως 0 για να απεργοποιηθεί πλήρως ο ήχος."
-
-#~ msgid "Unit reply volume"
-#~ msgstr "Ένταση απαντήσεων μονάδων"
-
-#~ msgid "Shadows (slow)"
-#~ msgstr "Σκιές (αργό)"
-
-#~ msgid "enable shadows?"
-#~ msgstr "Ενεργοποίηση σκιών;"
-
-#~ msgid "3D trees"
-#~ msgstr "Τρισδιάστατα δέντρα"
-
-#~ msgid ""
-#~ "want better looking trees?\n"
-#~ "needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
-#~ msgstr ""
-#~ "θέλετε πιο όμορφα δέντρα;\n"
-#~ "απαιτεί Geforce 2/Radeon 8500/Intel 830 ή μεταγενέστερες κάρτες γραφικών"
-
-#~ msgid "High-resolution clouds"
-#~ msgstr "Σύννεφα υψηλής ανάλυσης"
-
-#~ msgid ""
-#~ "want better looking sky?\n"
-#~ "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
-#~ msgstr ""
-#~ "θέλετε πιο όμορφο ουρανό;\n"
-#~ "απαιτεί Geforce 5/Radeon 9500/Intel 915 ή μεταγενέστερες κάρτες γραφικών"
-
-#~ msgid "Dynamic clouds (slow)"
-#~ msgstr "Δυναμικά σύννεφα (αργό)"
-
-#~ msgid "want moving clouds in the sky?"
-#~ msgstr "θέλετε κινούμενα σύννεφα στον ουρανό;"
-
-#~ msgid "Reflective units"
-#~ msgstr "Ανάκλαση στις μονάδες"
-
-#~ msgid ""
-#~ "shiny units?\n"
-#~ "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
-#~ msgstr ""
-#~ "γυαλιστερές μονάδες;\n"
-#~ "απαιτεί Geforce 5/Radeon 9500/Intel 915 ή μεταγενέστερες κάρτες γραφικών"
-
-#~ msgid "Never use shaders when rendering SM3 maps"
-#~ msgstr ""
-#~ "Να μην χρησιμοποιούνται σκιαστές (shaders) όταν σχεδιάζονται χάρτες SM3"
-
-#~ msgid "problems with sm3 maps? enable this"
-#~ msgstr "προβλήματα με χάρτες sm3; ενεργοποιήστε αυτό"
-
-#~ msgid "Enable LuaShaders support"
-#~ msgstr "Ενεργοποίηση υποστήριξης LuaShader"
-
-#~ msgid "makes for some cool effects"
-#~ msgstr "για cool εφέ"
-
-#~ msgid "High-resolution LOS textures"
-#~ msgstr "Υψηλής ανάλυσης texture Οπτικής Επαφής"
-
-#~ msgid "smoother Line of Sight overlays"
-#~ msgstr "πιο ομαλές επικαλύψεις Οπτικής Επαφής"
-
-#~ msgid "Draw smooth points"
-#~ msgstr "Σχεδίαση ομαλών σημείων"
-
-#~ msgid "should points be anti-aliased"
-#~ msgstr "να εξομαλύνονται οι γωνίες σημείων"
-
-#~ msgid "Draw smooth lines"
-#~ msgstr "Σχεδίαση ομαλών γραμμών"
-
-#~ msgid "should lines be anti-aliased"
-#~ msgstr "να εξομαλύνονται οι γωνίες γραμμών"
-
-#~ msgid "Issue commands on mini-map"
-#~ msgstr "Έκδοση εντολών στον υποχάρτη"
-
-#~ msgid "Issue orders on the mini-map like you would "
-#~ msgstr "Δώστε εντολές στον υποχάρτη όπως θα κάνατε "
-
-#~ msgid "Show commands on mini-map"
-#~ msgstr "Εμφάνιση εντολών στον υποχάρτη"
-
-#~ msgid "default value is \"on\""
-#~ msgstr "η εξ ορισμού τιμή είναι \"on\""
-
-#~ msgid "Draw icons on mini-map"
-#~ msgstr "Σχεδίαση εικονιδίων στον υποχάρτη"
-
-#~ msgid "Draw markers on mini-map"
-#~ msgstr "Σχεδίαση δεικτών στον υποχάρτη"
-
-#~ msgid "Mini-map on left (single screen)"
-#~ msgstr "Υποχάρτης στα αριστερά (μονή οθόνη)"
-
-#~ msgid "left is the default"
-#~ msgstr "εξ ορισμού είναι αριστερά"
-
-#~ msgid "Mini-map on left (dual screen)"
-#~ msgstr "Υποχάρτης στα αριστερά (διπλή οθόνη)"
-
-#~ msgid "Simplified mini-map colors"
-#~ msgstr "Απλοποιημένα χρώματα υποχάρτη"
-
-#~ msgid "Use less colors"
-#~ msgstr "Χρήση λιγότερων χρωμάτων"
-
-#~ msgid "Team-colored nanospray"
-#~ msgstr "Χρώματα ομάδας για σπράυ των nano-turret"
-
-#~ msgid "Should nano particels be the color of your team?"
-#~ msgstr ""
-#~ "Να χρησιμοποιούνται τα χρώματα της ομάδας για τα σωματίδια των nano-"
-#~ "turret;"
-
-#~ msgid "Colorized elevation map"
-#~ msgstr "Χρωματιστός υψομετρικός χάρτης"
-
-#~ msgid "makes differences in height clearer"
-#~ msgstr "κάνει πιο εμφανείς τις υψομετρικές διαφορές"
-
-#~ msgid "Show in-game clock"
-#~ msgstr "Εμφάνιση χρόνου παιχνιδιού"
-
-#~ msgid ""
-#~ "requires \"Enable LuaWidgets\" to be set.\n"
-#~ "Will be displayed in the bottom right corner"
-#~ msgstr ""
-#~ "απαιτεί να είναι ορισμένο το \"Ενεργοποίηση LuaWidgets\".\n"
-#~ "Εμφανίζεται στην κάτω δεξιά γωνία"
-
-#~ msgid "Show in-game player information"
-#~ msgstr "Εμφάνιση πληροφοριών παικτών"
-
-#~ msgid "Show in-game framerate"
-#~ msgstr "Εμφάνιση ρυθμού καρέ (FPS)"
-
-#~ msgid "Fix rendering on alt-tab"
-#~ msgstr "Επιδιόρθωση σχεδίασης κατά το Alt-Tab"
-
-#~ msgid "Do not change if not needed"
-#~ msgstr "Μην το αλλάζετε αν δεν χρειαστεί"
-
-#~ msgid "Disallow helper AI's"
-#~ msgstr "Απενεργοποίηση των μονάδων Βοηθητικής Λογικής"
-
-#~ msgid ""
-#~ "Disables Economy AI, etc.\n"
-#~ "If enabled might screw with LuaUi."
-#~ msgstr ""
-#~ "Απενεργοποιεί τα Economy AI κλπ.\n"
-#~ "Αν ενεργοποιηθεί μπορεί να δημιουργήσει προβλήματα με το LuaUI."
-
-#~ msgid "Enable scroll on window edge"
-#~ msgstr "Ενεργοποίηση κύλισης στις άκρες του παραθύρου"
-
-#~ msgid "Scroll the screen when mouse reaches the screen's edge."
-#~ msgstr "Κύλισης της οθόνης όταν το ποντίκι φτάνει τις άκρες της οθόνης."
-
-#~ msgid "Invert Mouse"
-#~ msgstr "Αντιστροφή Ποντικιού"
-
-#~ msgid "Inverts the Mouse Y-axis in FPS mode"
-#~ msgstr "Αντιστρέφει τον κάθετο άξονα του ποντικιού σε λειτουργία FPS"
-
-#~ msgid "Overhead camera"
-#~ msgstr "Υπερυψωμένη κάμερα"
-
-#~ msgid "set the scroll speed (mouse + keyboard) for this mode"
-#~ msgstr ""
-#~ "ορίστε την ταχύτητα κύλισης (ποντίκι + πληκτρολόγιο) για αυτή τη "
-#~ "λειτουργία"
-
-#~ msgid "Rotatable overhead camera"
-#~ msgstr "Περιστρεφόμενη υπερυψωμένη κάμερα"
-
-#~ msgid "Total war camera"
-#~ msgstr "Κάμερα Total War"
-
-#~ msgid "First person camera"
-#~ msgstr "Κάμερα πρώτου πλάνου"
-
-#~ msgid "Free camera"
-#~ msgstr "Ελεύθερη κάμερα"
-
-#~ msgid ""
-#~ "Make this the default view when startins Spring.\n"
-#~ "Can be changed ingame."
-#~ msgstr ""
-#~ "Να γίνει το εξ ορισμού όταν ξεκινάει το Spring.\n"
-#~ "Μπορεί να αλλαχθεί μέσα στο παιχνίδι."
-
-#~ msgid "Console verbose level (0=min,10=max)"
-#~ msgstr "Βαθμός αναλυτικότητας κονσόλας (0=ελαχ,10=μεγ)"
-
-#~ msgid "How much information should be outputted?"
-#~ msgstr "Πόσο αναλυτικές πληροφορίες να εκδίδονται;"
-
-#~ msgid "Catch AI exceptions"
-#~ msgstr "Αρπαγή εξαιρέσεων AI (exceptions)"
-
-#~ msgid "disable for AI debugging"
-#~ msgstr "απενεργοποιήστε για εκσφαλμάτωση AI"
-
-#~ msgid "Basic"
-#~ msgstr "Βασική"
-
-#~ msgid ""
-#~ "Depending on the power of your graphics card,\n"
-#~ "selecting higher quality than basic can have a\n"
-#~ "major impact on Spring's performance.\n"
-#~ msgstr ""
-#~ "Η επιλογή μεγαλύτερης ποιότητας από την βασική\n"
-#~ "μπορεί να επηρεάσει δραματικά την απόδοση του Spring,\n"
-#~ "ανάλογα με την ισχύ της κάρτας γραφικών σας,\n"
-
-#~ msgid "Reflective"
-#~ msgstr "Με ανάκλαση"
-
-#~ msgid "Reflective + refractive"
-#~ msgstr "Με ανάκλαση και διάθλαση"
-
-#~ msgid "Dynamic"
-#~ msgstr "Δυναμική"
-
-#~ msgid "Invert mouse y-axis"
-#~ msgstr "Αντιστροφή κάθετου άξονα ποντικιού"
-
-#~ msgid "swap up/down with down/up"
-#~ msgstr "το πάνω/κάτω γίνεται κάτω/πάνω"
-
-#~ msgid "Mini-map 3-button mouse support"
-#~ msgstr "Υποστήριξη υποχάρτη για ποντίκια με 3 πλήκτρα"
-
-#~ msgid "if you don't want to able to use that button, disable it here"
-#~ msgstr ""
-#~ "αν δεν θέλετε να μπορείτε να χρησιμοποιείτε εκείνο το κουμπί, "
-#~ "απενεργοποιήστε το εδώ"
-
-#~ msgid "Overhead"
-#~ msgstr "Υπερυψωμένη"
-
-#~ msgid "Static bird's eye view"
-#~ msgstr "Στατική οπτική πουλιού"
-
-#~ msgid "Rotatable overhead"
-#~ msgstr "Περιστρεφόμενη υπερυψωμένη"
-
-#~ msgid "Same as overhead, but you can rotate around the z-axis"
-#~ msgstr ""
-#~ "Ίδια με την υπερυψωμένη, αλλά μπορείτε να περιστρέφεστε γύρω από τον "
-#~ "άξονα ύψους"
-
-#~ msgid "Total war"
-#~ msgstr "Total war"
-
-#~ msgid "top-view camera, which can be tilted on the X axis"
-#~ msgstr "Κάμερα από πάνω, με δυνατότητα κλίσης στον οριζόντιο άξονα"
-
-#~ msgid "First person"
-#~ msgstr "Πρώτου προσώπου"
-
-#~ msgid "Camera from unit's point of view"
-#~ msgstr "Κάμερα από την οπτική της μονάδας"
-
-#~ msgid "Modify the view anyway you want"
-#~ msgstr "Τροποποιήστε τη θέα όπως θέλετε"
-
-#~ msgid "screen width"
-#~ msgstr "πλάτος οθόνης"
-
-#~ msgid "screen height"
-#~ msgstr "ύψος οθόνης"
-
-#~ msgid "Combined Options"
-#~ msgstr "Συνδυασμένες Επιλογές"
-
-#~ msgid "Render quality / Video mode"
-#~ msgstr "Ποιότητα σχεδίασης / Λειτουργία video"
-
-#~ msgid "Render detail"
-#~ msgstr "Λεπτομέρεια σχεδιάσης"
-
-#~ msgid "UI options"
-#~ msgstr "Επιλογές διεπαφής"
-
-#~ msgid "Audio"
-#~ msgstr "Ήχος"
-
-#~ msgid "Save Spring settings before exiting?"
-#~ msgstr "Αποθήκευση των ρυθμίσεων του Spring πριν την έξοδο;"
-
-#~ msgid "Confirmation needed"
-#~ msgstr "Απαιτείται επιβεβαίωση"
-
-#~ msgid "SpringSettings (simple mode)"
-#~ msgstr "Ρυθμίσεις Spring (απλή λειτουργία)"
-
-#~ msgid "Save settings"
-#~ msgstr "Αποθήκευση ρυθμίσεων"
-
-#~ msgid "Reset settings to default values"
-#~ msgstr "Επαναφορά αρχικών ρυθμίσεων"
-
-#~ msgid "Disable expert mode warning"
-#~ msgstr "Απενεργοποίηση προειδοποίησης λειτουργίας για προχωρημένους"
-
-#~ msgid "Quit"
-#~ msgstr "Έξοδος"
-
-#~ msgid "Simple (few options)"
-#~ msgstr "Απλό (λιγότερες επιλογές)"
-
-#~ msgid "Expert (all options"
-#~ msgstr "Για προχωρημένους (όλες οι επιλογές)"
-
-#~ msgid "About"
-#~ msgstr "Περί"
-
-#~ msgid "Contact"
-#~ msgstr "Επαφή"
-
-#~ msgid "Credits"
-#~ msgstr "Μνεία"
-
-#~ msgid "Report a bug"
-#~ msgstr "Αναφορά σφάλματος"
-
-#~ msgid "Mode"
-#~ msgstr "Κατάσταση"
-
-#~ msgid "Info/Help"
-#~ msgstr "Βοήθεια"
-
-#~ msgid "Reset ALL settings to default values?"
-#~ msgstr "Επαναφορά ΟΛΩΝ των ρυθμίσεων στις αρχικές τιμές;"
-
-#~ msgid "Hint"
-#~ msgstr "Υπόδειξη"
-
-#~ msgid "low"
-#~ msgstr "χαμηλή"
-
-#~ msgid "medium"
-#~ msgstr "μεσαία"
-
-#~ msgid "high"
-#~ msgstr "υψηλή"
-
-#~ msgid "very low"
-#~ msgstr "πολύ χαμηλή"
-
-#~ msgid "very high"
-#~ msgstr "πολύ υψηλή"
-
-#~ msgid "SpringSettings Error"
-#~ msgstr "Σφάλμα SpringSettings"
-
-#~ msgid "Audio Options"
-#~ msgstr "Επιλογές Ήχου"
-
-#~ msgid "Screen Resolution"
-#~ msgstr "Ανάλυση Οθόνης"
-
-#~ msgid "Water Quality"
-#~ msgstr "Ποιότητα Νερού"
-
-#~ msgid "Resolution in bit"
-#~ msgstr "Ανάλυση σε bit"
-
-#~ msgid "Render Quality Options"
-#~ msgstr "Επιλογές Ποιότητας Σχεδίασης"
-
-#~ msgid "Video Mode Options"
-#~ msgstr "Επιλογές Λειτουργίας Video"
-
-#~ msgid "Anti-Aliasing Options"
-#~ msgstr "Επιλογές Εξομάλυνσης Γωνιών"
-
-#~ msgid "Z-/Depth-Buffer"
-#~ msgstr "Πίνακας Βάθους (Ζ-Buffer)"
-
-#~ msgid "Rendering detail levels"
-#~ msgstr "Επίπεδα λεπτομερειών σχεδίασης"
-
-#~ msgid "Graphics quality"
-#~ msgstr "Ποιότητα γραφικών"
-
-#~ msgid "Graphics detail"
-#~ msgstr "Λεπτομέρεια γραφικών"
-
-#~ msgid "Screen resolution"
-#~ msgstr "Ανάλυση οθόνης"
-
-#~ msgid "Switch to expert mode"
-#~ msgstr "Αλλαγή σε λειτουργία για προχωρημένους"
-
-#~ msgid " (current)"
-#~ msgstr " (τρέχουσα)"
-
-#~ msgid ""
-#~ "Sets all quality options to predefined values according to your choice."
-#~ msgstr ""
-#~ "Θέτει όλες τις επιλογές ποιότητας σε εξ ορισμού τιμές ανάλογα με την "
-#~ "επιλογή σας."
-
-#~ msgid ""
-#~ "Sets all detail options to predefined values according to your choice."
-#~ msgstr ""
-#~ "Θέτει όλες τις επιλογές λεπτομερειών σε εξ ορισμού τιμές ανάλογα με την "
-#~ "επιλογή σας."
-
-#~ msgid "Info"
-#~ msgstr "Πληροφορίες"
-
-#~ msgid "Scroll Speeds (mouse + keyboard)"
-#~ msgstr "Ταχύτητες Κύλισης (ποντίκι & πληκτρολόγιο)"
-
-#~ msgid "Default Camera Mode"
-#~ msgstr "Αρχική Λειτουργία Κάμερας"
-
-#~ msgid "Misc. UI Options"
-#~ msgstr "Άλλες επιλογές διεπαφής"
-
-#~ msgid "Zoom"
-#~ msgstr "Μεγέθυνση"
+msgid "%s joined %s."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:760
+#, c-format
+msgid "%s left %s (%s)."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:794
+msgid "Channel topic"
+msgstr ""
+
+#: src/gui/chatpanel.cpp:800
+#, c-format
+msgid "Set by %s"
+msgstr ""
+
+#: src/gui/chatpanel.cpp:910
+#, c-format
+msgid "Are you sure you want to paste %d lines?"
+msgstr "Είστε βέβαιος ότι θέλετε να κάνετε επικόλληση %d γραμμών;"
+
+#: src/gui/chatpanel.cpp:920
+#, c-format
+msgid "Failed to post to %s"
+msgstr ""
+
+#: src/gui/chatpanel.cpp:944
+#, c-format
+msgid "You have %s."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:956
+msgid "You are not in channel or channel does not exist."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:964 src/gui/chatpanel.cpp:980
+#: src/gui/chatpanel.cpp:996 src/gui/chatpanel.cpp:1010
+#, c-format
+msgid ""
+"Command (%s) does not exist, use /help for a list of available commands."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:972
+msgid ""
+"You are not in battle or battle does not exist, use /help for a list of "
+"available commands."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:988
+msgid "User is offline."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1003
+msgid "Not connected to server"
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1015
+msgid "Sent: \""
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1049
+msgid "User is now offline."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1056
+msgid "User just got online."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1182
+msgid "Left Battle."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1190
+msgid "Joined Battle."
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1267
+#, c-format
+msgid "%d users"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:35
+msgid "Disable text appending"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:39
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+#: src/gui/chatpanelmenu.cpp:43
+msgid "Copy link location"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:47
+msgid "Clear"
+msgstr "Εκκαθάριση"
+
+#: src/gui/chatpanelmenu.cpp:54 src/gui/hosting/battleroomtab.cpp:185
+msgid "Leave"
+msgstr "Αποχώρηση"
+
+#: src/gui/chatpanelmenu.cpp:58
+msgid "Display Join/Leave Messages"
+msgstr "Εμφάνιση μηνυμάτων Εισόδου/Εξόδου"
+
+#: src/gui/chatpanelmenu.cpp:63
+msgid "Show mute list"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:71
+msgid "Channel info"
+msgstr "Πληροφορίες καναλιού"
+
+#: src/gui/chatpanelmenu.cpp:75 src/gui/chatpanelmenu.cpp:313
+msgid "Set topic..."
+msgstr "Ορισμός θέματος..."
+
+#: src/gui/chatpanelmenu.cpp:77 src/gui/chatpanelmenu.cpp:326
+msgid "Channel message..."
+msgstr "Μήνυμα καναλιού..."
+
+#: src/gui/chatpanelmenu.cpp:81
+msgid "Lock..."
+msgstr "Κλείδωμα..."
+
+#: src/gui/chatpanelmenu.cpp:83
+msgid "Unlock"
+msgstr "Ξεκλείδωμα"
+
+#: src/gui/chatpanelmenu.cpp:87
+msgid "Register..."
+msgstr "Εγγραφή..."
+
+#: src/gui/chatpanelmenu.cpp:89
+msgid "Unregister"
+msgstr "Διαγραφή"
+
+#: src/gui/chatpanelmenu.cpp:95
+msgid "On"
+msgstr "Ανοιχτό"
+
+#: src/gui/chatpanelmenu.cpp:97
+msgid "Off"
+msgstr "Κλειστό"
+
+#: src/gui/chatpanelmenu.cpp:101
+msgid "Is on?"
+msgstr "Είναι ανοιχτό;"
+
+#: src/gui/chatpanelmenu.cpp:103
+msgid "Spam protection"
+msgstr "Προστασία από ανεπιθύμητα μηνύματα"
+
+#: src/gui/chatpanelmenu.cpp:104 src/gui/chatpanelmenu.cpp:236
+msgid "ChanServ"
+msgstr "ChanServ"
+
+#: src/gui/chatpanelmenu.cpp:111
+msgid "Disconnect"
+msgstr "Αποσύνδεση"
+
+#: src/gui/chatpanelmenu.cpp:113
+msgid "Reconnect"
+msgstr "Επανασύνδεση"
+
+#: src/gui/chatpanelmenu.cpp:122
+msgid "Remove..."
+msgstr "Αφαίρεση..."
+
+#: src/gui/chatpanelmenu.cpp:124
+msgid "Change password..."
+msgstr "Αλλαγή κωδικού..."
+
+#: src/gui/chatpanelmenu.cpp:126
+msgid "Set access..."
+msgstr "Ορισμός πρόσβασης..."
+
+#: src/gui/chatpanelmenu.cpp:128
+msgid "Accounts"
+msgstr "Λογαριασμοί"
+
+#: src/gui/chatpanelmenu.cpp:131
+msgid "Broadcast..."
+msgstr "Μετάδοση..."
+
+#: src/gui/chatpanelmenu.cpp:136 src/gui/slbook.cpp:112 src/gui/slbook.cpp:114
+msgid "User"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:140
+msgid "Open log in editor"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:159
+msgid "Open Chat"
+msgstr "Ανοιχτή Συνομιλία"
+
+#: src/gui/chatpanelmenu.cpp:160
+msgid "Ignore User"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:161
+msgid "Unignore User"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:164
+msgid "Join same battle"
+msgstr "Σύνδεση στην ίδια μάχη"
+
+#: src/gui/chatpanelmenu.cpp:176
+msgid "Ingame time"
+msgstr "Χρόνος παιχνιδιού"
+
+#: src/gui/chatpanelmenu.cpp:178
+msgid "Retrieve IP and Smurfs"
+msgstr "Εύρεση διεύθυνσης IP και Smurf"
+
+#: src/gui/chatpanelmenu.cpp:185 src/gui/chatpanelmenu.cpp:223
+msgid "Mute..."
+msgstr "Αποσιώπηση..."
+
+#: src/gui/chatpanelmenu.cpp:187
+msgid "Mute for 5 minutes"
+msgstr "Αποσιώπηση για 5 λεπτά"
+
+#: src/gui/chatpanelmenu.cpp:189
+msgid "Mute for 10 minutes"
+msgstr "Αποσιώπηση για 10 λεπτά"
+
+#: src/gui/chatpanelmenu.cpp:191
+msgid "Mute for 30 minutes"
+msgstr "Αποσιώπηση για 30 λεπτά"
+
+#: src/gui/chatpanelmenu.cpp:193
+msgid "Mute for 2 hours"
+msgstr "Αποσιώπηση για 2 ώρες"
+
+#: src/gui/chatpanelmenu.cpp:195
+msgid "Mute for 1 day"
+msgstr "Αποσιώπηση για 1 ημέρα"
+
+#: src/gui/chatpanelmenu.cpp:198 src/gui/chatpanelmenu.cpp:225
+msgid "Unmute"
+msgstr "Αναίρεση αποσιώπησης"
+
+#: src/gui/chatpanelmenu.cpp:200
+msgid "Mute"
+msgstr "Αποσιώπηση"
+
+#: src/gui/chatpanelmenu.cpp:202 src/gui/chatpanelmenu.cpp:228
+msgid "Kick..."
+msgstr "Αποπομπή..."
+
+#: src/gui/chatpanelmenu.cpp:206
+msgid "Ban..."
+msgstr "Αποκλεισμός..."
+
+#: src/gui/chatpanelmenu.cpp:208
+msgid "Unban"
+msgstr "Άρση αποκλεισμού"
+
+#: src/gui/chatpanelmenu.cpp:212 src/gui/hosting/battleroomdataviewctrl.cpp:148
+#: src/gui/hosting/battleroomdataviewctrl.cpp:154
+#: src/gui/hosting/battleroomdataviewctrl.cpp:211
+msgid "Ring"
+msgstr "Κλήση"
+
+#: src/gui/chatpanelmenu.cpp:216
+msgid "Slap!"
+msgstr "Δώσε μπάτσα!"
+
+#: src/gui/chatpanelmenu.cpp:232
+msgid "Op"
+msgstr "Κάνε διαχειριστή"
+
+#: src/gui/chatpanelmenu.cpp:234
+msgid "DeOp"
+msgstr "Άρση δικαιώματος διαχείρησης"
+
+#: src/gui/chatpanelmenu.cpp:286
+msgid "ChanServ error"
+msgstr "Σφάλμα ChanServ"
+
+#: src/gui/chatpanelmenu.cpp:286
+msgid "ChanServ is not in this channel."
+msgstr "Το ChanServ δεν είναι σε αυτό το κανάλι"
+
+#: src/gui/chatpanelmenu.cpp:313
+msgid "What should be the new topic?"
+msgstr "Ποιο πρέπει να είναι το νέο θέμα;"
+
+#: src/gui/chatpanelmenu.cpp:326
+msgid "Message:"
+msgstr "Μήνυμα:"
+
+#: src/gui/chatpanelmenu.cpp:339
+msgid "Lock channel..."
+msgstr "Κλείδωμα καναλιού..."
+
+#: src/gui/chatpanelmenu.cpp:339
+msgid "What should the new password be?"
+msgstr "Ποιος πρέπει να είναι ο νέος κωδικός;"
+
+#: src/gui/chatpanelmenu.cpp:351
+msgid "Unlock Channel"
+msgstr "Ξεκλείδωμα Καναλιού"
+
+#: src/gui/chatpanelmenu.cpp:351
+msgid "Are you sure you want to unlock this channel?"
+msgstr "Επιβεβαίωση ξεκλειδώματος του καναλιού;"
+
+#: src/gui/chatpanelmenu.cpp:364
+msgid "Register Channel"
+msgstr "Δήλωση Καναλιού"
+
+#: src/gui/chatpanelmenu.cpp:364
+msgid "Who should be appointed founder of this channel?"
+msgstr "Ποιος πρέπει να δηλωθεί ως δημιουργός του καναλιού;"
+
+#: src/gui/chatpanelmenu.cpp:376
+msgid "Unregister Channel"
+msgstr "Διαγραφή Καναλιού"
+
+#: src/gui/chatpanelmenu.cpp:376
+msgid "Are you sure you want to unregister this channel?"
+msgstr "Επιβεβαίωση διαγραφής του καναλιού;"
+
+#: src/gui/chatpanelmenu.cpp:422
+msgid "Remove User Acount"
+msgstr "Διαγραφή Λογαριασμού Χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:422
+msgid "What user account do you want to remove today?"
+msgstr "Ποιον λογαριασμό χρήστη θέλετε να διαγράψετε σήμερα;"
+
+#: src/gui/chatpanelmenu.cpp:424
+msgid "Remove Account"
+msgstr "Διαγραφή λογαριασμού"
+
+#: src/gui/chatpanelmenu.cpp:424
+msgid "Are you sure you want to remove the account "
+msgstr "Επιβεβαίωση διαγραφής λογαριασμού "
+
+#: src/gui/chatpanelmenu.cpp:433 src/gui/chatpanelmenu.cpp:435
+msgid "Change User Acount Password"
+msgstr "Αλλαγή Κωδικού Λογαριασμού Χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:433
+msgid "What user account do you want to change the password for?"
+msgstr "Για ποιον λογαριασμό θέλετε να αλλάξετε τον κωδικό;"
+
+#: src/gui/chatpanelmenu.cpp:435
+msgid "What would be the new password?"
+msgstr "Ποιος θα είναι ο νέος κωδικός;"
+
+#: src/gui/chatpanelmenu.cpp:443 src/gui/chatpanelmenu.cpp:597
+#: src/gui/chatpanelmenu.cpp:603 src/gui/chatpanelmenu.cpp:720
+#: src/gui/hosting/battleroomtab.cpp:619 src/gui/hosting/battleroomtab.cpp:645
+#: src/gui/hosting/battleroomtab.cpp:669 src/gui/mainwindow.cpp:612
+#: src/gui/options/chatoptionstab.cpp:207
+#: src/gui/playback/playbackdataview.cpp:127 src/gui/ui.cpp:827
+#: src/springsettings/tab_abstract.cpp:112
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: src/gui/chatpanelmenu.cpp:443 src/gui/chatpanelmenu.cpp:597
+#: src/gui/chatpanelmenu.cpp:603
+msgid "Not Implemented"
+msgstr "Δεν έχει υλοποιηθεί"
+
+#: src/gui/chatpanelmenu.cpp:450
+msgid "Broadcast Message"
+msgstr "Μετάδοση Μηνύματος"
+
+#: src/gui/chatpanelmenu.cpp:450
+msgid "Message to be broadcasted:"
+msgstr "Μήνυμα προς μετάδοση:"
+
+#: src/gui/chatpanelmenu.cpp:504
+msgid "Mute User"
+msgstr "Αποσιώπηση Χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:504
+msgid "For how many minutes should the user be muted?"
+msgstr "Πόσα λεπτά να διαρκέσει η αποσιώπηση του χρήστη;"
+
+#: src/gui/chatpanelmenu.cpp:536
+msgid "Kick User"
+msgstr "Αποπομπή Χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:536 src/gui/chatpanelmenu.cpp:589
+msgid "Reason:"
+msgstr "Αιτία:"
+
+#: src/gui/chatpanelmenu.cpp:589
+msgid "Kick user"
+msgstr "Αποπομπή χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:615
+msgid "Mute user"
+msgstr "Αποσιώπηση χρήστη"
+
+#: src/gui/chatpanelmenu.cpp:615
+msgid "Duration:"
+msgstr "Διάρκεια:"
+
+#: src/gui/chatpanelmenu.cpp:712 src/gui/hosting/battleroomdataviewctrl.cpp:259
+msgid "Enter name"
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:713 src/gui/hosting/battleroomdataviewctrl.cpp:260
+msgid ""
+"Please enter the name for the new group.\n"
+"After clicking ok you will be taken to adjust its settings."
+msgstr ""
+
+#: src/gui/chatpanelmenu.cpp:720
+msgid "couldn't add user"
+msgstr ""
+
+#: src/gui/connectwindow.cpp:59
+msgid "Return to login..."
+msgstr ""
+
+#: src/gui/connectwindow.cpp:64
+msgid "Register"
+msgstr "Εγγραφή"
+
+#: src/gui/connectwindow.cpp:80
+msgid "Create a new account..."
+msgstr ""
+
+#: src/gui/connectwindow.cpp:85
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:119
+msgid "Login"
+msgstr "Είσοδος"
+
+#: src/gui/connectwindow.cpp:174
+msgid ""
+"The entered nickname contains invalid characters like )? &%.\n"
+" Please try again"
+msgstr ""
+
+#: src/gui/connectwindow.cpp:178
+msgid ""
+"Registration failed, the reason was:\n"
+"Password / confirmation mismatch (or empty password)"
+msgstr ""
+
+#: src/gui/contentdownloaddialog.cpp:45
+msgid "Enter search query (wildcard * can be used)"
+msgstr ""
+
+#: src/gui/contentdownloaddialog.cpp:48
+msgid "Search"
+msgstr ""
+
+#: src/gui/contentdownloaddialog.cpp:52 src/gui/mapctrl.cpp:715
+#: src/gui/mapctrl.cpp:717
+msgid "Download"
+msgstr "Λήψη αρχείου"
+
+#: src/gui/contentdownloaddialog.cpp:56 src/gui/slbook.cpp:104
+msgid "Close"
+msgstr ""
+
+#: src/gui/contentsearchresultdatamodel.cpp:37 src/gui/uiutils.h:56
+#: src/gui/wxfb/generated/AgreementDialogBase.cpp:55
+msgid "Yes"
+msgstr "Ναι"
+
+#: src/gui/contentsearchresultdatamodel.cpp:37 src/gui/uiutils.h:56
+#: src/gui/wxfb/generated/AgreementDialogBase.cpp:49
+msgid "No"
+msgstr "Όχι"
+
+#: src/gui/contentsearchresultview.cpp:18 src/gui/downloaddataviewctrl.cpp:20
+#: src/gui/mapselectdialog.cpp:171 src/gui/selectusersdialog.cpp:74
+msgid "Name"
+msgstr ""
+
+#: src/gui/contentsearchresultview.cpp:19
+msgid "Preview"
+msgstr ""
+
+#: src/gui/contentsearchresultview.cpp:20
+msgid "Type"
+msgstr ""
+
+#: src/gui/contentsearchresultview.cpp:21 src/gui/hosting/battlemaptab.cpp:93
+#: src/gui/hosting/battleroomtab.cpp:516 src/gui/hosting/battleroomtab.cpp:522
+#: src/gui/hosting/battleroomtab.cpp:1291
+#: src/gui/hosting/battleroomtab.cpp:1293 src/gui/mapselectdialog.cpp:103
+#: src/gui/singleplayertab.cpp:103
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: src/gui/contentsearchresultview.cpp:22
+msgid "Downloaded"
+msgstr ""
+
+#: src/gui/crashreporterdialog.cpp:29
+#, c-format
+msgid "Contents of %s:"
+msgstr ""
+
+#: src/gui/customdialogs.cpp:517 src/gui/customdialogs.cpp:561
+#, c-format
+msgid "Please standby %d seconds"
+msgstr ""
+
+#: src/gui/dataviewctrlheadermenu.cpp:47
+msgid "Hide this column"
+msgstr ""
+
+#: src/gui/dataviewctrlheadermenu.cpp:53
+msgid "Show all columns"
+msgstr ""
+
+#: src/gui/downloaddataviewctrl.cpp:22
+#: src/gui/hosting/battleroomdataviewctrl.cpp:43
+msgid "Status"
+msgstr ""
+
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+msgid "complete"
+msgstr ""
+
+#: src/gui/downloaddataviewctrl.cpp:27
+msgid "KB/s down"
+msgstr "KB/s λαμβάνονται"
+
+#: src/gui/downloaddataviewctrl.cpp:30
+msgid "ETA"
+msgstr ""
+
+#: src/gui/downloaddataviewctrl.cpp:32
+msgid "Filesize (MB)"
+msgstr "μέγεθος (MB)"
+
+#: src/gui/downloaddataviewmodel.cpp:40
+msgid "downloading"
+msgstr ""
+
+#: src/gui/hosting/addbotdialog.cpp:42
+msgid "Add bot"
+msgstr "Προσθήκη bot"
+
+#: src/gui/hosting/addbotdialog.cpp:49
+msgid "Add bot: high nimber of bots can cause performance problems"
+msgstr ""
+
+#: src/gui/hosting/addbotdialog.cpp:56
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:53
+msgid "Nickname:"
+msgstr "Ψευδώνυμο:"
+
+#: src/gui/hosting/addbotdialog.cpp:74
+msgid "AI:"
+msgstr "Τύπος bot:"
+
+#: src/gui/hosting/addbotdialog.cpp:78
+msgid "Choose the AI library to use with this bot."
+msgstr "Επιλέξτε τον τύπο του bot."
+
+#: src/gui/hosting/addbotdialog.cpp:86 src/gui/hosting/addbotdialog.cpp:96
+msgid "property"
+msgstr ""
+
+#: src/gui/hosting/addbotdialog.cpp:90 src/gui/hosting/addbotdialog.cpp:100
+msgid "value"
+msgstr ""
+
+#: src/gui/hosting/addbotdialog.cpp:116
+#: src/gui/hosting/autobalancedialog.cpp:68
+#: src/gui/hosting/mmoptionwindows.cpp:103
+#: src/gui/options/mainoptionstab.cpp:72
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:116
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:59
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:139
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: src/gui/hosting/addbotdialog.cpp:121
+msgid "Add Bot"
+msgstr "Προσθήκη Bot"
+
+#: src/gui/hosting/addbotdialog.cpp:231
+msgid "No AI bots found in your Spring installation."
+msgstr "Δεν βρέθηκαν bot στην εγκατάσταση σας."
+
+#: src/gui/hosting/addbotdialog.cpp:231
+msgid "No bot-libs found"
+msgstr "Δεν βρέθηκαν bot"
+
+#: src/gui/hosting/autobalancedialog.cpp:38
+msgid "Autobalance players into teams"
+msgstr "Εξισορρόπηση παικτών σε ομάδες"
+
+#: src/gui/hosting/autobalancedialog.cpp:41
+msgid "Method"
+msgstr "Μέθοδος"
+
+#: src/gui/hosting/autobalancedialog.cpp:44
+msgid "Divide ranks evenly"
+msgstr "Ομοιόμορφο μοίρασμα βαθμών"
+
+#: src/gui/hosting/autobalancedialog.cpp:45
+#: src/gui/hosting/battlemaptab.cpp:103
+msgid "Random"
+msgstr "Τυχαίο"
+
+#: src/gui/hosting/autobalancedialog.cpp:47
+msgid "Clans"
+msgstr "Ομάδες"
+
+#: src/gui/hosting/autobalancedialog.cpp:50
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:95
+msgid "None"
+msgstr "Καθόλου"
+
+#: src/gui/hosting/autobalancedialog.cpp:51
+msgid "Fair"
+msgstr "Μέτρια"
+
+#: src/gui/hosting/autobalancedialog.cpp:52
+msgid "Always"
+msgstr "Πάντα"
+
+#: src/gui/hosting/autobalancedialog.cpp:53
+msgid ""
+"Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
+"and '[smurfzor]Bob' ) together into same alliance. \n"
+"None: nothing special for clans.\n"
+"Fair: put clanmembers into alliance, unless this makes alliances unfair.\n"
+"Always: always put clanmembers into alliance, even if that alliance is "
+"unfair."
+msgstr ""
+"Τοποθέτηση μελών της ίδιας ομάδας (παίκτες που έχουν το ίδιο τag ομάδας, "
+"όπως '[smurfzor]Alice' και '[smurfzor]Bob') στην ίδια συμμαχία.\n"
+"Καθόλου: τίποτα ιδιαίτερο για τις ομάδες.\n"
+"Μέτρια: τοποθέτηση μελών της ίδιας ομάδας στην ίδια συμμαχία, εκτός κι αν "
+"αυτό την κάνει άδικη.\n"
+"Πάντα: τοποθέτηση μελών της ίδιας ομάδας στην ίδια συμμαχία, ακόμα κι αν "
+"αυτό την κάνει άδικη."
+
+#: src/gui/hosting/autobalancedialog.cpp:55
+msgid "Number of allies"
+msgstr ""
+
+#: src/gui/hosting/autobalancedialog.cpp:58
+msgid "Auto select"
+msgstr ""
+
+#: src/gui/hosting/autobalancedialog.cpp:71
+#: src/gui/hosting/mmoptionwindows.cpp:106
+#: src/gui/options/mainoptionstab.cpp:73
+msgid "Ok"
+msgstr "Εντάξει"
+
+#: src/gui/hosting/battlemaptab.cpp:69
+msgid "Select"
+msgstr ""
+
+#: src/gui/hosting/battlemaptab.cpp:86 src/gui/hosting/battleroomtab.cpp:286
+#: src/gui/mapselectdialog.cpp:100 src/gui/singleplayertab.cpp:96
+msgid "Option"
+msgstr "Επιλογή"
+
+#: src/gui/hosting/battlemaptab.cpp:88 src/gui/hosting/battleroomtab.cpp:287
+#: src/gui/mapselectdialog.cpp:101 src/gui/singleplayertab.cpp:98
+msgid "Value"
+msgstr "Τιμή"
+
+#: src/gui/hosting/battlemaptab.cpp:94 src/gui/hosting/battleroomtab.cpp:517
+#: src/gui/hosting/battleroomtab.cpp:523 src/gui/hosting/battleroomtab.cpp:1295
+#: src/gui/hosting/battleroomtab.cpp:1296 src/gui/mapselectdialog.cpp:104
+#: src/gui/singleplayertab.cpp:104
+msgid "Windspeed"
+msgstr "Ταχύτητα ανέμου"
+
+#: src/gui/hosting/battlemaptab.cpp:95 src/gui/hosting/battleroomtab.cpp:518
+#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1298
+#: src/gui/hosting/battleroomtab.cpp:1299 src/gui/mapselectdialog.cpp:105
+#: src/gui/mapselectdialog.cpp:172 src/gui/singleplayertab.cpp:105
+msgid "Tidal strength"
+msgstr "Δύναμη κυμάτων"
+
+#: src/gui/hosting/battlemaptab.cpp:96 src/gui/mapselectdialog.cpp:106
+#: src/gui/mapselectdialog.cpp:173 src/gui/singleplayertab.cpp:106
+msgid "Gravity"
+msgstr "Βαρύτητα"
+
+#: src/gui/hosting/battlemaptab.cpp:97 src/gui/mapselectdialog.cpp:107
+#: src/gui/mapselectdialog.cpp:175 src/gui/singleplayertab.cpp:107
+msgid "Extractor radius"
+msgstr "Ακτίνα εξαγωγέων"
+
+#: src/gui/hosting/battlemaptab.cpp:98 src/gui/mapselectdialog.cpp:108
+#: src/gui/mapselectdialog.cpp:174 src/gui/singleplayertab.cpp:108
+msgid "Max metal"
+msgstr "Μεγ. μέταλλο"
+
+#: src/gui/hosting/battlemaptab.cpp:103
+msgid "Fixed"
+msgstr "Σταθερό"
+
+#: src/gui/hosting/battlemaptab.cpp:103
+msgid "Choose in game"
+msgstr "Επιλ. στο παιχνίδι"
+
+#: src/gui/hosting/battlemaptab.cpp:103
+msgid "Chose before game"
+msgstr ""
+
+#: src/gui/hosting/battlemaptab.cpp:106
+msgid "Startpositions"
+msgstr "Αρχικές θέσεις"
+
+#: src/gui/hosting/battlerestrictionstab.cpp:54
+msgid "Unit restrictions"
+msgstr "Περιορισμοί μονάδων"
+
+#: src/gui/hosting/battlerestrictionstab.cpp:62
+msgid "Allowed units"
+msgstr "Επιτρεπτές μονάδες"
+
+#: src/gui/hosting/battlerestrictionstab.cpp:66
+msgid "Units in this list will be available in the game."
+msgstr "Οι μονάδες αυτής της λίστας θα είναι διαθέσιμες στο παιχνίδι."
+
+#: src/gui/hosting/battlerestrictionstab.cpp:78
+msgid "Disable selected units."
+msgstr ""
+
+#: src/gui/hosting/battlerestrictionstab.cpp:82
+msgid "Re-enable selected units."
+msgstr ""
+
+#: src/gui/hosting/battlerestrictionstab.cpp:85
+msgid "<<"
+msgstr ""
+
+#: src/gui/hosting/battlerestrictionstab.cpp:86
+msgid "Enable all units."
+msgstr "Ενεργοποίηση όλων των μονάδων."
+
+#: src/gui/hosting/battlerestrictionstab.cpp:95
+msgid "Restricted units"
+msgstr "Περιορισμένες μονάδες"
+
+#: src/gui/hosting/battlerestrictionstab.cpp:99
+msgid "Units in this list will not be available in the game."
+msgstr "Οι μονάδες αυτής της λίστας δεν θα είναι διαθέσιμες στο παιχνίδι."
+
+#: src/gui/hosting/battlerestrictionstab.cpp:243
+msgid "How many units of this type do you wish to allow?"
+msgstr ""
+
+#: src/gui/hosting/battlerestrictionstab.cpp:243
+msgid "Unit restriction"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:44
+msgid "Ingame"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:45
+msgid "Faction"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:46
+msgid "Rank"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:47
+msgid "TrueSkill"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:49
+#: src/gui/nickdataviewctrl.cpp:40 src/gui/selectusersdialog.cpp:107
+msgid "Nickname"
+msgstr "Ψευδώνυμο"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:50
+msgid "Player ID"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:51
+msgid "Team ID"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:52
+msgid "Bonus"
+msgstr ""
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:145
+#: src/gui/hosting/battleroomdataviewctrl.cpp:151
+#: src/gui/hosting/battleroomdataviewctrl.cpp:204
+#: src/gui/hosting/battleroomtab.cpp:147
+msgid "Spectator"
+msgstr "Θεατής"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:149
+#: src/gui/hosting/battleroomdataviewctrl.cpp:156
+#: src/gui/hosting/battleroomdataviewctrl.cpp:209
+msgid "Kick"
+msgstr "Αποπομπή"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:179
+#: src/gui/hosting/battleroomtab.cpp:158
+msgid "Team"
+msgstr "Ομάδα"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:187
+#: src/gui/hosting/battleroomtab.cpp:159
+msgid "Ally"
+msgstr "Συμμαχία"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:190
+#: src/gui/hosting/battleroomtab.cpp:161
+msgid "Side"
+msgstr "Πλευρά"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:194
+msgid "Set color"
+msgstr "Ορισμός χρώματος"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:199
+#: src/gui/hosting/battleroomdataviewctrl.cpp:324
+msgid "Set Resource Bonus"
+msgstr "Ορισμός Επιδόματος Πόρων"
+
+#: src/gui/hosting/battleroomdataviewctrl.cpp:324
+msgid "Please enter a value between 0 and 100"
+msgstr "Παρακαλώ εισάγετε μια τιμή από 0 εώς 100"
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:60
+#: src/gui/hosting/battleroomtab.cpp:253
+msgid "Manage Presets"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:63
+msgid "Set name."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:67
+msgid "Load..."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:68
+msgid "Load a saved set of options."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:72
+msgid "Save..."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:73
+#: src/gui/hosting/battleroomtab.cpp:264
+msgid "Save a set of options."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:77
+msgid "Delete..."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:78
+#: src/gui/hosting/battleroomtab.cpp:269
+msgid "Delete a set of options."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:82
+msgid "Set default..."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:83
+#: src/gui/hosting/battleroomtab.cpp:274
+msgid "Use the current set of options as game's default."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:91
+msgid "Game Options"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:96
+msgid "Map Options"
+msgstr "Επιλογές Χάρτη"
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:129
+msgid "No options available, you have to join a battle first."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:153
+msgid "No options available."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:159
+msgid "other"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:491
+msgid ""
+"Cannot load an options set without a name\n"
+"Please select one from the list and try again."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:491
+#: src/gui/hosting/battleroommmoptionstab.cpp:508
+#: src/gui/hosting/battleroomtab.cpp:1081 src/gui/ui.cpp:368
+msgid "error"
+msgstr "σφάλμα"
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:505
+#: src/gui/hosting/battleroomtab.cpp:1078
+msgid "Enter preset name"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:505
+#: src/gui/hosting/battleroomtab.cpp:1078
+msgid ""
+"Enter a name to save the current set of options\n"
+"If a preset with the same name already exist, it will be overwritten"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:508
+#: src/gui/hosting/battleroomtab.cpp:1081
+msgid "Cannot save an options set without a name."
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:519
+#: src/gui/hosting/battleroommmoptionstab.cpp:530
+#: src/gui/hosting/battleroomtab.cpp:1094
+#: src/gui/hosting/battleroomtab.cpp:1106
+msgid "Pick an existing option set from the list"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:519
+#: src/gui/hosting/battleroomtab.cpp:1094
+msgid "Delete preset"
+msgstr ""
+
+#: src/gui/hosting/battleroommmoptionstab.cpp:530
+#: src/gui/hosting/battleroomtab.cpp:1106
+msgid "Set game default preset"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:139
+msgid "Players with the same team number share control of their units."
+msgstr ""
+"Οι παίκτες με τον ίδιο αριθμό ομάδας μοιράζονται των έλεγχο των μονάδων τους."
+
+#: src/gui/hosting/battleroomtab.cpp:141
+msgid "Players with the same ally number work together to achieve victory."
+msgstr ""
+"Οι παίκτες με τον ίδιο αριθμό συμμαχίας συνεργάζονται για να πετύχουν τη "
+"νίκη."
+
+#: src/gui/hosting/battleroomtab.cpp:143
+msgid "Select a color to identify your units in-game"
+msgstr "Επιλέξτε ένα χρώμα για να ξεχωρίζουν οι μονάδες σας στο παιχνίδι"
+
+#: src/gui/hosting/battleroomtab.cpp:145
+msgid "Select your faction"
+msgstr "Επιλέξτε την φατριά σας"
+
+#: src/gui/hosting/battleroomtab.cpp:148
+msgid "Spectate (watch) the battle instead of playing"
+msgstr "Παρακολουθήστε τη μάχη αντί να συμμετάσχετε"
+
+#: src/gui/hosting/battleroomtab.cpp:149
+msgid "Auto un-spectate"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:150
+msgid "automatically unspec when there's a free slot"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:151
+msgid "I'm ready"
+msgstr "Είμαι έτοιμος"
+
+#: src/gui/hosting/battleroomtab.cpp:152
+msgid "Click this if you are content with the battle settings."
+msgstr "Επιλέξτε εδώ αν συμφωνείτε με τις ρυθμίσεις της μάχης."
+
+#: src/gui/hosting/battleroomtab.cpp:153
+msgid "auto-launch game"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:154
+msgid ""
+"Click this if you want game to be launched when it starts and you are a "
+"spectator."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:160
+msgid "Color"
+msgstr "Χρώμα"
+
+#: src/gui/hosting/battleroomtab.cpp:171
+msgid ""
+"A preview of the selected map.  You can see the starting positions, or (if "
+"set) starting boxes."
+msgstr ""
+"Προεπισκόπηση του επιλεγμένου χάρτη. Διακρίνετε τις αρχικές θέσεις ή (αν "
+"έχουν ρυθμιστεί) τις αρχικές περιοχές."
+
+#: src/gui/hosting/battleroomtab.cpp:173
+msgid "Pick.."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:184
+msgid "Host a new battle"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:186
+msgid "Leave the battle and return to the battle list"
+msgstr "Αποχώρηση από τη μάχη και επιστροφή στη λίστα μαχών"
+
+#: src/gui/hosting/battleroomtab.cpp:187
+msgid "Promote"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:188
+msgid "Promote the battle in some chat channels"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:189 src/gui/hosting/battleroomtab.cpp:584
+#: src/gui/singleplayertab.cpp:169
+msgid "Start"
+msgstr "Έναρξη"
+
+#: src/gui/hosting/battleroomtab.cpp:190 src/gui/hosting/battleroomtab.cpp:585
+msgid "Start the battle"
+msgstr "Έναρξη μάχης"
+
+#: src/gui/hosting/battleroomtab.cpp:192
+msgid "Player Management"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:193
+msgid "Various functions to make team games simplers to setup"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:195
+msgid "Add Bot..."
+msgstr "Προσθήκη Bot..."
+
+#: src/gui/hosting/battleroomtab.cpp:196
+msgid "Add a computer-controlled player to the game"
+msgstr "Προσθήκη bot στο παιχνίδι"
+
+#: src/gui/hosting/battleroomtab.cpp:197
+msgid "Autolock on start"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:198
+msgid ""
+"Automatically locks the battle when the game starts and unlock when it's "
+"finished."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:202
+msgid "Prevent additional players from joining the battle"
+msgstr "Αποτροπή συμμετοχής επιπλέον παιχτών στη μάχη"
+
+#: src/gui/hosting/battleroomtab.cpp:206
+msgid "Autohost"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:206
+msgid ""
+"Toggle autohost mode.  This allows players to control your battle using "
+"commands like '!balance' and '!start'."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:211
+msgid "AutoSpect"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:211
+msgid ""
+"Automatically spectate players that don't ready up or become synced within x "
+"seconds."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:214
+msgid "AutoControlBalance"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:214
+msgid ""
+"Automatically balance teams and allies and fix colors when all players are "
+"ready and synced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:217
+msgid "AutoStart"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:217
+msgid "Automatically start the battle when all players are ready and synced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:221
+msgid "Lock Balance"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:221
+msgid "When activated, prevents anyone but the host to change team and ally"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:226
+msgid "Ring unready"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:226
+msgid "Rings all players that don't have ready status and aren't spectators"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:228
+msgid "Ring unsynced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:228
+msgid "Rings all players that don't have sync status and aren't spectators"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:230
+msgid "Ring unready and unsynced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:230
+msgid ""
+"Rings all players that don't have sync status or don't have ready status and "
+"aren't spectators"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:232
+msgid "Ring ..."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:235
+msgid "Spect unready"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:235
+msgid "Force to spectate all players that don't have ready status"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:237
+msgid "Spect unsynced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:237
+msgid "Force to spectate all players that don't have sync status"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:239
+msgid "Force to spectate unready and unsynced"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:239
+msgid ""
+"Rings all players that don't have sync status or don't have ready status"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:241
+msgid "Force spectate ..."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:243
+msgid "Balance alliances"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:243
+msgid "Automatically balance players into two or more alliances"
+msgstr "Αυτόματη εξισορρόπηση παιχτών σε δύο ή περισσότερες συμμαχίες"
+
+#: src/gui/hosting/battleroomtab.cpp:246
+msgid "Fix colours"
+msgstr "Επιδιόρθωση χρωμάτων"
+
+#: src/gui/hosting/battleroomtab.cpp:246
+msgid "Make player colors unique"
+msgstr "Κάνει τα χρώματα των παικτών μοναδικά"
+
+#: src/gui/hosting/battleroomtab.cpp:249
+msgid "Balance teams"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:249
+msgid ""
+"Automatically balance players into control teams, by default none shares "
+"control"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:259
+msgid "Load battle preset"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:263
+msgid "Save"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:268 src/gui/playback/playbacktab.cpp:85
+msgid "Delete"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:273
+msgid "Set default"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:284
+msgid "Activate an element to quickly change it"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:429
+#, c-format
+msgid "%d way FFA"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:567
+msgid "Spectate"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:568
+msgid "Watch a running match (you are a spectator)"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:619
+msgid "You need to be in an autohost for this to work."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:644
+msgid ""
+"You must download missing content before you can start. You might need to "
+"wait for any existing downloads to finish!"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:655
+msgid ""
+"Some players are not ready yet.\n"
+"Do you want to force start?\n"
+"Click no to ring all unready players."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:655
+msgid "Not ready"
+msgstr "Δεν είναι έτοιμο"
+
+#: src/gui/hosting/battleroomtab.cpp:669
+msgid "Spring is already running."
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:829
+msgid "Enter timeout before autospeccing a player in minutes"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:829
+msgid "Set Timeout"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:1005
+#, c-format
+msgid "%s joined your battle"
+msgstr ""
+
+#: src/gui/hosting/battleroomtab.cpp:1018
+#, c-format
+msgid "%s left your active battle"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:53
+msgid "Chose automatically"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:53
+msgid "Randomly picks an available one"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:57
+msgid "Manually enter the manager name"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:57
+msgid "You'll get prompted for the exact manager name"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:151 src/gui/singleplayertab.cpp:377
+msgid "You have to select a game first."
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:151
+msgid "No game selected."
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:157
+msgid "You have to select a engine version first."
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:157
+msgid "No engine selected."
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:215
+msgid "Manually chose a manager"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:215
+msgid "Please type the nick of the manager you want to use ( case sensitive )"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:271
+#, c-format
+msgid ""
+"Battle not started beacuse the game you selected could not be found. "
+"Exception: %s"
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:272
+msgid "Error starting battle."
+msgstr "Πρόβλημα στην εκκίνηση μάχης."
+
+#: src/gui/hosting/hostbattledialog.cpp:285
+msgid ""
+"Could not find any maps in engine's search path. Have you downloaded any? "
+"You can join any multiplayer room for automatic download or use search in "
+"the Downloads tab.  Note that this can also happen when you set the paths in "
+"preferences incorrectly."
+msgstr ""
+
+#: src/gui/hosting/hostbattledialog.cpp:288
+msgid "No maps found"
+msgstr "Δεν βρέθηκαν χάρτες"
+
+#: src/gui/hosting/mainjoinbattletab.cpp:46
+msgid "Battleroom"
+msgstr "Δωμάτιο μάχης"
+
+#: src/gui/hosting/mainjoinbattletab.cpp:52
+#: src/gui/hosting/mainsingleplayertab.cpp:39
+#: src/springsettings/tab_simple.cpp:115
+msgid "Options"
+msgstr "Επιλογές"
+
+#: src/gui/hosting/mainjoinbattletab.cpp:55
+#: src/gui/hosting/mainsingleplayertab.cpp:41
+msgid "Unit Restrictions"
+msgstr ""
+
+#: src/gui/hosting/mmoptionwindows.cpp:42
+msgid "Change option"
+msgstr ""
+
+#: src/gui/hosting/votepanel.cpp:47
+msgid "Vote for YES, (Ctrl-Y)"
+msgstr ""
+
+#: src/gui/hosting/votepanel.cpp:52
+msgid "Vote for DON'T CARE, (Ctrl-B)"
+msgstr ""
+
+#: src/gui/hosting/votepanel.cpp:58
+msgid "Vote for NO, (Ctrl-N)"
+msgstr ""
+
+#: src/gui/infodialog.cpp:16
+msgid "Paths"
+msgstr ""
+
+#: src/gui/mainchattab.cpp:169
+msgid "Disconnected from server, chat closed."
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:45
+msgid "Manage downloads"
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:50
+msgid "Cancel Download"
+msgstr "Ακύρωση λήψης"
+
+#: src/gui/maindownloadtab.cpp:52
+msgid "Clear finished"
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:54
+msgid "Search file"
+msgstr "Αναζήτηση αρχείου"
+
+#: src/gui/maindownloadtab.cpp:57 src/gui/options/downloadoptionspanel.cpp:48
+msgid "Current download directory"
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:98
+msgid "Search for maps and games"
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:105
+msgid "Failed to download selected item."
+msgstr ""
+
+#: src/gui/maindownloadtab.cpp:105
+msgid "Failed to download"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:125 src/gui/options/mainoptionstab.cpp:63
+msgid "Chat"
+msgstr "Συνομιλία"
+
+#: src/gui/mainwindow.cpp:126
+msgid "Multiplayer"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:127
+msgid "Battle room"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:128
+msgid "Skirmish"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:130
+msgid "Replays"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:131 src/gui/options/mainoptionstab.cpp:60
+msgid "Downloads"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:140
+msgid "&Connect..."
+msgstr "&Σύνδεση..."
+
+#: src/gui/mainwindow.cpp:141
+msgid "&Disconnect"
+msgstr "&Αποσύνδεση"
+
+#: src/gui/mainwindow.cpp:142
+msgid "&Reopen server panel"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:146
+msgid "&Save options"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:149
+msgid "&Quit"
+msgstr "&Τερματισμός"
+
+#: src/gui/mainwindow.cpp:152
+msgid "&Autojoin channels"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:153
+msgid "&Change language"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:154
+msgid "&Reset layout"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:156
+msgid "&Lobby preferences"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:157
+msgid "&Engine preferences"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:162
+msgid "&Join channel..."
+msgstr "Είσοδος σε κανάλι..."
+
+#: src/gui/mainwindow.cpp:163
+msgid "Channel &list"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:164
+msgid "Open private &chat..."
+msgstr "Έναρξη prive συνομιλίας..."
+
+#: src/gui/mainwindow.cpp:165
+msgid "&Open Spring DataDir"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:167
+msgid "&Download Archives"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:169
+msgid "&Reload maps/games"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:171
+msgid "Check for new Version"
+msgstr "Έλεγχος για νέα έκδοση"
+
+#: src/gui/mainwindow.cpp:174
+msgid "&Help, tutorial and FAQ"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:175
+msgid "&About"
+msgstr "&Περί"
+
+#: src/gui/mainwindow.cpp:176
+msgid "&System Info"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:177
+msgid "&Report a bug..."
+msgstr "Αναφορά προβλήματος..."
+
+#: src/gui/mainwindow.cpp:178
+msgid "&Documentation"
+msgstr "&Τεκμηρίωση"
+
+#: src/gui/mainwindow.cpp:181
+msgid "&Server"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:182
+msgid "&Edit"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:184
+msgid "&Tools"
+msgstr "&Εργαλεία"
+
+#: src/gui/mainwindow.cpp:185
+msgid "&Help"
+msgstr "&Βοήθεια"
+
+#: src/gui/mainwindow.cpp:490
+msgid "You need to be connected to a server to view the channel list"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:490
+msgid "Not connected"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:505
+msgid "Join channel..."
+msgstr "Είσοδος σε κανάλι..."
+
+#: src/gui/mainwindow.cpp:505
+msgid "Name of channel to join"
+msgstr "Όνομα καναλιού"
+
+#: src/gui/mainwindow.cpp:517
+msgid "Open Private Chat..."
+msgstr "Έναρξη prive συνομιλίας..."
+
+#: src/gui/mainwindow.cpp:517
+msgid "Name of user"
+msgstr "Όνομα χρήστη"
+
+#: src/gui/mainwindow.cpp:639
+#, c-format
+msgid "You need to restart %s for the language change to take effect."
+msgstr ""
+
+#: src/gui/mainwindow.cpp:641
+msgid "Restart required"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:673
+#, c-format
+msgid "Please restart %s now"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:727
+msgid ""
+"Which Archives to download? Put each archive on a single line, for example"
+msgstr ""
+
+#: src/gui/mainwindow.cpp:727
+msgid "Download Archives"
+msgstr ""
+
+#: src/gui/mapctrl.cpp:601
+#, c-format
+msgid "Metal: %.1f%%"
+msgstr ""
+
+#: src/gui/mapctrl.cpp:711 src/gui/mapctrl.cpp:713
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: src/gui/mapctrl.cpp:929
+msgid "side:"
+msgstr "πλευρά:"
+
+#: src/gui/mapctrl.cpp:943
+#, c-format
+msgid "ally:   %d"
+msgstr "συμμαχία: %d"
+
+#: src/gui/mapctrl.cpp:957
+#, c-format
+msgid "bonus: %d%%"
+msgstr "επίδομα: %d%%"
+
+#: src/gui/mapgridctrl.cpp:263
+#, c-format
+msgid "Map %s doesn't exist!"
+msgstr ""
+
+#: src/gui/mapgridctrl.cpp:278
+#, c-format
+msgid "Map %s already in grid!"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:44
+msgid "Select map (click and drag to scroll)"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:52
+msgid "Vertical sort key"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:58
+msgid "Horizontal sort key"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:64
+msgid "Filter"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:66
+msgid "Shows only maps which contain this text in their name or description."
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:69
+msgid "Map details"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:109
+msgid "Start positions"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:176
+msgid "Minimum wind"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:177
+msgid "Maximum wind"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:178
+msgid "Average wind"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:179
+msgid "Size (map area)"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:180
+msgid "Aspect ratio"
+msgstr ""
+
+#: src/gui/mapselectdialog.cpp:181
+msgid "Number of start positions"
+msgstr ""
+
+#: src/gui/nickdataviewctrl.cpp:37
+msgid "s"
+msgstr "κ"
+
+#: src/gui/nickdataviewctrl.cpp:38
+msgid "c"
+msgstr "χ"
+
+#: src/gui/nickdataviewctrl.cpp:39
+msgid "r"
+msgstr "β"
+
+#: src/gui/nickdataviewctrl.cpp:41
+msgid "Lobby client"
+msgstr ""
+
+#: src/gui/notifications/notificationmanager.cpp:99
+#, c-format
+msgid "%d more events"
+msgstr ""
+
+#: src/gui/options/chatoptionstab.cpp:65
+msgid "Colors and font"
+msgstr "Χρώματα και γραμματοσειρά"
+
+#: src/gui/options/chatoptionstab.cpp:90
+msgid "Normal"
+msgstr "Κανονικό"
+
+#: src/gui/options/chatoptionstab.cpp:104
+msgid "Background"
+msgstr "Φόντο"
+
+#: src/gui/options/chatoptionstab.cpp:118
+msgid "Action"
+msgstr "Ενέργεια"
+
+#: src/gui/options/chatoptionstab.cpp:132
+#: src/gui/options/groupoptionspanel.cpp:125
+msgid "Highlight"
+msgstr "Επισήμανση"
+
+#: src/gui/options/chatoptionstab.cpp:146
+msgid "Join/Leave"
+msgstr "Είσοδος/Έξοδος"
+
+#: src/gui/options/chatoptionstab.cpp:160
+msgid "My messages"
+msgstr "Τα μηνύματά μου"
+
+#: src/gui/options/chatoptionstab.cpp:179
+msgid "Server"
+msgstr "Εξυπηρετητής"
+
+#: src/gui/options/chatoptionstab.cpp:193
+msgid "Client"
+msgstr "Πελάτης"
+
+#: src/gui/options/chatoptionstab.cpp:221
+msgid "Timestamp"
+msgstr "Χρονόσημο"
+
+#: src/gui/options/chatoptionstab.cpp:235
+msgid "Notification"
+msgstr "Ειδοποίηση"
+
+#: src/gui/options/chatoptionstab.cpp:245
+msgid ""
+"[19:35] ** Server ** Connected to Server.\n"
+"[22:30] <Dude> hi everyone\n"
+"[22:30] ** Dude2 joined the channel.\n"
+"[22:30] * Dude2 thinks his colors looks nice\n"
+"[22:45] <Dude> Dude2: orl?\n"
+"[22:46] <Dude2> But could be better, should tweak them some more...\n"
+msgstr ""
+
+#: src/gui/options/chatoptionstab.cpp:256
+msgid "Font:"
+msgstr "Γραμματοσειρά:"
+
+#: src/gui/options/chatoptionstab.cpp:264
+msgid "Select..."
+msgstr "Επιλογή..."
+
+#: src/gui/options/chatoptionstab.cpp:275
+msgid "Behavior"
+msgstr "Συμπεριφορά"
+
+#: src/gui/options/chatoptionstab.cpp:277
+msgid "Enable Irc colors in chat messages"
+msgstr ""
+
+#: src/gui/options/chatoptionstab.cpp:282
+msgid "Play notification sounds"
+msgstr "Χρήση ήχων ειδοποίησης"
+
+#: src/gui/options/chatoptionstab.cpp:287
+msgid "Copy server messages in current channel"
+msgstr ""
+
+#: src/gui/options/chatoptionstab.cpp:297
+msgid "Chat logs"
+msgstr "Καταγραφές συνομιλιών"
+
+#: src/gui/options/chatoptionstab.cpp:300
+msgid "Save chat logs"
+msgstr "Αποθήκευση καταγραφών συνομιλιών"
+
+#: src/gui/options/chatoptionstab.cpp:308
+msgid "approx. number of lines loaded from log into chat"
+msgstr ""
+
+#: src/gui/options/chatoptionstab.cpp:316
+msgid "Highlight words"
+msgstr "Επισήμανση λέξεων"
+
+#: src/gui/options/chatoptionstab.cpp:318
+msgid "Words to highlight in chat:"
+msgstr "Λέξεις προς επισήμανση σε συνομιλίες:"
+
+#: src/gui/options/chatoptionstab.cpp:327
+msgid "enter a ; separated list"
+msgstr "Εισάγετε λίστα χωρισμένη με \";\""
+
+#: src/gui/options/chatoptionstab.cpp:331
+msgid "Additionally play sound/flash titlebar "
+msgstr "Επιπλέον χρήση ήχων/αναβόσβημα τίτλου παραθύρου "
+
+#: src/gui/options/downloadoptionspanel.cpp:41
+msgid "Parallel HTTP Connections when downloading content"
+msgstr ""
+
+#: src/gui/options/downloadoptionspanel.cpp:54
+#: src/gui/options/lobbyoptionstab.cpp:66
+#: src/gui/options/lobbyoptionstab.cpp:90
+#: src/gui/options/springoptionstab.cpp:98
+#: src/gui/options/springoptionstab.cpp:108
+msgid "Browse"
+msgstr "Αναζήτηση"
+
+#: src/gui/options/downloadoptionspanel.cpp:92
+msgid "Choose a directory for downloading"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:55
+#: src/gui/options/groupoptionspanel.cpp:168
+#: src/gui/options/springoptionstab.cpp:74
+msgid "Remove"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:57
+msgid "Remove an existing group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:61
+msgid "Rename.."
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:63
+msgid "Rename an existing group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:70
+#: src/gui/options/springoptionstab.cpp:81
+msgid "Add New.."
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:71
+msgid "Add new group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:84
+msgid "Group Actions"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:89
+msgid "Notify login/logout"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:91
+msgid "Notify when users of this group go online or offline"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:95
+msgid "Ignore Chat"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:97
+msgid "Ignore anything said in channel by any of the users in this group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:101
+msgid "Notify Hosted Battles"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:103
+msgid "Notify when users of this group hosts a battle"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:107 src/useractions.cpp:86
+#: src/useractions.cpp:87
+msgid "Ignore PM"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:109
+msgid "Ignore anything said in private chat by any of the users in this group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:113
+msgid "Notify Status Change"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:115
+msgid "Notify when the status of a users in this group changes"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:119
+msgid "Autokick"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:121
+msgid "Auto kick any of the users in this group from battles hosted"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:127
+msgid "Highlight battles and the names of users in this group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:134
+msgid "Highlight Color"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:139
+#: src/gui/options/groupoptionspanel.cpp:141
+msgid "Select highlight color"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:152
+msgid "Users in group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:163
+msgid "Add.."
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:164
+msgid "Add users to group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:170
+msgid "Remove users from group"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:268
+msgid "Name of new group:"
+msgstr ""
+
+#: src/gui/options/groupoptionspanel.cpp:268
+msgid "Add New Group"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:54
+#: src/gui/options/lobbyoptionstab.cpp:55
+msgid "Web Browser"
+msgstr "Περιηγητής ιστοσελίδων"
+
+#: src/gui/options/lobbyoptionstab.cpp:57
+msgid "Default Browser."
+msgstr "Εξ ορισμού"
+
+#: src/gui/options/lobbyoptionstab.cpp:59
+msgid "Use your system-wide browser preference"
+msgstr "Χρήση της ρύθμισης συστήματος"
+
+#: src/gui/options/lobbyoptionstab.cpp:61
+msgid "Specify:"
+msgstr "Προσδιορίστε:"
+
+#: src/gui/options/lobbyoptionstab.cpp:62
+msgid "Specify the web browser you want to use"
+msgstr "Προσδιορίστε τον περιηγητή που θέλετε να χρησιμοποιήσετε"
+
+#: src/gui/options/lobbyoptionstab.cpp:67
+msgid "Use a file dialog to find the web browser"
+msgstr "Χρήση διαλόγου αρχείων για αναζήτηση του περιηγητή"
+
+#: src/gui/options/lobbyoptionstab.cpp:85
+msgid "External text editor"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:86
+msgid "Path"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:91
+msgid "Use a file dialog to find the editor binary"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:102
+msgid "Autoconnect"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:103
+#, c-format
+msgid "If checked, %s will automatically log on to the last used server"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:104
+msgid "Autoconnect on lobby start"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:111
+msgid "Automatic updates"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:112
+#, c-format
+msgid ""
+"%s can check at startup if a newer version is available and automatically "
+"download it for you."
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:113
+msgid "automatically check for updates"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:121
+msgid "Tooltips"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:122
+msgid "Show Tooltips?"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:125
+#, c-format
+msgid "Requires %s restart to take effect."
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:130
+msgid "Battle Promotion"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:131
+msgid "Show notifications when someone promotes battle?"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:135
+msgid "Tab completion method"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:136
+msgid ""
+"\"Match exact\" will complete a word if there is one and only one match.\n"
+"\"Match nearest\" will select the (first) match that has closest Levenshtein "
+"distance"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:138
+msgid "Match exact"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:139
+msgid "Match nearest"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:150
+msgid "Misc GUI"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:151
+msgid "Show big icons in mainwindow tabs?"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:154
+msgid "Use notification popups?"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:157
+msgid "Screen position for notification popups"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:164
+msgid "Display time for popup notifications in seconds"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:170
+msgid "Show close button on all tabs? (needs restart to take effect)"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:173
+msgid "Test Notification"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:177
+msgid "Start tab"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:180
+msgid "Select which tab to show at startup"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:188
+msgid "GUI user level"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:190
+msgid "Newbie"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:190
+msgid "Professional"
+msgstr ""
+
+#: src/gui/options/lobbyoptionstab.cpp:298
+msgid "Executables (*.exe)|*.exe|Any File (*.*)|*.*"
+msgstr "Εκτελέσιμα (*.exe)|*.exe|Όλα τα αρχεία (*.*)|*.*"
+
+#: src/gui/options/lobbyoptionstab.cpp:300
+msgid "Any file (*)|*"
+msgstr "Όλα τα αρχεία (*)|*"
+
+#: src/gui/options/lobbyoptionstab.cpp:302
+msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
+msgstr "Πακέτα Εφαρμογών (*.app)|*.app|Όλα τα αρχεία (*.*)|*.*"
+
+#: src/gui/options/lobbyoptionstab.cpp:307
+msgid "Choose a web browser executable"
+msgstr "Επιλέξτε το εκτελέσιμο του περιηγητή"
+
+#: src/gui/options/lobbyoptionstab.cpp:314
+msgid "Choose a editor browser executable"
+msgstr ""
+
+#: src/gui/options/mainoptionstab.cpp:57
+msgid "Spring"
+msgstr "Spring"
+
+#: src/gui/options/mainoptionstab.cpp:66
+msgid "General"
+msgstr ""
+
+#: src/gui/options/mainoptionstab.cpp:69
+msgid "Groups"
+msgstr ""
+
+#: src/gui/options/mainoptionstab.cpp:71
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: src/gui/options/mainoptionstab.cpp:159
+#, c-format
+msgid "%s Preferences"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:75
+msgid "Remove an existing engine installation (does not delete files)"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:82
+msgid "Add new engine installation"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:86
+msgid "Auto Configure"
+msgstr "Αυτόματη Ρύθμιση"
+
+#: src/gui/options/springoptionstab.cpp:94
+msgid "Spring executable"
+msgstr "Εκτελέσιμο του Spring"
+
+#: src/gui/options/springoptionstab.cpp:96
+#: src/gui/options/springoptionstab.cpp:107
+msgid "Location"
+msgstr "Τοποθεσία"
+
+#: src/gui/options/springoptionstab.cpp:99
+#: src/gui/options/springoptionstab.cpp:109
+msgid "Find"
+msgstr "Αναζήτηση"
+
+#: src/gui/options/springoptionstab.cpp:104
+msgid "UnitSync library"
+msgstr "Μονάδα UnitSync"
+
+#: src/gui/options/springoptionstab.cpp:111
+msgid "Restore Paths"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:232
+#: src/gui/options/springoptionstab.cpp:272
+msgid "Choose a Spring executable"
+msgstr "Επιλέξτε το εκτελέσιμο του Spring"
+
+#: src/gui/options/springoptionstab.cpp:242
+#: src/gui/options/springoptionstab.cpp:252
+msgid "Choose UnitSync library"
+msgstr "Επιλέξτε τη μονάδα UnitSync"
+
+#: src/gui/options/springoptionstab.cpp:296
+msgid "Configuration error"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:354
+msgid ""
+"Do you want to change spring's datadir location? (select yes only if you "
+"know what you're doing)"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:354
+msgid "Data dir wizard"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:360
+msgid "Choose a folder"
+msgstr "Επιλογή φακέλου"
+
+#: src/gui/options/springoptionstab.cpp:363
+#, c-format
+msgid "Something went wrong when creating the directory: %s"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:389
+msgid "Reloading unitsync"
+msgstr ""
+
+#: src/gui/options/springoptionstab.cpp:396 src/gui/singleplayertab.cpp:490
+msgid "Spring error"
+msgstr "Πρόβλημα του Spring"
+
+#: src/gui/pastedialog.cpp:27
+msgid "Flood warning"
+msgstr "Προειδοποίηση πλημμύρας"
+
+#: src/gui/pastedialog.cpp:52
+msgid "Use pastebin"
+msgstr ""
+
+#: src/gui/playback/playbackdataview.cpp:40
+msgid "Date"
+msgstr ""
+
+#: src/gui/playback/playbackdataview.cpp:41
+msgid "Duration"
+msgstr ""
+
+#: src/gui/playback/playbackdataview.cpp:46
+msgid "Filesize"
+msgstr ""
+
+#: src/gui/playback/playbackdataview.cpp:47 src/springsettings/frame.cpp:229
+msgid "File"
+msgstr "Αρχείο"
+
+#: src/gui/playback/playbackdataview.cpp:127
+msgid "Could not delete Replay: "
+msgstr ""
+
+#: src/gui/playback/playbackfilter.cpp:65
+msgid "Filter settings"
+msgstr ""
+
+#: src/gui/playback/playbackfilter.cpp:174
+msgid "Filesize in KB:"
+msgstr ""
+
+#: src/gui/playback/playbackfilter.cpp:200
+msgid "Duration (hh:mm:ss):"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:84
+msgid "Watch"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:84
+msgid "Load"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:86
+msgid "Reload list"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:219
+msgid "replay"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:219
+msgid "savegame"
+msgstr ""
+
+#: src/gui/playback/playbacktab.cpp:305
+msgid "Unitsync library required"
+msgstr ""
+
+#: src/gui/selectusersdialog.cpp:52
+msgid "Filter names"
+msgstr ""
+
+#: src/gui/selectusersdialog.cpp:57
+msgid "Enter text filter to filter the online users list"
+msgstr ""
+
+#: src/gui/selectusersdialog.h:68
+msgid "Select Users"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:73
+msgid "No Unitsync configured."
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:82
+msgid ""
+"You can drag the sun/bot icon around to define start position.\n"
+" Hover over the icon for a popup that lets you change side, ally and bonus."
+msgstr ""
+"Μπορείτε να σύρετε το εικονίδιο ήλιου/bot για να ορίσετε την αρχική θέση.\n"
+" Πηγαίνετε το ποντίκι πάνω από το εικονίδιο για να αλλάξετε μεριά, συμμαχία "
+"και επίδομα."
+
+#: src/gui/singleplayertab.cpp:125
+msgid "No games? Download them by joining a multiplayer game room"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:132
+msgid "No maps? Download them by joining a multiplayer game room"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:135
+msgid "Choose map..."
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:142
+msgid "No engines? Download them by joining a multiplayer game room"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:147
+msgid "Add bot..."
+msgstr "Προσθήκη bot..."
+
+#: src/gui/singleplayertab.cpp:148 src/gui/singleplayertab.cpp:170
+msgid "First select game, map and engine"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:163
+msgid "Spectate only"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:166
+msgid "Random start positions"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:205 src/gui/singleplayertab.cpp:236
+msgid "-- Select one --"
+msgstr "-- Επιλέξτε κάποιο --"
+
+#: src/gui/singleplayertab.cpp:377 src/gui/singleplayertab.cpp:383
+msgid "Game setup error"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:383
+msgid "You have to select a map first."
+msgstr "Πρέπει να επιλέξετε έναν χάρτη πρώτα."
+
+#: src/gui/singleplayertab.cpp:417
+msgid "Incompatible bots have been removed after game selection changed."
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:417
+msgid "Bots removed"
+msgstr ""
+
+#: src/gui/singleplayertab.cpp:489
+msgid ""
+"You cannot start a game (engine) while another engine is already running"
+msgstr ""
+
+#: src/gui/slbook.cpp:103
+msgid "New Tab"
+msgstr ""
+
+#: src/gui/slbook.cpp:106
+msgid "Close all chats"
+msgstr ""
+
+#: src/gui/slbook.cpp:107
+msgid "Close all other chats"
+msgstr ""
+
+#: src/gui/slbook.cpp:113
+msgid "Panel"
+msgstr ""
+
+#: src/gui/taskbar.cpp:85
+msgid "Download failed"
+msgstr ""
+
+#: src/gui/taskbar.cpp:102
+msgid "Download finished"
+msgstr ""
+
+#: src/gui/taskbar.cpp:136
+#, c-format
+msgid "Downloading %s"
+msgstr ""
+
+#: src/gui/ui.cpp:246
+#, c-format
+msgid "%s commands help:"
+msgstr ""
+
+#: src/gui/ui.cpp:248
+msgid "Global commands:"
+msgstr "Γενικές εντολές:"
+
+#: src/gui/ui.cpp:249
+msgid "  \"/away\" - Sets your status to away."
+msgstr "  \"/away\" - Ορίζει την κατάσταση σας ως μακρυά από τον υπολογιστή."
+
+#: src/gui/ui.cpp:250
+msgid "  \"/back\" - Resets your away status."
+msgstr "  \"/back\" - Ορίζει την κατάσταση σας ως κοντά στον υπολογιστή."
+
+#: src/gui/ui.cpp:251
+msgid ""
+"  \"/changepassword newpassword\" - Changes the current active account's "
+"password, needs the old password saved in login box"
+msgstr ""
+
+#: src/gui/ui.cpp:252
+msgid ""
+"  \"/changepassword oldpassword newpassword\" - Changes the current active "
+"account's password, password cannot contain spaces"
+msgstr ""
+
+#: src/gui/ui.cpp:253
+msgid "  \"/channels\" - Lists currently active channels."
+msgstr "  \"/channels\" - Εμφανίζει μια λίστα των ενεργών καναλιών."
+
+#: src/gui/ui.cpp:254
+msgid ""
+"  \"/help [topic]\" - Put topic if you want to know more specific "
+"information about a command."
+msgstr ""
+"  \"/help [θέμα]\" - Βάλτε θέμα αν θέλετε πιο συγκεκριμένες πληροφορίες για "
+"μια εντολή."
+
+#: src/gui/ui.cpp:255
+msgid "  \"/join channel [password]\" - Joins a channel."
+msgstr ""
+
+#: src/gui/ui.cpp:256
+msgid "  \"/j\" - Alias to /join."
+msgstr "  \"/j\" - Συνώνυμο του /join."
+
+#: src/gui/ui.cpp:257
+msgid "  \"/ingame\" - Shows how much time you have in game."
+msgstr ""
+
+#: src/gui/ui.cpp:258
+msgid ""
+"  \"/msg username [text]\" - Sends a private message containing text to "
+"username."
+msgstr ""
+
+#: src/gui/ui.cpp:259
+msgid "  \"/part\" - Leaves current channel."
+msgstr ""
+
+#: src/gui/ui.cpp:260
+msgid "  \"/p\" - Alias to /part."
+msgstr ""
+
+#: src/gui/ui.cpp:261
+msgid "  \"/rename newalias\" - Changes your nickname to newalias."
+msgstr "  \"/rename νέοψευδώνυμο\" - Αλλάζει το ψευδώνυμο σας σε νέοψευδώνυμο."
+
+#: src/gui/ui.cpp:263
+#, c-format
+msgid "  \"/sayver\" - Says what version of %s you have in chat."
+msgstr ""
+
+#: src/gui/ui.cpp:264
+msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
+msgstr "  \"/testmd5 κείμενο\" - Επιστρέφει ένα md5-b64 hash του κειμένου."
+
+#: src/gui/ui.cpp:266
+#, c-format
+msgid "  \"/ver\" - Displays what version of %s you have."
+msgstr ""
+
+#: src/gui/ui.cpp:267
+msgid "  \"/clear\" - Clears all text from current chat panel"
+msgstr ""
+
+#: src/gui/ui.cpp:269
+msgid "Chat commands:"
+msgstr "Εντολές συνομιλίας:"
+
+#: src/gui/ui.cpp:270
+msgid "  \"/me action\" - Say IRC style action message."
+msgstr ""
+"  \"/me δραστηριότητα\" - Στέλνει ένα μήνυμα δραστηριότητας σε στυλ IRC (/e)."
+
+#: src/gui/ui.cpp:272
+msgid ""
+"If you are missing any commands, go to #springlobby and try to type it "
+"there :)"
+msgstr ""
+"Αν δεν μπορείτε να θυμηθείτε κάποια εντολή, πηγαίνετε στο #springlobby και "
+"δοκιμάστε να την πληκτρολογήσετε εκεί :)"
+
+#: src/gui/ui.cpp:325
+#, c-format
+msgid "disconnected from server: %s"
+msgstr ""
+
+#: src/gui/ui.cpp:368
+msgid "no active chat panels open."
+msgstr "καμία ενεργή συνομιλία ανοιχτή."
+
+#: src/gui/ui.cpp:371
+#, c-format
+msgid "%s (%d users)"
+msgstr ""
+
+#: src/gui/ui.cpp:516
+msgid "The current battle was closed by the host."
+msgstr "Η τρέχουσα μάχη έκλεισε από τον οικοδεσπότη."
+
+#: src/gui/ui.cpp:707
+#, c-format
+msgid ""
+"%s:\n"
+"ring!"
+msgstr ""
+
+#: src/gui/ui.cpp:824
+msgid ""
+"There was an error checking for the latest version.\n"
+"Please try again later.\n"
+"If the problem persists, please use Help->Report Bug to report this bug."
+msgstr ""
+"Παρουσιάστηκε πρόβλημα κατά τον έλεγχο για νέα έκδοση.\n"
+"Παρακαλώ προσπαθήστε αργότερα.\n"
+"Αν το πρόβλημα παραμένει, παρακαλώ χρησιμοποιήστε το Βοηθεία -> Αναφορά "
+"Προβλήματος για να αναφέρετε αυτό το πρόβλημα."
+
+#: src/gui/ui.cpp:834
+msgid "Your Version: "
+msgstr "Η έκδοσή σας: "
+
+#: src/gui/ui.cpp:834
+msgid "Latest Version: "
+msgstr "Τελευταία έκδοση: "
+
+#: src/gui/ui.cpp:840
+#, c-format
+msgid "Your %s version is up to date."
+msgstr ""
+
+#: src/gui/ui.cpp:841
+msgid "Up to Date"
+msgstr "Ενημερωμένο"
+
+#: src/gui/ui.cpp:845
+#, c-format
+msgid "Your %s version is not up to date."
+msgstr ""
+
+#: src/gui/ui.cpp:849
+msgid "Would you like to update to the new version?"
+msgstr ""
+
+#: src/gui/ui.cpp:851
+#, c-format
+msgid "Update %s?"
+msgstr ""
+
+#: src/gui/ui.cpp:858
+msgid "Automatic update failed."
+msgstr ""
+
+#: src/gui/ui.cpp:861
+msgid ""
+"The instructions for updating manually have been opened in your web browser."
+msgstr ""
+
+#: src/gui/ui.cpp:862
+msgid "Updater error."
+msgstr ""
+
+#: src/gui/ui.cpp:869
+msgid "Please update to the latest version before reporting bugs."
+msgstr ""
+
+#: src/gui/ui.cpp:870
+msgid "Not up to Date"
+msgstr "Μη Ενημερωμένο"
+
+#: src/gui/ui.cpp:875
+#, c-format
+msgid "Your %s version is newer than the latest release."
+msgstr ""
+
+#: src/gui/ui.cpp:877
+msgid "Thank you for helping with testing!"
+msgstr ""
+
+#: src/gui/ui.cpp:963
+msgid "Content is required to play. Should it be downloaded?"
+msgstr ""
+
+#: src/gui/ui.cpp:965
+msgid "Content is missing"
+msgstr ""
+
+#: src/gui/ui.cpp:994
+msgid ""
+"The certificate by the server is unkown. Do you want to trust it? Please "
+"verify the fingerprint:\n"
+msgstr ""
+
+#: src/gui/ui.cpp:994 src/gui/ui.cpp:998
+msgid "Unknown Certificate"
+msgstr ""
+
+#: src/gui/ui.cpp:997
+#, c-format
+msgid ""
+"The server provided an invalid certificate! Maybe there is a MITM attack "
+"ongoing. Do you want ignore this warning?\n"
+"Expected:\n"
+"%s\n"
+"Received:\n"
+"%s"
+msgstr ""
+
+#: src/gui/uiutils.cpp:352
+msgid "Choose color"
+msgstr ""
+
+#: src/gui/uiutils.cpp:354
+msgid "Choose color (only first 16 will be saved)"
+msgstr ""
+
+#: src/gui/uiutils.cpp:434 src/gui/uiutils.cpp:439
+msgid "Couldn't launch browser. URL is: "
+msgstr "Αδυναμία εκκίνησης περιηγητή. Το URL είναι: "
+
+#: src/gui/uiutils.cpp:434 src/gui/uiutils.cpp:439
+msgid "Couldn't launch browser."
+msgstr "Αδυναμία εκκίνησης περιηγητή."
+
+#: src/gui/uiutils.cpp:439
+msgid ""
+"\n"
+"Broser path is: "
+msgstr ""
+"\n"
+"Διαδρομή περιηγητή είναι: "
+
+#: src/gui/usermenu.h:34
+msgid "Create new group..."
+msgstr ""
+
+#: src/gui/usermenu.h:39
+msgid "Add to group..."
+msgstr ""
+
+#: src/gui/usermenu.h:40
+msgid "Remove from group"
+msgstr ""
+
+#: src/gui/wxfb/generated/AgreementDialogBase.cpp:29
+msgid "Verification code - sent by email"
+msgstr ""
+
+#: src/gui/wxfb/generated/AgreementDialogBase.cpp:42
+msgid "Do you accept the terms of this agreement?"
+msgstr "Αποδέχεστε τους όρους αυτής της συμφωνίας;"
+
+#: src/gui/wxfb/generated/AgreementDialogBase.h:55
+msgid "Terms of Service"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:25
+msgid "see code"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:33
+msgid "Lobby server:"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:37
+msgid "Official Server"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:38
+msgid ""
+"Server to connect to. You can connect to any server you like by typing in "
+"hostaddress:port format."
+msgstr ""
+"Εξυπηρετητής στον οποίο θα γίνει σύνδεση. Μπορείτε να συνδεθείτε σε όποιον "
+"εξυπηρετητή θέλετε δηλώνοντας τον στη μορφή \"εξυπηρετητής:θύρα\""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:42
+msgid "E-mail address:"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:44
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:49
+msgid "A verification code will be sent to your email address."
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:57
+msgid "NewPlayer012356"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:58
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:67
+msgid "Can be changed later"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:62
+msgid "Password:"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:66
+msgid "1111222233334444"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:76
+msgid "Verify password:"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:92
+msgid "Show password"
+msgstr ""
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:97
+msgid "Remember password"
+msgstr "Αποθήκευση κωδικού πρόσβασης"
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:101
+msgid "Autoconnect next time"
+msgstr "Αυτόματη σύνδεση την επόμενη φορά"
+
+#: src/gui/wxfb/generated/ConnectWindowBase.cpp:103
+msgid ""
+"remember connection details and automatically connect to server on next "
+"lobby startup"
+msgstr ""
+"Αποθήκευση των στοιχείων σύνδεσης και αυτόματη σύνδεση στον εξυπηρετητή κατά "
+"την επόμενη εκκίνηση του lobby"
+
+#: src/gui/wxfb/generated/ConnectWindowBase.h:69
+msgid "Connect to lobby server"
+msgstr "Σύνδεση στον εξυπηρετητή lobby"
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:18
+msgid "<report>"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:23
+msgid "Contents of ~/.spring/infolog.txt:"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:33
+msgid "Upload log"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:35
+msgid "4"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:51
+msgid "Report bug..."
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:52
+msgid "https://springrts.com/wiki/Bugs"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:62
+msgid "Re-run in safe mode"
+msgstr ""
+
+#: src/gui/wxfb/generated/CrashReporterDialogBase.cpp:65
+msgid "Re-run normally"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:24
+msgid "Battle name:"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:31
+msgid "A short description of the game, this will show up in the battle list."
+msgstr "Σύντομη περιγραφή του παιχνιδιού, θα εμφανιστεί στη λίστα μαχών."
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:44
+msgid "Select the game to play."
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:57
+msgid "Select the engine version to play."
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:61
+msgid ""
+"Password:\n"
+"(no spaces)"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:68
+msgid "Password needed to join game. Keep empty for no password"
+msgstr "Κωδικός για συμμετοχή στο παιχνίδι. Αφήστε κενό για ελεύθερη συμμετοχή"
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:72
+msgid "Port:"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:79
+msgid ""
+"UDP port to host game on. Default is 8452. Make sure to open your firewall "
+"and re-configure your router."
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:83
+msgid "Use relayhost"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:85
+msgid ""
+"host and control game on remote server, helps if you have trouble hosting"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:95
+msgid "Hole punching"
+msgstr "Διάτρηση"
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:97
+msgid "NAT traversal:"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:99
+msgid ""
+"NAT traversal method to use. Use none and reconfigure firewall/router if "
+"hole punching does not work."
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:103
+msgid "Player rank limit:"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:105
+msgid "Require at least"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:105
+msgid "Allow no greater than"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:111
+msgid "Combo!"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:117
+msgid "Maximum number of players:"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:120
+msgid ""
+"The maximum number of players to allow in the battle. You may need special "
+"permission to host more than 8."
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:142
+msgid "Host!"
+msgstr ""
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.cpp:144
+msgid "Start hosting the battle."
+msgstr "Έναρξη φιλοξενίας της μάχης."
+
+#: src/gui/wxfb/generated/HostBattleDialogBase.h:81
+msgid "Host new battle"
+msgstr "Φιλοξενία νέας μάχης"
+
+#: src/serverevents.cpp:123
+#, c-format
+msgid "ping: %s ms"
+msgstr ""
+
+#: src/serverevents.cpp:145
+msgid " just connected"
+msgstr ""
+
+#: src/serverevents.cpp:161
+msgid " is now "
+msgstr ""
+
+#: src/serverevents.cpp:217
+msgid " just went offline"
+msgstr ""
+
+#: src/serverevents.cpp:252
+msgid " opened battle "
+msgstr ""
+
+#: src/serverevents.cpp:648
+msgid "Join channel failed"
+msgstr "Η είσοδος στο κανάλι απέτυχε"
+
+#: src/serverevents.cpp:648
+msgid "Could not join channel "
+msgstr "Απέτυχε η είσοδος στο κανάλι "
+
+#: src/serverevents.cpp:648
+msgid " because: "
+msgstr " επειδή: "
+
+#: src/serverevents.cpp:914
+msgid "Server Message"
+msgstr "Μήνημα Εξυπηρετητή"
+
+#: src/serverevents.cpp:1037
+#, c-format
+msgid " has ip=%s"
+msgstr " έχει διεύθυνση IP=%s"
+
+#: src/serverevents.cpp:1043
+msgid " does not really support nat traversal"
+msgstr " δεν υποστηρίζει πραγματικά την Διάτρηση NAT"
+
+#: src/serverevents.cpp:1054
+msgid "You were kicked from the battle!"
+msgstr "Εκδιωχθήκατε από τη μάχη!"
+
+#: src/serverevents.cpp:1054
+msgid "Kicked by Host"
+msgstr "Αποπομπή από Οικοδεσπότη"
+
+#: src/serverevents.cpp:1086
+#, c-format
+msgid "Begin mutelist for channel %s"
+msgstr ""
+
+#: src/serverevents.cpp:1086
+#, c-format
+msgid "%s mutelist"
+msgstr ""
+
+#: src/serverevents.cpp:1096
+msgid " indefinite time remaining"
+msgstr ""
+
+#: src/serverevents.cpp:1098
+#, c-format
+msgid " %d minutes remaining"
+msgstr ""
+
+#: src/serverevents.cpp:1108
+msgid "End mutelist for "
+msgstr ""
+
+#: src/serverevents.cpp:1142
+msgid "Automatically moved to new battle"
+msgstr ""
+
+#: src/settings.cpp:138
+msgid "main"
+msgstr ""
+
+#: src/settings.h:71
+msgid "Bottom right"
+msgstr ""
+
+#: src/settings.h:72
+msgid "Bottom left"
+msgstr ""
+
+#: src/settings.h:73
+msgid "Top right"
+msgstr ""
+
+#: src/settings.h:74
+msgid "Top left"
+msgstr ""
+
+#: src/spring.cpp:95
+msgid "An engine/game is already running!"
+msgstr ""
+
+#: src/spring.cpp:106
+#, c-format
+msgid ""
+"The engine executable version '%s' was not found at the set location '%s', "
+"please re-check."
+msgstr ""
+
+#: src/spring.cpp:107
+msgid "Executable not found"
+msgstr ""
+
+#: src/spring.cpp:223
+msgid "Engine crashed?"
+msgstr ""
+
+#: src/spring.cpp:224
+#, c-format
+msgid "Engine exited with nonzero code %d."
+msgstr ""
+
+#: src/spring.cpp:227
+msgid ""
+" Possible reasons include:\n"
+"\n"
+" (a) Timeout when connecting.\n"
+"Make sure that the host you are connecting to has their firewall(s) and "
+"router(s) configured correctly. The default port is 8452.\n"
+"\n"
+" (b) Long connection loss during gameplay.\n"
+"In this case simply restart normally.\n"
+"\n"
+" (c) Graphics-related crash\n"
+"The engine or game requires more than what your graphics hardware is capable "
+"of. You can try restarting in safe mode. If that worked, then adjust engine "
+"settings to match your hardware capabilities. If the problems persist, then "
+"ask in the newbies channel for help.\n"
+"\n"
+" (d) Choosing incompatible content for the selected game\n"
+"Sometimes, choosing incompatible content for the selected game will either "
+"crash the engine or the match will stop immidiately after loading finishes. "
+"Are you using the right engine version for the selected game? Please consult "
+"the documentation of the selected game.\n"
+"\n"
+"We can run the engine again in safe mode. This will disable all graphics "
+"features known to cause problems, but will drastically reduce the visual "
+"quality of the game and some of the effects may not be rendered at all!"
+msgstr ""
+
+#: src/spring.cpp:269
+msgid ""
+"Ooops, the engine crashed again.\n"
+"\n"
+"This time I do not know what to do anymore. Please contact my developers!\n"
+":("
+msgstr ""
+
+#: src/spring.cpp:276
+msgid "Please report the crash to the game's developers\n"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:197
+msgid "Scrollwheel speed"
+msgstr "Ταχύτητα ροδέλας κύλισης"
+
+#: src/springsettings/ctrlconstants.h:197
+msgid ""
+"Higher values mean faster zoom with mouse wheel.\n"
+"Negative values will invert zoom direction.\n"
+"Results may vary depending on camera mode!"
+msgstr ""
+"Μεγαλύτερες τιμές σημαίνουν γρηγορότερη μεγέθυνση με τη ροδέλα του "
+"ποντικιού.\n"
+"Αρνητικές τιμές αντιστρέφουν την φορά μεγέθυνσης.\n"
+"Φέρει διαφορετικά αποτελέσματα ανάλογα με τον τύπο κάμερας!"
+
+#: src/springsettings/ctrlconstants.h:207
+msgid "Shadow-map size"
+msgstr "Μέγεθος χάρτη σκιων"
+
+#: src/springsettings/ctrlconstants.h:207
+msgid ""
+"higher value = better looking shadows\n"
+"possible values: 1024, 2048, 4096, 8192"
+msgstr ""
+"μεγαλύτερη τιμή = καλύτερες σκιες\n"
+"επιτρεπτές τιμες: 1024, 2048, 4096, 8192"
+
+#: src/springsettings/ctrlconstants.h:209
+msgid "Tree view-distance"
+msgstr "Απόσταση εμφάνισης δέντρων"
+
+#: src/springsettings/ctrlconstants.h:209
+msgid "sets the maximum distance at which trees will still be rendered"
+msgstr "Ορίζει τη μέγιστη απόσταση που θα σχεδιάζονται τα δέντρα"
+
+#: src/springsettings/ctrlconstants.h:210
+msgid "Terrain detail"
+msgstr "Λεπτομέρειες εδάφους"
+
+#: src/springsettings/ctrlconstants.h:210
+msgid "higher value = more terrain details"
+msgstr "μεγαλύτερες τιμές = περισσότερες λεπτομέρειες εδάφους"
+
+#: src/springsettings/ctrlconstants.h:211
+msgid "Unit LOD distance"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:211
+msgid "higher value = units will remain detailed even when zooming out"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:212
+msgid "Grass detail"
+msgstr "Λεπτομέρεια χορταριού"
+
+#: src/springsettings/ctrlconstants.h:212
+msgid "higher value = more detailed grass"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:213
+msgid "Ground decals"
+msgstr "Decal εδάφους"
+
+#: src/springsettings/ctrlconstants.h:213
+msgid ""
+"settings higher than 1 might have unwelcome side-effects / be very resource "
+"hungry"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:214
+msgid "Unit icon distance"
+msgstr "Απόσταση εικονιδίων μονάδων"
+
+#: src/springsettings/ctrlconstants.h:214
+msgid ""
+"determines at which range units are still fully rendered\n"
+"higher value = greater range = more units rendered at the same time"
+msgstr ""
+"Προσδιορίζει μέχρι πια απόσταση θα σχεδιάζονται πλήρως οι μονάδες\n"
+"μεγαλύτερες τιμές = μεγαλύτερη απόσταση = περισσότερες μονάδες σχεδιάζονται "
+"ταυτόχρονα"
+
+#: src/springsettings/ctrlconstants.h:216
+msgid "Max simultaneous particles"
+msgstr "Μέγιστος αριθμός ταυτόχρονων σωματιδίων"
+
+#: src/springsettings/ctrlconstants.h:216
+#: src/springsettings/ctrlconstants.h:217
+msgid "limits how many particles are displayed at the same time"
+msgstr "περιορίζει το πόσα σωματίδια (κομματάκια) θα εμφανίζονται ταυτόχρονα"
+
+#: src/springsettings/ctrlconstants.h:217
+msgid "Max nano simultaneous particles"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:224
+msgid "Run full-screen"
+msgstr "Εκτέλεση σε πλήρη οθόνη"
+
+#: src/springsettings/ctrlconstants.h:224
+msgid "run fullscreen or in a window?"
+msgstr "εκτέλεση σε πλήρη οθόνη ή σε παράθυρο;"
+
+#: src/springsettings/ctrlconstants.h:225
+msgid "Dual-screen mode"
+msgstr "Λειτουργία διπλής οθόνης"
+
+#: src/springsettings/ctrlconstants.h:225
+msgid "if you have two monitors you can use both"
+msgstr "αν έχετε δύο οθόνες μπορείτε να τις χρησιμοποιήσετε ταυτόχρονα"
+
+#: src/springsettings/ctrlconstants.h:226
+msgid "Enable v-sync"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:226
+msgid "V-Sync on/off"
+msgstr "Ενεργός/ανενεργός κάθετος συγχρονισμός (V-Sync)"
+
+#: src/springsettings/ctrlconstants.h:231
+msgid "16-bit Z-buffer"
+msgstr "Πίνακας βάθους (Z-buffer) ανάλυσης 16-bit"
+
+#: src/springsettings/ctrlconstants.h:231
+#: src/springsettings/ctrlconstants.h:232
+msgid "placeholder"
+msgstr "placeholder"
+
+#: src/springsettings/ctrlconstants.h:232
+msgid "24-bit Z-buffer"
+msgstr "Πίνακας βάθους (Z-buffer) ανάλυσης 24-bit"
+
+#: src/springsettings/ctrlconstants.h:238
+msgid "Full-scene anti-aliasing samples"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:238
+msgid "how much anti-aliasing should be applied"
+msgstr "πόση εξομάλυνση γωνιών πρέπει να εφαρμοστεί"
+
+#: src/springsettings/ctrlconstants.h:248
+msgid "Maximum simultaneous sounds"
+msgstr "Μέγιστος αριθμός ταυτόχρονων ήχων"
+
+#: src/springsettings/ctrlconstants.h:248
+msgid ""
+"maximum different sounds played at the same time\n"
+"Set this to zero to disable sound completely."
+msgstr ""
+"Μέγιστος αριθμός διαφορετικών ήχων που θα αναπαράγονται ταυτόχρονα\n"
+"Ορίστε ως 0 για να απεργοποιηθεί πλήρως ο ήχος."
+
+#: src/springsettings/ctrlconstants.h:250
+msgid "Master sound volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:250
+msgid "master sound volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:251
+msgid "General sound volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:251
+msgid "general volume relative to master volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:252
+msgid "Unit reply volume"
+msgstr "Ένταση απαντήσεων μονάδων"
+
+#: src/springsettings/ctrlconstants.h:252
+msgid "reply volume relative to master volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:253
+msgid "Battle volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:253
+msgid "battle volume relative to global volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:254
+msgid "User interface volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:254
+msgid "ui volume relative to global volume"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:255
+msgid "Air Absorbtion factor"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:255
+msgid "How far sounds will have high frequencies dampened"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:262
+#: src/springsettings/tab_quality_video.cpp:162
+msgid "Shadows (slow)"
+msgstr "Σκιές (αργό)"
+
+#: src/springsettings/ctrlconstants.h:262
+msgid "enable shadows?"
+msgstr "Ενεργοποίηση σκιών;"
+
+#: src/springsettings/ctrlconstants.h:263
+msgid "3D trees"
+msgstr "Τρισδιάστατα δέντρα"
+
+#: src/springsettings/ctrlconstants.h:263
+msgid ""
+"want better looking trees?\n"
+"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
+msgstr ""
+"θέλετε πιο όμορφα δέντρα;\n"
+"απαιτεί Geforce 2/Radeon 8500/Intel 830 ή μεταγενέστερες κάρτες γραφικών"
+
+#: src/springsettings/ctrlconstants.h:265
+msgid "High-resolution clouds"
+msgstr "Σύννεφα υψηλής ανάλυσης"
+
+#: src/springsettings/ctrlconstants.h:265
+msgid ""
+"want better looking sky?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+"θέλετε πιο όμορφο ουρανό;\n"
+"απαιτεί Geforce 5/Radeon 9500/Intel 915 ή μεταγενέστερες κάρτες γραφικών"
+
+#: src/springsettings/ctrlconstants.h:267
+msgid "Dynamic clouds (slow)"
+msgstr "Δυναμικά σύννεφα (αργό)"
+
+#: src/springsettings/ctrlconstants.h:267
+msgid "want moving clouds in the sky?"
+msgstr "θέλετε κινούμενα σύννεφα στον ουρανό;"
+
+#: src/springsettings/ctrlconstants.h:268
+msgid "Reflective units"
+msgstr "Ανάκλαση στις μονάδες"
+
+#: src/springsettings/ctrlconstants.h:268
+msgid ""
+"shiny units?\n"
+"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
+msgstr ""
+"γυαλιστερές μονάδες;\n"
+"απαιτεί Geforce 5/Radeon 9500/Intel 915 ή μεταγενέστερες κάρτες γραφικών"
+
+#: src/springsettings/ctrlconstants.h:270
+msgid "Never use shaders when rendering SM3 maps"
+msgstr ""
+"Να μην χρησιμοποιούνται σκιαστές (shaders) όταν σχεδιάζονται χάρτες SM3"
+
+#: src/springsettings/ctrlconstants.h:270
+msgid "problems with sm3 maps? enable this"
+msgstr "προβλήματα με χάρτες sm3; ενεργοποιήστε αυτό"
+
+#: src/springsettings/ctrlconstants.h:271
+msgid "Enable LuaShaders support"
+msgstr "Ενεργοποίηση υποστήριξης LuaShader"
+
+#: src/springsettings/ctrlconstants.h:271
+msgid "makes for some cool effects"
+msgstr "για cool εφέ"
+
+#: src/springsettings/ctrlconstants.h:272
+msgid "Use Pixelbuffer objects"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:272
+msgid ""
+"If supported, it speeds up the dynamic loading of terrain textures -> "
+"smoother camera movement"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:273
+msgid "Compress textures"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:273
+msgid ""
+"Runtime texture compression. (Ideal for graphic cards with small amount of "
+"vram)"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:274
+msgid "High-resolution LOS textures"
+msgstr "Υψηλής ανάλυσης texture Οπτικής Επαφής"
+
+#: src/springsettings/ctrlconstants.h:274
+msgid "smoother Line of Sight overlays"
+msgstr "πιο ομαλές επικαλύψεις Οπτικής Επαφής"
+
+#: src/springsettings/ctrlconstants.h:275
+msgid "Draw smooth points"
+msgstr "Σχεδίαση ομαλών σημείων"
+
+#: src/springsettings/ctrlconstants.h:275
+msgid "should points be anti-aliased"
+msgstr "να εξομαλύνονται οι γωνίες σημείων"
+
+#: src/springsettings/ctrlconstants.h:276
+msgid "Draw smooth lines"
+msgstr "Σχεδίαση ομαλών γραμμών"
+
+#: src/springsettings/ctrlconstants.h:276
+msgid "should lines be anti-aliased"
+msgstr "να εξομαλύνονται οι γωνίες γραμμών"
+
+#: src/springsettings/ctrlconstants.h:283
+msgid "Issue commands on mini-map"
+msgstr "Έκδοση εντολών στον υποχάρτη"
+
+#: src/springsettings/ctrlconstants.h:283
+msgid "Issue orders on the mini-map like you would "
+msgstr "Δώστε εντολές στον υποχάρτη όπως θα κάνατε "
+
+#: src/springsettings/ctrlconstants.h:284
+msgid "Show commands on mini-map"
+msgstr "Εμφάνιση εντολών στον υποχάρτη"
+
+#: src/springsettings/ctrlconstants.h:284
+#: src/springsettings/ctrlconstants.h:285
+#: src/springsettings/ctrlconstants.h:286
+msgid "default value is \"on\""
+msgstr "η εξ ορισμού τιμή είναι \"on\""
+
+#: src/springsettings/ctrlconstants.h:285
+msgid "Draw icons on mini-map"
+msgstr "Σχεδίαση εικονιδίων στον υποχάρτη"
+
+#: src/springsettings/ctrlconstants.h:286
+msgid "Draw markers on mini-map"
+msgstr "Σχεδίαση δεικτών στον υποχάρτη"
+
+#: src/springsettings/ctrlconstants.h:287
+msgid "Mini-map on left (single screen)"
+msgstr "Υποχάρτης στα αριστερά (μονή οθόνη)"
+
+#: src/springsettings/ctrlconstants.h:287
+#: src/springsettings/ctrlconstants.h:288
+msgid "left is the default"
+msgstr "εξ ορισμού είναι αριστερά"
+
+#: src/springsettings/ctrlconstants.h:288
+msgid "Mini-map on left (dual screen)"
+msgstr "Υποχάρτης στα αριστερά (διπλή οθόνη)"
+
+#: src/springsettings/ctrlconstants.h:289
+msgid "Simplified mini-map colors"
+msgstr "Απλοποιημένα χρώματα υποχάρτη"
+
+#: src/springsettings/ctrlconstants.h:289
+msgid "Use less colors"
+msgstr "Χρήση λιγότερων χρωμάτων"
+
+#: src/springsettings/ctrlconstants.h:291
+msgid "Team-colored nanospray"
+msgstr "Χρώματα ομάδας για σπράυ των nano-turret"
+
+#: src/springsettings/ctrlconstants.h:291
+msgid "Should nano particels be the color of your team?"
+msgstr ""
+"Να χρησιμοποιούνται τα χρώματα της ομάδας για τα σωματίδια των nano-turret;"
+
+#: src/springsettings/ctrlconstants.h:292
+msgid "Colorized elevation map"
+msgstr "Χρωματιστός υψομετρικός χάρτης"
+
+#: src/springsettings/ctrlconstants.h:292
+msgid "makes differences in height clearer"
+msgstr "κάνει πιο εμφανείς τις υψομετρικές διαφορές"
+
+#: src/springsettings/ctrlconstants.h:294
+msgid "Show in-game clock"
+msgstr "Εμφάνιση χρόνου παιχνιδιού"
+
+#: src/springsettings/ctrlconstants.h:294
+#: src/springsettings/ctrlconstants.h:295
+#: src/springsettings/ctrlconstants.h:296
+msgid ""
+"requires \"Enable LuaWidgets\" to be set.\n"
+"Will be displayed in the bottom right corner"
+msgstr ""
+"απαιτεί να είναι ορισμένο το \"Ενεργοποίηση LuaWidgets\".\n"
+"Εμφανίζεται στην κάτω δεξιά γωνία"
+
+#: src/springsettings/ctrlconstants.h:295
+msgid "Show in-game player information"
+msgstr "Εμφάνιση πληροφοριών παικτών"
+
+#: src/springsettings/ctrlconstants.h:296
+msgid "Show in-game framerate"
+msgstr "Εμφάνιση ρυθμού καρέ (FPS)"
+
+#: src/springsettings/ctrlconstants.h:298
+msgid "Fix rendering on alt-tab"
+msgstr "Επιδιόρθωση σχεδίασης κατά το Alt-Tab"
+
+#: src/springsettings/ctrlconstants.h:298
+msgid "Do not change if not needed"
+msgstr "Μην το αλλάζετε αν δεν χρειαστεί"
+
+#: src/springsettings/ctrlconstants.h:299
+msgid "Disallow helper AI's"
+msgstr "Απενεργοποίηση των μονάδων Βοηθητικής Λογικής"
+
+#: src/springsettings/ctrlconstants.h:299
+msgid ""
+"Disables Economy AI, etc.\n"
+"If enabled might screw with LuaUi."
+msgstr ""
+"Απενεργοποιεί τα Economy AI κλπ.\n"
+"Αν ενεργοποιηθεί μπορεί να δημιουργήσει προβλήματα με το LuaUI."
+
+#: src/springsettings/ctrlconstants.h:300
+msgid "Enable scroll on window edge"
+msgstr "Ενεργοποίηση κύλισης στις άκρες του παραθύρου"
+
+#: src/springsettings/ctrlconstants.h:300
+msgid "Scroll the screen when mouse reaches the screen's edge."
+msgstr "Κύλισης της οθόνης όταν το ποντίκι φτάνει τις άκρες της οθόνης."
+
+#: src/springsettings/ctrlconstants.h:301
+msgid "Invert Mouse"
+msgstr "Αντιστροφή Ποντικιού"
+
+#: src/springsettings/ctrlconstants.h:301
+msgid "Inverts the Mouse Y-axis in FPS mode"
+msgstr "Αντιστρέφει τον κάθετο άξονα του ποντικιού σε λειτουργία FPS"
+
+#: src/springsettings/ctrlconstants.h:302
+msgid "Use Hardware Cursor"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:302
+msgid "Use native OS mouse cursor (hardware accelerated)"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:310
+msgid "Overhead camera"
+msgstr "Υπερυψωμένη κάμερα"
+
+#: src/springsettings/ctrlconstants.h:310
+#: src/springsettings/ctrlconstants.h:311
+#: src/springsettings/ctrlconstants.h:312
+#: src/springsettings/ctrlconstants.h:313
+#: src/springsettings/ctrlconstants.h:314
+msgid "set the scroll speed (mouse + keyboard) for this mode"
+msgstr ""
+"ορίστε την ταχύτητα κύλισης (ποντίκι + πληκτρολόγιο) για αυτή τη λειτουργία"
+
+#: src/springsettings/ctrlconstants.h:311
+msgid "Rotatable overhead camera"
+msgstr "Περιστρεφόμενη υπερυψωμένη κάμερα"
+
+#: src/springsettings/ctrlconstants.h:312
+msgid "Total war camera"
+msgstr "Κάμερα Total War"
+
+#: src/springsettings/ctrlconstants.h:313
+msgid "First person camera"
+msgstr "Κάμερα πρώτου πλάνου"
+
+#: src/springsettings/ctrlconstants.h:314
+#: src/springsettings/ctrlconstants.h:368
+msgid "Free camera"
+msgstr "Ελεύθερη κάμερα"
+
+#: src/springsettings/ctrlconstants.h:319
+#: src/springsettings/ctrlconstants.h:321
+#: src/springsettings/ctrlconstants.h:323
+#: src/springsettings/ctrlconstants.h:325
+#: src/springsettings/ctrlconstants.h:327
+msgid ""
+"Make this the default view when startins Spring.\n"
+"Can be changed ingame."
+msgstr ""
+"Να γίνει το εξ ορισμού όταν ξεκινάει το Spring.\n"
+"Μπορεί να αλλαχθεί μέσα στο παιχνίδι."
+
+#: src/springsettings/ctrlconstants.h:334
+msgid "Console verbose level (0=min,10=max)"
+msgstr "Βαθμός αναλυτικότητας κονσόλας (0=ελαχ,10=μεγ)"
+
+#: src/springsettings/ctrlconstants.h:334
+msgid "How much information should be outputted?"
+msgstr "Πόσο αναλυτικές πληροφορίες να εκδίδονται;"
+
+#: src/springsettings/ctrlconstants.h:339
+msgid "Catch AI exceptions"
+msgstr "Αρπαγή εξαιρέσεων AI (exceptions)"
+
+#: src/springsettings/ctrlconstants.h:339
+msgid "disable for AI debugging"
+msgstr "απενεργοποιήστε για εκσφαλμάτωση AI"
+
+#: src/springsettings/ctrlconstants.h:344
+#: src/springsettings/ctrlconstants.h:355
+msgid "Basic"
+msgstr "Βασική"
+
+#: src/springsettings/ctrlconstants.h:344
+msgid ""
+"Depending on the power of your graphics card,\n"
+"selecting higher quality than basic can have a\n"
+"major impact on Spring's performance.\n"
+msgstr ""
+"Η επιλογή μεγαλύτερης ποιότητας από την βασική\n"
+"μπορεί να επηρεάσει δραματικά την απόδοση του Spring,\n"
+"ανάλογα με την ισχύ της κάρτας γραφικών σας,\n"
+
+#: src/springsettings/ctrlconstants.h:355
+msgid "Reflective"
+msgstr "Με ανάκλαση"
+
+#: src/springsettings/ctrlconstants.h:355
+msgid "Reflective + refractive"
+msgstr "Με ανάκλαση και διάθλαση"
+
+#: src/springsettings/ctrlconstants.h:355
+msgid "Dynamic"
+msgstr "Δυναμική"
+
+#: src/springsettings/ctrlconstants.h:355
+msgid "Bump-mapped"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:358
+msgid "Invert mouse y-axis"
+msgstr "Αντιστροφή κάθετου άξονα ποντικιού"
+
+#: src/springsettings/ctrlconstants.h:358
+msgid "swap up/down with down/up"
+msgstr "το πάνω/κάτω γίνεται κάτω/πάνω"
+
+#: src/springsettings/ctrlconstants.h:359
+msgid "Mini-map 3-button mouse support"
+msgstr "Υποστήριξη υποχάρτη για ποντίκια με 3 πλήκτρα"
+
+#: src/springsettings/ctrlconstants.h:359
+msgid "if you don't want to able to use that button, disable it here"
+msgstr ""
+"αν δεν θέλετε να μπορείτε να χρησιμοποιείτε εκείνο το κουμπί, "
+"απενεργοποιήστε το εδώ"
+
+#: src/springsettings/ctrlconstants.h:364
+msgid "Overhead"
+msgstr "Υπερυψωμένη"
+
+#: src/springsettings/ctrlconstants.h:364
+msgid "Static bird's eye view"
+msgstr "Στατική οπτική πουλιού"
+
+#: src/springsettings/ctrlconstants.h:365
+msgid "Rotatable overhead"
+msgstr "Περιστρεφόμενη υπερυψωμένη"
+
+#: src/springsettings/ctrlconstants.h:365
+msgid "Same as overhead, but you can rotate around the z-axis"
+msgstr ""
+"Ίδια με την υπερυψωμένη, αλλά μπορείτε να περιστρέφεστε γύρω από τον άξονα "
+"ύψους"
+
+#: src/springsettings/ctrlconstants.h:366
+msgid "Total war"
+msgstr "Total war"
+
+#: src/springsettings/ctrlconstants.h:366
+msgid "top-view camera, which can be tilted on the X axis"
+msgstr "Κάμερα από πάνω, με δυνατότητα κλίσης στον οριζόντιο άξονα"
+
+#: src/springsettings/ctrlconstants.h:367
+msgid "First person"
+msgstr "Πρώτου προσώπου"
+
+#: src/springsettings/ctrlconstants.h:367
+msgid "Camera from unit's point of view"
+msgstr "Κάμερα από την οπτική της μονάδας"
+
+#: src/springsettings/ctrlconstants.h:368
+msgid "Modify the view anyway you want"
+msgstr "Τροποποιήστε τη θέα όπως θέλετε"
+
+#: src/springsettings/ctrlconstants.h:373
+msgid "screen width"
+msgstr "πλάτος οθόνης"
+
+#: src/springsettings/ctrlconstants.h:374
+msgid "screen height"
+msgstr "ύψος οθόνης"
+
+#: src/springsettings/ctrlconstants.h:381
+msgid "Blur reflection"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:382
+msgid "Use depth texture"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:382
+msgid "enables smoother blending on coastlines"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:383
+msgid "Shore waves"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:383
+msgid "Enables shorewaves"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:384
+msgid "Reflection"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:384
+msgid "Turn on water reflections"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:386
+msgid "Reflection texture size"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:387
+msgid "Refraction"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:387
+msgid ""
+"Turn on water refractions.\n"
+"(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow))."
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:389
+msgid "Anisotropy"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:393
+msgid "off"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:393
+msgid "screencopy(fast)"
+msgstr ""
+
+#: src/springsettings/ctrlconstants.h:393
+msgid "own rendering pass(slow)"
+msgstr ""
+
+#: src/springsettings/frame.cpp:26
+msgid "Combined Options"
+msgstr "Συνδυασμένες Επιλογές"
+
+#: src/springsettings/frame.cpp:27
+msgid "Render quality / Video mode"
+msgstr "Ποιότητα σχεδίασης / Λειτουργία video"
+
+#: src/springsettings/frame.cpp:28
+msgid "Render detail"
+msgstr "Λεπτομέρεια σχεδιάσης"
+
+#: src/springsettings/frame.cpp:29
+msgid "UI options"
+msgstr "Επιλογές διεπαφής"
+
+#: src/springsettings/frame.cpp:30
+msgid "Audio"
+msgstr "Ήχος"
+
+#: src/springsettings/frame.cpp:31
+msgid "Hotkeys"
+msgstr ""
+
+#: src/springsettings/frame.cpp:32
+msgid ""
+"Changes made on Quality/Detail tab in expert mode\n"
+"will be lost if you change simple options again.\n"
+"Also these changes WILL NOT be reflected by the \n"
+"selected choices on the Combined options tab.\n"
+"(this message can be disabled in the \"File\" menu)"
+msgstr ""
+
+#: src/springsettings/frame.cpp:120 src/springsettings/frame.cpp:144
+msgid "Save Spring settings before exiting?"
+msgstr "Αποθήκευση των ρυθμίσεων του Spring πριν την έξοδο;"
+
+#: src/springsettings/frame.cpp:120 src/springsettings/frame.cpp:144
+#: src/springsettings/frame.cpp:253
+msgid "Confirmation needed"
+msgstr "Απαιτείται επιβεβαίωση"
+
+#: src/springsettings/frame.cpp:189
+msgid "SpringSettings (simple mode)"
+msgstr "Ρυθμίσεις Spring (απλή λειτουργία)"
+
+#: src/springsettings/frame.cpp:201
+msgid "Save settings"
+msgstr "Αποθήκευση ρυθμίσεων"
+
+#: src/springsettings/frame.cpp:202
+msgid "Reset settings to default values"
+msgstr "Επαναφορά αρχικών ρυθμίσεων"
+
+#: src/springsettings/frame.cpp:203
+msgid "Disable expert mode warning"
+msgstr "Απενεργοποίηση προειδοποίησης λειτουργίας για προχωρημένους"
+
+#: src/springsettings/frame.cpp:205
+msgid "Quit"
+msgstr "Έξοδος"
+
+#: src/springsettings/frame.cpp:210
+msgid "Simple (few options)"
+msgstr "Απλό (λιγότερες επιλογές)"
+
+#: src/springsettings/frame.cpp:211
+msgid "Expert (all options"
+msgstr "Για προχωρημένους (όλες οι επιλογές)"
+
+#: src/springsettings/frame.cpp:214
+msgid "About"
+msgstr "Περί"
+
+#: src/springsettings/frame.cpp:215
+msgid "Contact"
+msgstr "Επαφή"
+
+#: src/springsettings/frame.cpp:216
+msgid "Credits"
+msgstr "Μνεία"
+
+#: src/springsettings/frame.cpp:217
+msgid "Report a bug"
+msgstr "Αναφορά σφάλματος"
+
+#: src/springsettings/frame.cpp:230
+msgid "Mode"
+msgstr "Κατάσταση"
+
+#: src/springsettings/frame.cpp:231
+msgid "Info/Help"
+msgstr "Βοήθεια"
+
+#: src/springsettings/frame.cpp:253
+msgid "Reset ALL settings to default values?"
+msgstr "Επαναφορά ΟΛΩΝ των ρυθμίσεων στις αρχικές τιμές;"
+
+#: src/springsettings/frame.cpp:277
+msgid "(simple mode)"
+msgstr ""
+
+#: src/springsettings/frame.cpp:279
+msgid "Hint"
+msgstr "Υπόδειξη"
+
+#: src/springsettings/frame.cpp:326
+msgid "(expert mode)"
+msgstr ""
+
+#: src/springsettings/presets.h:31 src/springsettings/presets.h:32
+msgid "low"
+msgstr "χαμηλή"
+
+#: src/springsettings/presets.h:31 src/springsettings/presets.h:32
+msgid "medium"
+msgstr "μεσαία"
+
+#: src/springsettings/presets.h:31 src/springsettings/presets.h:32
+msgid "high"
+msgstr "υψηλή"
+
+#: src/springsettings/presets.h:32
+msgid "very low"
+msgstr "πολύ χαμηλή"
+
+#: src/springsettings/presets.h:32
+msgid "very high"
+msgstr "πολύ υψηλή"
+
+#: src/springsettings/tab_abstract.cpp:111
+#, c-format
+msgid "Could not access your settings. Exception: %s\n"
+msgstr ""
+
+#: src/springsettings/tab_abstract.cpp:600
+#, c-format
+msgid "Could not save, unitsync not properly loaded. Exception: %s"
+msgstr ""
+
+#: src/springsettings/tab_abstract.cpp:601
+msgid "SpringSettings Error"
+msgstr "Σφάλμα SpringSettings"
+
+#: src/springsettings/tab_audio.cpp:37
+msgid "Audio Options"
+msgstr "Επιλογές Ήχου"
+
+#: src/springsettings/tab_quality_video.cpp:45
+msgid "Screen Resolution"
+msgstr "Ανάλυση Οθόνης"
+
+#: src/springsettings/tab_quality_video.cpp:147
+msgid ""
+"If an option needs special hardware to work\n"
+"\t\t\t\t\t\t\t\t\t\t\t\tit will be mentioned in the tooltip."
+msgstr ""
+
+#: src/springsettings/tab_quality_video.cpp:170
+msgid "Water Quality"
+msgstr "Ποιότητα Νερού"
+
+#: src/springsettings/tab_quality_video.cpp:199
+msgid "Resolution in bit"
+msgstr "Ανάλυση σε bit"
+
+#: src/springsettings/tab_quality_video.cpp:259
+msgid "Render Quality Options"
+msgstr "Επιλογές Ποιότητας Σχεδίασης"
+
+#: src/springsettings/tab_quality_video.cpp:260
+msgid "Video Mode Options"
+msgstr "Επιλογές Λειτουργίας Video"
+
+#: src/springsettings/tab_quality_video.cpp:261
+msgid "Anti-Aliasing Options"
+msgstr "Επιλογές Εξομάλυνσης Γωνιών"
+
+#: src/springsettings/tab_quality_video.cpp:262
+msgid "Z-/Depth-Buffer"
+msgstr "Πίνακας Βάθους (Ζ-Buffer)"
+
+#: src/springsettings/tab_quality_video.cpp:263
+msgid "Bump-mapped Water"
+msgstr ""
+
+#: src/springsettings/tab_render_detail.cpp:44
+msgid "Rendering detail levels"
+msgstr "Επίπεδα λεπτομερειών σχεδίασης"
+
+#: src/springsettings/tab_simple.cpp:21
+msgid ""
+"These options let you roughly control Spring's rendering.\n"
+"\t\t\t\t\t\t\t\t\tFor more speed try lowering the settings.\n"
+"\t\t\t\t\t\t\t\t\tFull control over all settings is available in the\n"
+"\t\t\t\t\t\t\t\t\t\"Expert mode\", either click on the button on the\n"
+"\t\t\t\t\t\t\t\t\tright or use the \"Mode\" menu in the top menubar.\n"
+"\t\t\t\t\t\t\t\t\tYou can go back to this mode at any time by choosing\n"
+"\t\t\t\t\t\t\t\t\t\"Simple mode\" from the \"Mode\" menu.\n"
+"\t\t\t\t\t\t\t\t\tIf you encounter error messages concerning graphics\n"
+"\t\t\t\t\t\t\t\t\twhen running Spring it might be necessary to disable\n"
+" \t\t\t\t\t\t\t\t\tsome options in expert mode.\n"
+msgstr ""
+
+#: src/springsettings/tab_simple.cpp:32
+msgid "Graphics quality"
+msgstr "Ποιότητα γραφικών"
+
+#: src/springsettings/tab_simple.cpp:33
+msgid "Graphics detail"
+msgstr "Λεπτομέρεια γραφικών"
+
+#: src/springsettings/tab_simple.cpp:34
+msgid "Screen resolution"
+msgstr "Ανάλυση οθόνης"
+
+#: src/springsettings/tab_simple.cpp:35
+msgid "Switch to expert mode"
+msgstr "Αλλαγή σε λειτουργία για προχωρημένους"
+
+#: src/springsettings/tab_simple.cpp:56
+msgid " (current)"
+msgstr " (τρέχουσα)"
+
+#: src/springsettings/tab_simple.cpp:68
+msgid "Sets all quality options to predefined values according to your choice."
+msgstr ""
+"Θέτει όλες τις επιλογές ποιότητας σε εξ ορισμού τιμές ανάλογα με την επιλογή "
+"σας."
+
+#: src/springsettings/tab_simple.cpp:74
+msgid "Sets all detail options to predefined values according to your choice."
+msgstr ""
+"Θέτει όλες τις επιλογές λεπτομερειών σε εξ ορισμού τιμές ανάλογα με την "
+"επιλογή σας."
+
+#: src/springsettings/tab_simple.cpp:79
+msgid ""
+"Select the resolution fitting your monitor(s).\n"
+"\t\t\tSelecting a dual screen resolution will automatically enable dual "
+"screen mode.\n"
+"\t\t\tIf the appropriate resolution is not available you can set it manually "
+"in expert mode.\n"
+"\t\t\tPlease also contact the author so it can be added in future releases."
+msgstr ""
+
+#: src/springsettings/tab_simple.cpp:116
+msgid "Info"
+msgstr "Πληροφορίες"
+
+#: src/springsettings/tab_ui.cpp:24
+msgid ""
+"Setting a slider to 0 will exclude that\n"
+"\t\t\t\t\t\t\t\t\t\t\tmode from being cycled through ingame."
+msgstr ""
+
+#: src/springsettings/tab_ui.cpp:129
+msgid "Scroll Speeds (mouse + keyboard)"
+msgstr "Ταχύτητες Κύλισης (ποντίκι & πληκτρολόγιο)"
+
+#: src/springsettings/tab_ui.cpp:134
+msgid "Default Camera Mode"
+msgstr "Αρχική Λειτουργία Κάμερας"
+
+#: src/springsettings/tab_ui.cpp:137
+msgid "Misc. UI Options"
+msgstr "Άλλες επιλογές διεπαφής"
+
+#: src/springsettings/tab_ui.cpp:140
+msgid "Zoom"
+msgstr "Μεγέθυνση"
+
+#: src/updater/updaterapp.cpp:68
+msgid "h"
+msgstr ""
+
+#: src/updater/updaterapp.cpp:68
+msgid "help"
+msgstr ""
+
+#: src/updater/updaterapp.cpp:68
+msgid "show this help message"
+msgstr ""
+
+#: src/updater/updaterapp.cpp:69
+msgid ""
+"<parent pid> <springlobby.exe> <updater.exe> <source dir> <destination dir>"
+msgstr ""
+
+#: src/useractions.cpp:54
+msgid "none"
+msgstr ""
+
+#: src/useractions.cpp:55
+msgid "highlight"
+msgstr ""
+
+#: src/useractions.cpp:56
+msgid "notify login/out"
+msgstr ""
+
+#: src/useractions.cpp:57
+msgid "ignore chat"
+msgstr ""
+
+#: src/useractions.cpp:58
+msgid "ignore pm"
+msgstr ""
+
+#: src/useractions.cpp:59
+msgid "autokick"
+msgstr ""
+
+#: src/useractions.cpp:60
+msgid "notify hosted battle"
+msgstr ""
+
+#: src/useractions.cpp:61
+msgid "notify status change"
+msgstr ""
+
+#: src/useractions.cpp:74
+msgid "no action at all"
+msgstr ""
+
+#: src/useractions.cpp:75
+msgid "highlight user in nick list and battles he participates in"
+msgstr ""
+
+#: src/useractions.cpp:76
+msgid "popup a message box when user logs in/out from  the server"
+msgstr ""
+
+#: src/useractions.cpp:77
+msgid "you won't see message by these users in normal channels"
+msgstr ""
+
+#: src/useractions.cpp:78
+msgid ""
+"ignore private messages of these users, no pm window will open if any of "
+"these try to contact you privately"
+msgstr ""
+
+#: src/useractions.cpp:79
+msgid "automatically kick users from battles hosted by yourself"
+msgstr ""
+
+#: src/useractions.cpp:80
+msgid "popup a message box when user hosts a new battle"
+msgstr ""
+
+#: src/useractions.cpp:81
+msgid "popup a message box when user changes away status"
+msgstr ""
+
+#: src/useractions.cpp:85
+msgid "Default"
+msgstr ""
+
+#: src/useractions.cpp:88 src/useractions.cpp:89
+msgid "Ignore chat"
+msgstr ""
+
+#: src/useractions.cpp:90 src/useractions.cpp:91
+msgid "Battle Autokick"
+msgstr ""
+
+#: src/useractions.cpp:92 src/useractions.cpp:93 src/useractions.cpp:94
+#: src/useractions.cpp:95 src/useractions.cpp:97
+msgid "Friends"
+msgstr ""
+
+#: src/useractions.cpp:309
+msgid ""
+"To prevent logical inconsistencies, adding a user to more than one group is "
+"not allowed"
+msgstr ""
+
+#: src/useractions.cpp:310
+msgid "Cannot add user to group"
+msgstr ""
+
+#: src/utils/curlhelper.cpp:52
+msgid ": "
+msgstr ""
+
+#: src/utils/slpaths.cpp:459
+#, c-format
+msgid "Directory %s is not accessible!"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:61
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:75
+msgid "English"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:91
+#, c-format
+msgid "SEARCHING FOR %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:95
+msgid " (Default)"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:123
+msgid "Select the language"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:123
+msgid "Language"
+msgstr ""
 
 #~ msgid "Accept Agreement"
 #~ msgstr "Αποδοχή Συμφωνίας"
