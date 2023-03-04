@@ -55,8 +55,8 @@ else()
 	message(STATUS "Found xgettext: ${XGETTEXT}")
 	add_custom_target(
 		update-potfile
-		COMMAND ${XGETTEXT} -d springlobby --keyword=_ --from-code=utf-8 --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
-		DEPENDS springlobby
+		COMMAND ${XGETTEXT} -d springlobby --keyword=_ --from-code=utf-8 --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "https://github.com/springlobby/springlobby/issues" -o ${MESSAGES_POT_FILE} ${srcfiles}
+		DEPENDS springlobby srcfiles
 		WORKING_DIRECTORY ${springlobby_SOURCE_DIR})
 endif()
 
