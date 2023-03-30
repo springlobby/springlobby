@@ -49,7 +49,7 @@ bool GetMac(std::vector<unsigned char>& mac)
 	return (GetMacType(mac, 0));
 }
 
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) || defined(__OpenBSD__) || defined(__FreeBSD__)
 
 bool GetMac(std::vector<unsigned char>& mac)
 {
